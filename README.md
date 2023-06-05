@@ -5,6 +5,7 @@ Godot MVVM框架，帮助你更简单地开发UI。
 
 使用说明：
 1，入门
+
 1），如果你需要创建新场景，必须在scenes文件夹下创建，并且需要使用我自定义的RootNode,RootNode2D,RootNode3D,RootContrl（注意，不知道为什么除了rootnode，其他节点不会自动挂脚本，需要手动挂），最后需要在layouts下创建xml文件，注意路径需要一一对应，如下：
 
 ![Screenshot 2023-06-05 171104](https://github.com/JustDooooIt/GoVM/assets/43512399/758ec2c1-eb21-4cd1-9daf-26e54bf3c191)![xml截图1](https://github.com/JustDooooIt/GoVM/assets/43512399/7ef4fb3e-28a9-423a-a39f-020b1092327b)
@@ -16,7 +17,9 @@ Godot MVVM框架，帮助你更简单地开发UI。
 运行游戏即可看到新的节点被创建
 
 2，单向数据绑定
+
 1）你可以看到创建的场景的根节点有默认的脚本，你需要继承这个脚本。
+
 2）然后你就可以在ready方法定义响应式数据了，如下：
 
 ![Screenshot 2023-06-05 172609](https://github.com/JustDooooIt/GoVM/assets/43512399/3a87a60d-aadb-44b8-8896-12ec2ae25a6f)
