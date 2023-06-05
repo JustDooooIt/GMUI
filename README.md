@@ -43,7 +43,10 @@ updated方法会在你更改数据时执行。
 ![xml截图4](https://github.com/JustDooooIt/GoVM/assets/43512399/a3d3bf8f-2a2b-42f9-aaea-bfa126ee5606)
 
 4）如果子场景要给父场景传递参数，请使用signal
-5）最后还有插槽，在子场景使用<Slot name="slot"></Slot>声明插槽，在Scene中使用<Template slot="slot"></Template>即可
+5）最后还有插槽，如下
 
+![插槽1](https://github.com/JustDooooIt/GMUI/assets/43512399/146324b0-7e54-4a5d-8bd9-f2fe7c4a76cc)
+
+![插槽2](https://github.com/JustDooooIt/GMUI/assets/43512399/681e8fd5-4d34-4bba-937a-5954fcc8bfd5)
 
 当你看完这些，你可能会觉得十分甚至九分像vue，不用怀疑，总体思想就是vue来指导，底层细节不同而已（逃
