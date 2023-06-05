@@ -16,35 +16,35 @@ var isSyncToScene = false
 signal bue_setted
 
 func _enter_tree():
-	var _vms_ = preload('res://addons/go_vm/scripts/common/vms.gd').new()
-	var _patch_ = preload('res://addons/go_vm/scripts/vnode/patch.gd').new()
-	var _vh_ = preload('res://addons/go_vm/scripts/vnode/vnode_helper.gd').new()
-	var _values_ = preload('res://addons/go_vm/scripts/observer/values.gd').new()
+	var _vms_ = preload('res://addons/gmui/scripts/common/vms.gd').new()
+	var _patch_ = preload('res://addons/gmui/scripts/vnode/patch.gd').new()
+	var _vh_ = preload('res://addons/gmui/scripts/vnode/vnode_helper.gd').new()
+	var _values_ = preload('res://addons/gmui/scripts/observer/values.gd').new()
 	Engine.register_singleton('_vms', _vms_)
 	Engine.register_singleton('_patch', _patch_)
 	Engine.register_singleton('_vh', _vh_)
 	Engine.register_singleton('_values', _values_)
-	add_autoload_singleton('_vms', 'res://addons/go_vm/scripts/common/vms.gd')
-	add_autoload_singleton('_values', 'res://addons/go_vm/scripts/observer/values.gd')
-	add_autoload_singleton('_vh', 'res://addons/go_vm/scripts/vnode/vnode_helper.gd')
-	add_autoload_singleton('_patch', 'res://addons/go_vm/scripts/vnode/patch.gd')
+	add_autoload_singleton('_vms', 'res://addons/gmui/scripts/common/vms.gd')
+	add_autoload_singleton('_values', 'res://addons/gmui/scripts/observer/values.gd')
+	add_autoload_singleton('_vh', 'res://addons/gmui/scripts/vnode/vnode_helper.gd')
+	add_autoload_singleton('_patch', 'res://addons/gmui/scripts/vnode/patch.gd')
 	editorSetting.set('docks/filesystem/textfile_extensions', 'txt,md,cfg,ini,log,json,yml,yaml,toml,xml')
 #	scene_changed.connect(set_bue)
 #	scene_changed.connect(init_node)
 #	scene_changed.connect(set_xml_content)
 #	scene_changed.connect(bind_load_xml_signal)
-	add_custom_type('RootNode', 'Node', preload('res://addons/go_vm/scripts/common/root_node.gd'), preload('res://addons/go_vm/icon/Node.svg'))
-	add_custom_type('RootNode2D', 'Node2D', preload('res://addons/go_vm/scripts/common/root_node_2d.gd'), preload('res://addons/go_vm/icon/Node2D.svg'))
-	add_custom_type('RootNode3D', 'Node3D', preload('res://addons/go_vm/scripts/common/root_node_3d.gd'), preload('res://addons/go_vm/icon/Node3D.svg'))
-	add_custom_type('RootControl', 'Control', preload('res://addons/go_vm/scripts/common/root_control.gd'), preload('res://addons/go_vm/icon/Control.svg'))
+	add_custom_type('RootNode', 'Node', preload('res://addons/gmui/scripts/common/root_node.gd'), preload('res://addons/gmui/icon/Node.svg'))
+	add_custom_type('RootNode2D', 'Node2D', preload('res://addons/gmui/scripts/common/root_node_2d.gd'), preload('res://addons/gmui/icon/Node2D.svg'))
+	add_custom_type('RootNode3D', 'Node3D', preload('res://addons/gmui/scripts/common/root_node_3d.gd'), preload('res://addons/gmui/icon/Node3D.svg'))
+	add_custom_type('RootControl', 'Control', preload('res://addons/gmui/scripts/common/root_control.gd'), preload('res://addons/gmui/icon/Control.svg'))
 #func _ready():
 #	print('plugin ready')
 
 func _build():
-	add_autoload_singleton('_vms', 'res://addons/go_vm/scripts/common/vms.gd')
-	add_autoload_singleton('_values', 'res://addons/go_vm/scripts/observer/values.gd')
-	add_autoload_singleton('_vh', 'res://addons/go_vm/scripts/vnode/vnode_helper.gd')
-	add_autoload_singleton('_patch', 'res://addons/go_vm/scripts/vnode/patch.gd')
+	add_autoload_singleton('_vms', 'res://addons/gmui/scripts/common/vms.gd')
+	add_autoload_singleton('_values', 'res://addons/gmui/scripts/observer/values.gd')
+	add_autoload_singleton('_vh', 'res://addons/gmui/scripts/vnode/vnode_helper.gd')
+	add_autoload_singleton('_patch', 'res://addons/gmui/scripts/vnode/patch.gd')
 	return true
 
 func set_xml_content(rootNode):

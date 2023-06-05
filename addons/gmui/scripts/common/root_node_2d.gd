@@ -12,6 +12,7 @@ var renderFunc = null
 var newVNode = null
 var staticProps = {}
 var dynamicProps = {}
+var isInit = true
 
 signal mounted
 signal updated
@@ -22,8 +23,8 @@ func _init():
 	_vms.set_vm(vm)
 	ready.connect(_init_watcher)
 	ready.connect(_set_parent_vm)
-	init_finish.connect(_mounted)
-	updated.connect(_updated)
+#	init_finish.connect(_mounted)
+#	updated.connect(_updated)
 #	tree_entered.connect(build_ast)
 #	self.set_scene_instance_load_placeholder(true)
 #	ready.connect(dont_init)
@@ -65,8 +66,10 @@ func _ready():
 func _init_watcher():
 	watcher = Watcher.new(_init_render)
 	watcher.getter = _update
-	emit_signal('init_finish')
-	emit_signal('updated')
+	_mounted()
+	_updated()
+#	emit_signal('init_finish')
+#	emit_signal('updated')
 
 func _get_current_ast(ast):
 	var _path = _get_path()
@@ -113,7 +116,8 @@ func _update():
 	var newVNode = renderFunc.exec()
 	_patch.run(oldVNode, newVNode)
 	oldVNode = newVNode
-	emit_signal('updated')
+	_updated()
+#	emit_signal('updated')
 
 func _init_render():
 	oldVNode = _vh.rtree_to_vtree(self)

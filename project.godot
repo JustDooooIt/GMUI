@@ -17,12 +17,12 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-_bues="*res://addons/go_vm/scripts/common/vms.gd"
-_vms="*res://addons/go_vm/scripts/common/vms.gd"
-_values="*res://addons/go_vm/scripts/observer/values.gd"
-_vh="*res://addons/go_vm/scripts/vnode/vnode_helper.gd"
-_patch="*res://addons/go_vm/scripts/vnode/patch.gd"
+_bues="*res://addons/gmui/scripts/common/vms.gd"
+_vms="*res://addons/gmui/scripts/common/vms.gd"
+_values="*res://addons/gmui/scripts/observer/values.gd"
+_vh="*res://addons/gmui/scripts/vnode/vnode_helper.gd"
+_patch="*res://addons/gmui/scripts/vnode/patch.gd"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/go_vm/plugin.cfg")
+enabled=PackedStringArray()

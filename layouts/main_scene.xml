@@ -4,7 +4,7 @@
 	<Scene name="SubScene2" scene_xml_path="res://layouts/sub_scene1.xml" visible="true"></Scene>
 	<Scene name="SubScene3" scene_xml_path="res://layouts/sub_scene2.xml">
 		<Template>
-			<Node name="node"></Node>
+			<Node name="ThisIsSlot"></Node>
 		</Template>
 	</Scene>
 </Node2D>

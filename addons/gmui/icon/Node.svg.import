@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://s6kiv4128eg3"
-path="res://.godot/imported/Node3D.svg-b58e851215f8a868e027cc23de81665f.ctex"
+uid="uid://dhqvyamj1egid"
+path="res://.godot/imported/Node.svg-b4dd2313211b50f0154b1be12a284197.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/go_vm/icon/Node3D.svg"
-dest_files=["res://.godot/imported/Node3D.svg-b58e851215f8a868e027cc23de81665f.ctex"]
+source_file="res://addons/gmui/icon/Node.svg"
+dest_files=["res://.godot/imported/Node.svg-b4dd2313211b50f0154b1be12a284197.ctex"]
 
 [params]
 

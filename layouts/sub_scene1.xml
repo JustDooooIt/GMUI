@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Node2D name="SubScene1">
-	<Node2D name="node1" g-bind:visible="visible"></Node2D>
+	
 </Node2D>

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://mdyfy43avaam"
-path="res://.godot/imported/Control.svg-426f8b7f5093898d0405ebb8222785d0.ctex"
+path="res://.godot/imported/Control.svg-9920b1cd55de53a120c64f7dd3408811.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/go_vm/icon/Control.svg"
-dest_files=["res://.godot/imported/Control.svg-426f8b7f5093898d0405ebb8222785d0.ctex"]
+source_file="res://addons/gmui/icon/Control.svg"
+dest_files=["res://.godot/imported/Control.svg-9920b1cd55de53a120c64f7dd3408811.ctex"]
 
 [params]
 
