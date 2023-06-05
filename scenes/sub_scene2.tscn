@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://kdu854ji3166"]
+
+[ext_resource type="Script" path="res://addons/go_vm/scripts/common/root_node_2d.gd" id="1_3y3rn"]
+
+[node name="sub_scene2" type="Node2D"]
+script = ExtResource("1_3y3rn")

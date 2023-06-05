@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Node2D name="main_scene">
+	<Scene name="SubScene1" scene_xml_path="res://layouts/sub_scene1.xml" visible="false"></Scene>
+	<Scene name="SubScene2" scene_xml_path="res://layouts/sub_scene1.xml" visible="true"></Scene>
+</Node2D>
