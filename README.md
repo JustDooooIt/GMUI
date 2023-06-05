@@ -1,5 +1,4 @@
 # GoVM
-Godot MVVM 
 Godot MVVM框架，帮助你更简单地开发UI。
 注意，目前处于开发测试阶段。
 
