@@ -29,7 +29,7 @@ mounted方法会在ready之后执行，即组件渲染完成后执行。
 updated方法会在你更改数据时执行。
 3）最后在xml中使用g-bind获取数据即可
 
-![xml截图3](https://github.com/JustDooooIt/GoVM/assets/43512399/803b9e61-b816-415d-b8f3-95869fcdb894)
+![xml截图5](https://github.com/JustDooooIt/GMUI/assets/43512399/0ca2f55c-e5dc-438a-b0b6-1f4cf4ebd705)
 
 4）如果要修改数据，则调用define_reactive返回的对象的rset,获取用rget
 
