@@ -72,7 +72,7 @@ func _updated():
 
 #### 父子场景传值  
 
-1. 首先使用Scene标签引入其他场景的XML文件，然后输入你要传递的参数  
+1. 首先使用Scene标签引入其他场景的XML文件，然后输入您要传递的参数  
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
