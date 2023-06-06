@@ -40,7 +40,7 @@ Godot Engine MVVM UI
 2. Define the responsive data in the `ready` method, as follows:
 
 ```gdscript
-extends "res://addons/gmui/scripts/common/root_node_2d.gd"
+extends "res://addons/gmui/scripts/common/g_node_2d.gd"
 
 @onready var data = vm.define_reactive({'visible': false, 'text': 'text'})
     
