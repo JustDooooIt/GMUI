@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://dmj63xtov3luk"]
+[gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://addons/gmui/scripts/common/root_node_2d.gd" id="1_837sn"]
+[ext_resource type="Script" path="res://addons/gmui/scripts/common/g_node_2d.gd" id="1_837sn"]
 
 [node name="sub_scene2" type="Node2D"]
 script = ExtResource("1_837sn")

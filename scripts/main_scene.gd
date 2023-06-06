@@ -1,6 +1,6 @@
-extends "res://addons/gmui/scripts/common/root_node_2d.gd"
+extends "res://addons/gmui/scripts/common/g_node_2d.gd"
 
-@onready var data = vm.define_reactive({'visible': false})
+@onready var data = vm.define_reactive({'visible': false, 'text': 'text'})
 	
 func _mounted():
 	await get_tree().create_timer(5).timeout

@@ -1,7 +1,7 @@
 [gd_scene load_steps=2 format=3 uid="uid://b1odmj2mmwe2k"]
 
 [sub_resource type="GDScript" id="GDScript_kgm4y"]
-script/source = "extends \"res://addons/gmui/scripts/common/root_node_2d.gd\"
+script/source = "extends \"res://addons/gmui/scripts/common/g_node_2d.gd\"
 "
 
 [node name="sub_scene1" type="Node2D"]
