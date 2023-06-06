@@ -7,7 +7,10 @@ static func vnode_func(ast, isScene, sceneXMLPath, bindDict, staticProps, dynami
 	var vnodes = []
 	if ast.isScene:
 		var node = ast.sceneXML
-		return 'vnode("%s", "%s", %s, "%s", %s, [])' % [node.type, node.name, true, ast.sceneXMLPath, node.properties]
+		var id = 'null'
+		if !node.model.is_empty():
+			id = vm.get_instance_id()
+		return 'vnode("%s", "%s", %s, "%s", %s, %s, %s, [])' % [node.type, node.name, true, ast.sceneXMLPath, node.properties, id, ast.model]
 #		vnodes.append(vnode_func(node, true, path, ast.sceneXMLPath, ast.staticProps, ast.dynamicProps, node.bindDict, vm))
 #		return ','.join(vnodes)
 	elif ast.isSlot:
@@ -29,7 +32,12 @@ static func vnode_func(ast, isScene, sceneXMLPath, bindDict, staticProps, dynami
 				vm.data.rset(key, vm.parent.data.rget(key), false)
 			for key in ast.bindDict.keys():
 				ast.properties[key] = vm.data.rget(ast.bindDict[key])
-			return 'vnode("%s", "%s", %s, "%s", %s, [])' % [ast.type, ast.name, isScene, sceneXMLPath, ast.properties]
+			if ast.type == 'LineEdit' and !ast.model.is_empty():
+				ast.properties[ast.model.cName] = vm.data.rget(ast.model.rName)
+			var id = 'null'
+			if !ast.model.is_empty():
+				id = vm.get_instance_id()
+			return 'vnode("%s", "%s", %s, "%s", %s, %s, %s, [])' % [ast.type, ast.name, isScene, sceneXMLPath, ast.properties, id, ast.model]
 		else:
 #			vm.emit_signal('send_props')
 #			if vm.parent != null:
@@ -42,7 +50,10 @@ static func vnode_func(ast, isScene, sceneXMLPath, bindDict, staticProps, dynami
 				var vnode = vnode_func(child, false,  '', child.bindDict, staticProps, dynamicProps, vm)
 				if vnode != '':
 					vnodes.append(vnode)
-			return 'vnode("%s", "%s", %s, "%s", %s, [%s])' % [ast.type, ast.name, isScene, sceneXMLPath, ast.properties, ','.join(vnodes)]
+			var id = 'null'
+			if !ast.model.is_empty():
+				id = vm.get_instance_id()
+			return 'vnode("%s", "%s", %s, "%s", %s, %s, %s, [%s])' % [ast.type, ast.name, isScene, sceneXMLPath, ast.properties, id, ast.model, ','.join(vnodes)]
 
 #static func bind_send_props_signal(vm):
 #	if !vm.parent.send_props.is_connected(vm.set_props):

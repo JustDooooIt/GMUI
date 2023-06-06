@@ -16,8 +16,8 @@ func observe():
 			if data[key] is Dictionary:
 				self.rdata[key] = ReactiveDictionary.new(data[key])
 			elif data[key] is Array:
-				self.rdata[key] = ReactiveArray.new(data[key])
-		
+				self.rdata[key] = ReactiveArray.new(data[key])				
+
 func rget(key):
 	if _values.curWatcher != null:
 		dep.depend()
@@ -35,3 +35,6 @@ func rset(key, value, canNotify = true):
 		self.rdata[key] = ReactiveDictionary.new(data[key])
 	if canNotify:
 		dep.notify()
+
+func _reverse_rset(value, key, canNotify = true):
+	rset(key, value, canNotify)

@@ -34,6 +34,8 @@ func _add_rnode_by_vnode(rnode, vnode, mode = Node.INTERNAL_MODE_DISABLED):
 	else:
 		newRNode = ClassDB.instantiate(vnode.type)
 		newRNode.name = vnode.name
+		if newRNode is LineEdit:
+			LineEditModelStrategy.new(newRNode, vnode).operate()
 		rnode.add_child(newRNode)
 #		newRNode.owner = PathUtils.get_owner(rnode)
 		for child in vnode.children:
@@ -53,6 +55,8 @@ func _create_rnode_tree(rnode, vnode, mode = Node.INTERNAL_MODE_DISABLED):
 		else:
 			newRNode = ClassDB.instantiate(child.type)
 			newRNode.name = child.name
+			if newRNode is LineEdit:
+				LineEditModelStrategy.new(newRNode, child).operate()
 			rnode.add_child(newRNode)
 #		newRNode.owner = PathUtils.get_owner(rnode)
 			_set_properties(newRNode,child)
@@ -94,6 +98,8 @@ func _create_rnode_tree_with_root(rnode, vnode):
 		newRNode = ClassDB.instantiate(vnode.type)
 		newRNode.name = vnode.name
 		vnode.rnode = rnode
+		if newRNode is LineEdit:
+			LineEditModelStrategy.new(newRNode, vnode).operate()
 		_set_properties(rnode, vnode)
 		if rnode != null:
 			rnode.add_child(newRNode)

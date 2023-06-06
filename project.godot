@@ -25,4 +25,4 @@ _patch="*res://addons/gmui/scripts/vnode/patch.gd"
 
 [editor_plugins]
 
-enabled=PackedStringArray()
+enabled=PackedStringArray("res://addons/gmui/plugin.cfg")

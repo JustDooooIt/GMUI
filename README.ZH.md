@@ -27,7 +27,7 @@ Godot游戏引擎的 MVVM UI 框架
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Node2D name="MainScene">
-    <Node2D name="node1"></Node2D>
+	<Node2D name="node1"></Node2D>
 </Node2D>
 ```  
 
@@ -43,14 +43,14 @@ Godot游戏引擎的 MVVM UI 框架
 extends "res://addons/gmui/scripts/common/g_node_2d.gd"
 
 @onready var data = vm.define_reactive({'visible': false, 'text': 'text'})
-    
+	
 func _mounted():
-    await get_tree().create_timer(5).timeout
-    data.rset('visible', true)
-    print('mounted')
+	await get_tree().create_timer(5).timeout
+	data.rset('visible', true)
+	print('mounted')
 
 func _updated():
-    print('updated')
+	print('updated')
 ```  
 
 > `vm`是位于父脚本的变量，是管理当前场景数据的实例  
@@ -67,7 +67,7 @@ func _updated():
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Node2D name="MainScene">
-    <Node2D name="node1" g-bind:visible="visible"></Node2D>
+	<Node2D name="node1" g-bind:visible="visible"></Node2D>
 </Node2D>
 ```  
 
@@ -87,7 +87,7 @@ var v = data.rget('name')
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Node2D name="MainScene">
-    <Scene name="SubScene1" scene_xml_path="res://layouts/sub_scene1.xml" visible="true"></Scene>
+	<Scene name="SubScene1" scene_xml_path="res://layouts/sub_scene1.xml" visible="true"></Scene>
 </Node2D>
 ```  
 
@@ -97,7 +97,7 @@ var v = data.rget('name')
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Node2D name="SubScene1">
-    <Node2D name="node1" g-bind:visible="visible"></Node2D>
+	<Node2D name="node1" g-bind:visible="visible"></Node2D>
 </Node2D>
 ```  
 
@@ -109,11 +109,11 @@ extends "res://addons/gmui/scripts/common/g_node_2d.gd"
 signal send_value(value)
 
 func _ready():
-    var parent = self.get_parent()
-    send_value.connect(parent.set_value)
-    
+	var parent = self.get_parent()
+	send_value.connect(parent.set_value)
+	
 func _mounted():
-    emit_signal('send_value', 10)
+	emit_signal('send_value', 10)
 ```  
 
 ```gdscript   
@@ -124,13 +124,13 @@ var value
 @onready var data = vm.define_reactive({'value':10})
 
 func _mounted():
-    print('mounted')
+	print('mounted')
 
 func _updated():
-    print('updated')
+	print('updated')
 
 func set_value(value):
-    data.rset('value', value)
+	data.rset('value', value)
 ```   
 
 4. 最后关于插槽的用法，示例如下    
@@ -139,9 +139,9 @@ func set_value(value):
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Scene name="SubScene2" scene_xml_path="res://layouts/sub_scene2.xml">
-    <Template>
-        <Node2D name="node"></Node2D>
-    </Template>
+	<Template>
+		<Node2D name="node"></Node2D>
+	</Template>
 </Scene>
 ```  
 
@@ -149,7 +149,7 @@ func set_value(value):
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Node2D name="SubScene2">
-    <Slot></Slot>
+	<Slot></Slot>
 </Node2D>
 ```  
 

@@ -10,7 +10,7 @@ extends Node
 var _v = vnode
 
 #普通节点
-func vnode(type = '', name = '' , isScene = false, sceneXMLPath = '', properties = {}, children = []):
+static func vnode(type = '', name = '' , isScene = false, sceneXMLPath = '', properties = {}, vmId = null, model = {}, children = []):
 	var vnode = VNode.new()
 	vnode.name = name
 	vnode.type = type
@@ -18,6 +18,8 @@ func vnode(type = '', name = '' , isScene = false, sceneXMLPath = '', properties
 	vnode.children = children
 	vnode.sceneXMLPath = sceneXMLPath
 	vnode.properties = properties
+	vnode.vmId = vmId
+	vnode.model = model
 	return vnode
 
 #设置节点属性

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Node2D name="MainScene">
-	<LineEdit name="LineEdit"></LineEdit>
+	<LineEdit name="LineEdit" g-model="text"></LineEdit>
+	<Label name="label" g-bind:text="text"></Label>
 </Node2D>
