@@ -73,6 +73,8 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 				if !hasName:
 					newNode.name = '__default__'
 				newNode.isSlot = true
+			elif nodeType == 'LineEdit':
+				LineEditStrategy.new(newNode, xmlParser)._operate()
 			else:
 				for i in count:
 					var attrName = xmlParser.get_attribute_name(i)

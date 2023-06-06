@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Node2D name="main_scene">
-	<Scene name="SubScene1" scene_xml_path="res://layouts/sub_scene1.xml" g-bind:visible="visible"></Scene>
-	<Scene name="SubScene2" scene_xml_path="res://layouts/sub_scene1.xml" visible="true"></Scene>
-	<Scene name="SubScene3" scene_xml_path="res://layouts/sub_scene2.xml">
-		<Template>
-			<Node name="ThisIsSlot"></Node>
-		</Template>
-	</Scene>
+<Node2D name="MainScene">
+	<LineEdit name="LineEdit"></LineEdit>
 </Node2D>

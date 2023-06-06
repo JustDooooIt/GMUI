@@ -33,10 +33,10 @@ func _enter_tree():
 #	scene_changed.connect(init_node)
 #	scene_changed.connect(set_xml_content)
 #	scene_changed.connect(bind_load_xml_signal)
-	add_custom_type('RootNode', 'Node', preload('res://addons/gmui/scripts/common/root_node.gd'), preload('res://addons/gmui/icon/Node.svg'))
-	add_custom_type('RootNode2D', 'Node2D', preload('res://addons/gmui/scripts/common/root_node_2d.gd'), preload('res://addons/gmui/icon/Node2D.svg'))
-	add_custom_type('RootNode3D', 'Node3D', preload('res://addons/gmui/scripts/common/root_node_3d.gd'), preload('res://addons/gmui/icon/Node3D.svg'))
-	add_custom_type('RootControl', 'Control', preload('res://addons/gmui/scripts/common/root_control.gd'), preload('res://addons/gmui/icon/Control.svg'))
+	add_custom_type('GNode', 'Node', preload('res://addons/gmui/scripts/common/g_node.gd'), preload('res://addons/gmui/icon/Node.svg'))
+	add_custom_type('GNode2D', 'Node2D', preload('res://addons/gmui/scripts/common/g_node_2d.gd'), preload('res://addons/gmui/icon/Node2D.svg'))
+	add_custom_type('GNode3D', 'Node3D', preload('res://addons/gmui/scripts/common/g_node_3d.gd'), preload('res://addons/gmui/icon/Node3D.svg'))
+	add_custom_type('GControl', 'Control', preload('res://addons/gmui/scripts/common/g_control.gd'), preload('res://addons/gmui/icon/Control.svg'))
 #func _ready():
 #	print('plugin ready')
 

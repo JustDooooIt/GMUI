@@ -17,6 +17,7 @@ var template = null
 #var propertyFile = ''
 var sceneXMLPath = ''
 var sceneXML = null
+var modelDict = {}
 var staticProps = {}
 var dynamicProps = {}
 var properties = {}
