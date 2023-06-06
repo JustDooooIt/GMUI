@@ -98,7 +98,7 @@ var v = data.rget('name')
 </Node2D>
 ```  
 
-3. Passing arguments to the parent scene in the child scene can be done using signal  
+3. Passing arguments to the parent scene in the child scene, you can use signal  
 
 ```gdscript
 extends "res://addons/gmui/scripts/common/g_node_2d.gd"
