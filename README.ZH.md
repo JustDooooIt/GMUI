@@ -40,7 +40,7 @@ Godot游戏引擎的 MVVM UI 框架
 2. 在`ready`方法定义响应式数据，如下：
 
 ```gdscript
-extends "res://addons/gmui/scripts/common/root_node_2d.gd"
+extends "res://addons/gmui/scripts/common/g_node_2d.gd"
 
 @onready var data = vm.define_reactive({'visible': false, 'text': 'text'})
     
