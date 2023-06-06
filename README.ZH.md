@@ -7,7 +7,7 @@ Godot游戏引擎的 MVVM UI 框架
 
 #### 简单使用
 
-1. 新场景必须在根目录的scenes文件夹里创建，并且需要使用GMUI提供的GNode,GNode2D,GNode3D,GControl节点，然后在layouts目录下创建XML文件，示例如下：
+1. 新场景必须在根目录的scenes文件夹里创建，并且需要使用GMUI提供的GNode，GNode2D，GNode3D，GControl节点，然后在layouts文件夹里创建XML文件，示例如下：
 
 ![Screenshot 2023-06-05 171104](https://github.com/JustDooooIt/GoVM/assets/43512399/758ec2c1-eb21-4cd1-9daf-26e54bf3c191)  
 
@@ -50,10 +50,11 @@ func _mounted():
 
 func _updated():
 	print('updated')
-```
+```  
 
 > vm是位于父脚本的变量，是管理当前场景数据的实例  
 > vm.define_reactive可以将字典转换为响应式对象  
+
 > mounted方法会在ready之后执行，即组件渲染完成后执行  
 > updated方法会在你更改数据时执行    
 
@@ -92,6 +93,7 @@ func _updated():
 ```  
 
 3. 在子场景中向父场景传递参数，可以使用signal  
+
 ```gdscript
 extends "res://addons/gmui/scripts/common/g_node_2d.gd"
 
@@ -103,9 +105,9 @@ func _ready():
 	
 func _mounted():
 	emit_signal('send_value', 10)
-```
+```  
 
-```gdscript
+```gdscript   
 extends "res://addons/gmui/scripts/common/g_node_2d.gd"
 
 var value
@@ -120,7 +122,7 @@ func _updated():
 
 func set_value(value):
 	data.rset('value', value)
-```
+```   
 
 4. 最后关于插槽的用法，示例如下    
 
