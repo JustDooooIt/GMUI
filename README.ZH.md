@@ -73,7 +73,7 @@ func _updated():
 var data = vm.define_reactive({'name': value})
 data.rset('name', newValue)
 var v = data.rget('name')
-```gdscript
+```
 
 #### 父子场景传值  
 
