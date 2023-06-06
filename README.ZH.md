@@ -91,7 +91,33 @@ func _updated():
 </Node2D>
 ```  
 
-3. 在子场景中向父场景传递参数，可以使用signal   
+3. 在子场景中向父场景传递参数，可以使用signal  
+```gdscript
+extends "res://addons/gmui/scripts/common/g_node_2d.gd"
+
+signal send_value(value)
+
+func _ready():
+	var parent = self.get_parent()
+	send_value.connect(parent.set_value)
+	
+func _mounted():
+	emit_signal('send_value', 10)
+
+extends "res://addons/gmui/scripts/common/g_node_2d.gd"
+
+var value
+
+func _mounted():
+	print('mounted')
+
+func _updated():
+	print('updated')
+
+func set_value(value):
+	self.value = value
+	print(value)
+```
 
 4. 最后关于插槽的用法，示例如下    
 
