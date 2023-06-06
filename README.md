@@ -52,11 +52,13 @@ func _updated():
     print('updated')
 ```  
 
-> vm is a variable that belongs to the parent script and is the instance that manages the current scene data  
-> vm.define_reactive converts the dictionary to a responsive object  
+> `vm` is a variable that belongs to the parent script and is the instance that manages the current scene data  
 
-> mounted method will be executed after ready, i.e. after the component has finished rendering  
-> the updated method will be executed when you change the data    
+> `vm.define_reactive` converts the dictionary to a responsive object  
+
+> `mounted` method will be executed after ready, i.e. after the component has finished rendering  
+
+> `updated` method will be executed when you change the data    
 
 3. Finally, just use the `g-bind` directive in the XML to get the data  
 
