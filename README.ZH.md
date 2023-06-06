@@ -69,6 +69,11 @@ func _updated():
 ```  
 
 4. 如果要修改数据，可以调用define_reactive返回的对象的rset，获取则使用rget  
+```gdscript
+var data = vm.define_reactive({'name': value})
+data.rset('name', newValue)
+var v = data.rget('name')
+```gdscript
 
 #### 父子场景传值  
 
