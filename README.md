@@ -9,7 +9,7 @@ Godot Engine MVVM UI
 
 1. New scenes must be created in the scenes folder in the root directory and need to use the GNode, GNode2D, GNode3D, GControl nodes provided by GMUI, then create XML files in the layouts directory, examples are as follows:
 
-! [Screenshot 2023-06-05 171104](https://github.com/JustDooooIt/GoVM/assets/43512399/758ec2c1-eb21-4cd1-9daf-26e54bf3c191)  
+![Screenshot 2023-06-05 171104](https://github.com/JustDooooIt/GoVM/assets/43512399/758ec2c1-eb21-4cd1-9daf-26e54bf3c191)  
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
