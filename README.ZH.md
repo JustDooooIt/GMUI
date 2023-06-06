@@ -152,7 +152,29 @@ func set_value(value):
     <Slot></Slot>
 </Node2D>
 ```  
-你也可以给slot加上name="name"属性，然后在template加上slot="name"即可使用具名察猜
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Node2D name="MainScene">
+	<Scene name="SubScene1" scene_xml_path="res://layouts/sub_scene1.xml">
+		<Template slot="slot1">
+			<Node name="node1"></Node>
+		</Template>
+		<Template slot="slot2">
+			<Node name="node2"></Node>
+		</Template>
+	</Scene>
+</Node2D>
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Node2D name="SubScene1">
+	<Slot name="slot1"></Slot>
+	<Slot name="slot2"></Slot>
+</Node2D>
+```
+你也可以给slot加上name="name"属性，然后在template加上slot="name"即可使用具名插槽，作用是可以在一个场景区分多个插槽
 
 > 看完这些，您可能会觉得十分甚至九分像Vue，事实也正是如此
 
