@@ -110,6 +110,8 @@ extends "res://addons/gmui/scripts/common/g_node_2d.gd"
 
 var value
 
+@onready var data = vm.define_reactive({'value':10})
+
 func _mounted():
 	print('mounted')
 
@@ -117,8 +119,7 @@ func _updated():
 	print('updated')
 
 func set_value(value):
-	self.value = value
-	print(value)
+	data.rset('value', value)
 ```
 
 4. 最后关于插槽的用法，示例如下    
