@@ -153,6 +153,7 @@ func set_value(value):
 </Node2D>
 ```  
 
+你也可以给slot加上name="name"属性，然后在template加上slot="name"即可使用具名插槽，作用是可以在一个场景区分多个插槽
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <Node2D name="MainScene">
@@ -174,7 +175,6 @@ func set_value(value):
 	<Slot name="slot2"></Slot>
 </Node2D>
 ```
-你也可以给slot加上name="name"属性，然后在template加上slot="name"即可使用具名插槽，作用是可以在一个场景区分多个插槽
 
 > 看完这些，您可能会觉得十分甚至九分像Vue，事实也正是如此
 
