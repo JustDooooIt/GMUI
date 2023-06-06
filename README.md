@@ -7,7 +7,7 @@ Godot Engine MVVM UI
 
 #### Easy to use
 
-1. New scenes must be created in the scenes folder in the root directory and need to use the GNode, GNode2D, GNode3D, GControl nodes provided by GMUI, then create XML files in the layouts directory, examples are as follows:
+1. New scenes must be created in the `scenes` folder in the root directory and need to use the `GNode`, `GNode2D`, `GNode3D`, `GControl` nodes provided by GMUI, then create XML files in the `layouts` directory, examples are as follows:
 
 ![Screenshot 2023-06-05 171104](https://github.com/JustDooooIt/GoVM/assets/43512399/758ec2c1-eb21-4cd1-9daf-26e54bf3c191)  
 
@@ -18,7 +18,7 @@ Godot Engine MVVM UI
 </Node2D>
 ```
 
-> Due to a known bug, nodes other than GNode will not mount the script automatically, you need to mount it manually  
+> Due to a known bug, nodes other than `GNode` will not mount the script automatically, you need to mount it manually  
 
 2. Create a node in the XML file  
 
@@ -36,7 +36,7 @@ Godot Engine MVVM UI
 
 1. The root node of the created scene has a default script, which your node need to inherit
 
-2. Define the responsive data in the ready method, as follows:
+2. Define the responsive data in the `ready` method, as follows:
 
 ```gdscript
 extends "res://addons/gmui/scripts/common/root_node_2d.gd"
@@ -58,7 +58,7 @@ func _updated():
 > mounted method will be executed after ready, i.e. after the component has finished rendering  
 > the updated method will be executed when you change the data    
 
-3. Finally, just use the g-bind directive in the XML to get the data  
+3. Finally, just use the `g-bind` directive in the XML to get the data  
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -68,11 +68,17 @@ func _updated():
 </Node2D>
 ```  
 
-4. If you want to modify the data, you can call the rset of the object returned by define_reactive, and use rset for fetching  
+4. If you want to modify the data, you can call the `rset` of the object returned by `define_reactive`, and use `rget` for fetching  
+
+```gdscript  
+var data = vm.define_reactive({'name': value})
+data.rset('name', newValue)
+var v = data.rget('name')
+```  
 
 #### Passing values from parent to child scenes  
 
-1. First use the Scene tag to bring in the XML file of the other scene, then enter the parameters you want to pass  
+1. First use the `Scene` tag to bring in the XML file of the other scene, then enter the parameters you want to pass  
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -82,7 +88,7 @@ func _updated():
 </Node2D>
 ```  
 
-2. Use the g-bind command in the sub-scene to get the variables  
+2. Use the `g-bind` directive in the sub-scene to get the variables  
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
