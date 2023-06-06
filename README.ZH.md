@@ -103,7 +103,9 @@ func _ready():
 	
 func _mounted():
 	emit_signal('send_value', 10)
+```
 
+```gdscript
 extends "res://addons/gmui/scripts/common/g_node_2d.gd"
 
 var value
