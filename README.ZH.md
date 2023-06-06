@@ -2,6 +2,7 @@
 Godot游戏引擎的 MVVM UI 框架
 > [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[中文文档](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)  
 > 注意：目前处于早期开发阶段  
+> 支持版本：4.x
 
 ## 快速开始
 
