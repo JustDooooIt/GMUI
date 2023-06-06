@@ -52,13 +52,13 @@ func _updated():
     print('updated')
 ```  
 
-> vm是位于父脚本的变量，是管理当前场景数据的实例  
+> `vm`是位于父脚本的变量，是管理当前场景数据的实例  
 
-> vm.define_reactive可以将字典转换为响应式对象  
+> `vm.define_reactive`可以将字典转换为响应式对象  
 
-> mounted方法会在ready之后执行，即组件渲染完成后执行  
+> `mounted`方法会在ready之后执行，即组件渲染完成后执行  
 
-> updated方法会在你更改数据时执行    
+> `updated`方法会在你更改数据时执行    
 
 3. 最后，在XML中使用`g-bind`指令获取数据即可  
 
