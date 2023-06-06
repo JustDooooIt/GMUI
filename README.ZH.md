@@ -14,7 +14,7 @@ Godot游戏引擎的 MVVM UI 框架
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Node2D name="main_scene">
+<Node2D name="MainScene">
 </Node2D>
 ```
 
@@ -25,7 +25,7 @@ Godot游戏引擎的 MVVM UI 框架
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Node2D name="main_scene">
+<Node2D name="MainScene">
 	<Node2D name="node1"></Node2D>
 </Node2D>
 ```  
@@ -44,8 +44,8 @@ extends "res://addons/gmui/scripts/common/root_node_2d.gd"
 @onready var data = vm.define_reactive({'visible': false, 'text': 'text'})
 	
 func _mounted():
-#	await get_tree().create_timer(5).timeout
-#	data.rset('visible', true)
+	await get_tree().create_timer(5).timeout
+	data.rset('visible', true)
 	print('mounted')
 
 func _updated():
@@ -62,7 +62,7 @@ func _updated():
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Node2D name="main_scene">
+<Node2D name="MainScene">
 	<Node2D name="node1" g-bind:visible="visible"></Node2D>
 </Node2D>
 ```  
@@ -76,8 +76,8 @@ func _updated():
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Node2D name="main_scene">
-	<Scene name="SubScene1" scene_xml_path="res://layouts/sub_scene1.xml"></Scene>
+<Node2D name="MainScene">
+	<Scene name="SubScene1" scene_xml_path="res://layouts/sub_scene1.xml" visible="true"></Scene>
 </Node2D>
 ```  
 
@@ -108,7 +108,7 @@ func _updated():
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Node2D name="sub_scene2">
+<Node2D name="SubScene2">
 	<Slot></Slot>
 </Node2D>
 ```  
