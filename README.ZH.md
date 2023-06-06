@@ -36,7 +36,7 @@ Godot游戏引擎的 MVVM UI 框架
 
 1. 创建的场景的根节点有默认的脚本，您需要继承这个脚本
 
-2. 在ready方法定义响应式数据了，如下：
+2. 在ready方法定义响应式数据，如下：
 
 ```gdscript
 extends "res://addons/gmui/scripts/common/root_node_2d.gd"
