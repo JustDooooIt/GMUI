@@ -152,6 +152,7 @@ func set_value(value):
     <Slot></Slot>
 </Node2D>
 ```  
+你也可以给slot加上name="name"属性，然后在template加上slot="name"即可使用具名察猜
 
 > 看完这些，您可能会觉得十分甚至九分像Vue，事实也正是如此
 
