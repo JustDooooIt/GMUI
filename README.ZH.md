@@ -98,7 +98,7 @@ func _updated():
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Scene name="SubScene3" scene_xml_path="res://layouts/sub_scene2.xml">
+<Scene name="SubScene2" scene_xml_path="res://layouts/sub_scene2.xml">
 	<Template>
 		<Node2D name="node"></Node2D>
 	</Template>
