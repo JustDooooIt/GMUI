@@ -163,7 +163,7 @@ func gen_scene(type):
 	for filePath in filePaths:
 		var content = FileAccess.get_file_as_string(filePath)
 		var regex = RegEx.new()
-		regex.compile('<script>(.|\n)*</script>')
+		regex.compile('<script.*>(.|\n)*</script>')
 		var regexMatchs = regex.search_all(content)
 		if regexMatchs != null and regexMatchs.size() > 0:
 			for regexMatch in regexMatchs:
@@ -251,7 +251,7 @@ func gen_script(gmuiFile, scenePath, nodeType):
 		var regexMatchs = regex.search_all(scriptContent)
 		for rm in regexMatchs:
 			scriptContent = scriptContent.replace(rm.strings[0], '')
-		scriptContent = scriptContent.lstrip('<script>\n').rstrip('\n</script>')
+#		scriptContent = scriptContent.lstrip('<script>\n').rstrip('\n</script>')
 		scriptContent = '	extends "%s/super_scripts/%s.gd"\n	%s' % [distPath, nodeType, outerScriptCode] + scriptContent
 		regex.compile('\n*\t+.*\n*')
 		regexMatch = regex.search_all(scriptContent)
