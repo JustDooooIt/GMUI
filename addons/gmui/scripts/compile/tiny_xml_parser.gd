@@ -35,14 +35,24 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 				treeRoot = newNode
 				newNode.path = '.'
 				newNode.isRoot = isRoot
-#				paths = ['.']
-			if nodeType == 'Scene':
+				newNode.name = str(ResourceLoader.get_resource_uid(FileUtils.xml_to_scene_path(content)))
 				for i in count:
 					var attrName = xmlParser.get_attribute_name(i)
 					var attrValue = xmlParser.get_attribute_value(i)
-					if attrName == 'name':
-						newNode.name = attrValue
-					elif attrName == 'scenePath':
+					if attrName.contains('g-bind:'):
+						newNode.bindDict[attrName.split(':')[1]] = attrValue
+					elif attrName == 'ref':
+						newNode.ref['name'] = attrValue
+					else:
+						newNode.properties[attrName] = attrValue
+#				paths = ['.']
+			elif nodeType == 'Scene':
+				newNode.name = str(randi())
+				for i in count:
+					var attrName = xmlParser.get_attribute_name(i)
+					var attrValue = xmlParser.get_attribute_value(i)
+#					if attrName == 'name':
+					if attrName == 'scenePath':
 						var xmlPath = attrValue.replace('.gmui', '.xml')
 						xmlPath = attrValue.replace('res://dist/components', 'res://dist/layouts/components').replace('.gmui', '.xml')
 						newNode.sceneXMLPath = xmlPath
@@ -92,12 +102,11 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 			elif nodeType == 'OptionButton':
 				ControlStrategy.new(newNode, 'selected', xmlParser).operate()
 			else:
+				newNode.name = str(randi())
 				for i in count:
 					var attrName = xmlParser.get_attribute_name(i)
 					var attrValue = xmlParser.get_attribute_value(i)
-					if attrName == 'name':
-						newNode.name = attrValue
-					elif attrName.contains('g-bind:'):
+					if attrName.contains('g-bind:'):
 						newNode.bindDict[attrName.split(':')[1]] = attrValue
 					elif attrName == 'ref':
 						newNode.ref['name'] = attrValue

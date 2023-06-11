@@ -1,11 +1,11 @@
 class_name FileUtils extends RefCounted
 
 static func xml_to_scene_path(path):
-	path = path.replace('res://dist/layouts', 'res://dist/scenes')
+	path = path.replace('res://addons/gmui/dist/layouts', 'res://addons/gmui/dist/scenes')
 	return path.replace('.xml', '.tscn')
 
 static func scene_to_xml_path(path):
-	path = path.replace('res://dist/scenes', 'res://dist/layouts')
+	path = path.replace('res://addons/gmui/dist/scenes', 'res://addons/gmui/dist/layouts')
 	return path.replace('.tscn', '.xml')
 
 static func get_all_file(path, files = []):

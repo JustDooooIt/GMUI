@@ -1,6 +1,8 @@
-<VBoxContainer name="container">
-	<Control name="control"></Control>
+<VBoxContainer>
+	<Control></Control>
+	<Scene scenePath="res://components/username_input.gmui"></Scene>
 </VBoxContainer>
 
-<script>
+<script src="res://scripts/test.gd">
+	var b = 0
 </script>

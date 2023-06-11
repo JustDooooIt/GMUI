@@ -11,13 +11,14 @@ config_version=5
 [application]
 
 config/name="GMUI"
-run/main_scene="res://dist/scenes/pages/index.tscn"
+run/main_scene="res://addons/gmui/dist/scenes/pages/index.tscn"
 config/features=PackedStringArray("4.0", "Forward Plus")
 config/icon="res://textures/icon.svg"
 
 [autoload]
 
 _bues="*res://addons/gmui/scripts/common/vms.gd"
+_vh="*res://addons/gmui/scripts/vnode/vnode_helper.gd"
 _vms="*res://addons/gmui/scripts/common/vms.gd"
 _values="*res://addons/gmui/scripts/observer/values.gd"
 _patch="*res://addons/gmui/scripts/vnode/patch.gd"

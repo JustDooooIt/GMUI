@@ -1,6 +1,7 @@
 @tool
 class_name Plugin extends EditorPlugin
 
+var distPath = 'res://addons/gmui/dist'
 var editorInterface = get_editor_interface()
 var editorSetting = editorInterface.get_editor_settings()
 var scriptEditor = editorInterface.get_script_editor()
@@ -34,16 +35,10 @@ func _enter_tree():
 #	scene_changed.connect(set_xml_content)
 #	scene_changed.connect(bind_load_xml_signal)
 	genBtn.pressed.connect(gen)
-	gen()
 	DirAccess.make_dir_absolute('res://components')
 	DirAccess.make_dir_absolute('res://pages')
-	DirAccess.make_dir_absolute('res://scripts')
-	DirAccess.make_dir_absolute('res://dist/scenes')
-	DirAccess.make_dir_absolute('res://dist')
-	add_custom_type('GNode', 'Node', preload('res://addons/gmui/scripts/common/gnode.gd'), preload('res://addons/gmui/icon/Node.svg'))
-	add_custom_type('GNode2D', 'Node2D', preload('res://addons/gmui/scripts/common/gnode_2d.gd'), preload('res://addons/gmui/icon/Node2D.svg'))
-	add_custom_type('GNode3D', 'Node3D', preload('res://addons/gmui/scripts/common/gnode_3d.gd'), preload('res://addons/gmui/icon/Node3D.svg'))
-	add_custom_type('GControl', 'Control', preload('res://addons/gmui/scripts/common/gcontrol.gd'), preload('res://addons/gmui/icon/Control.svg'))
+	DirAccess.make_dir_absolute(distPath)
+
 #func _ready():
 #	print('plugin ready')
 
@@ -163,16 +158,6 @@ func set_all_owner(rootNode, node):
 func _get_plugin_name():
 	return 'GMUI'
 
-func mount_script():
-	var scriptPaths = FileUtils.get_all_file('res://scripts')
-	for scriptPath in scriptPaths:
-		var script = load(scriptPath).instantiate()
-		var scene = PackedScene.new()
-		var root = Control.new()
-		root.set_script(script)
-		scene.pack(root)
-		ResourceSaver.save(scene, scriptPath.replace('res://scripts', 'res://dist/scenes'))
-
 func gen_scene(type):
 	var filePaths = FileUtils.get_all_file('res://' + type)
 	for filePath in filePaths:
@@ -183,22 +168,21 @@ func gen_scene(type):
 		if regexMatchs != null and regexMatchs.size() > 0:
 			for regexMatch in regexMatchs:
 				content = content.replace(regexMatch.strings[0], '')
-		content = content.replace('scenePath="res://components', 'scenePath="res://dist/components')
+		content = content.replace('scenePath="res://components', 'scenePath="%s/layouts/components' % distPath)
 		content = content.replace('<template>', '').replace('</template>', '')
-		var rootType = ''
-		var xmlPath = filePath.replace('res://' + type, 'res://dist/layouts/' + type)
+		var xmlPath = filePath.replace('res://' + type, distPath + '/layouts/' + type)
 		xmlPath = xmlPath.trim_suffix('gmui') + 'xml'
-		var scenePath = xmlPath.replace('res://dist/layouts', 'res://dist/scenes')
+		var scenePath = xmlPath.replace(distPath + '/layouts', distPath + '/scenes')
 		scenePath = scenePath.replace('.xml', '.tscn')
 		var xmlDirPath = xmlPath.get_base_dir()
 		regex.compile('[^</>]\\w*[^</>]')
 		var regexMatch = regex.search(content)
-		if regexMatch != null and regexMatch.strings.size() > 0:
-			rootType = regexMatch.strings[0].replace(' ', '')
+		var rootType = regexMatch.strings[0].strip_edges()
+		if regexMatch != null and rootType != '':
 			content = '<?xml version="1.0" encoding="UTF-8"?>\n' + content
 			DirAccess.make_dir_recursive_absolute(xmlDirPath)
 			var file = FileAccess.open(xmlPath, FileAccess.WRITE)
-			file.store_string(content)
+			file.store_string(content.replace('	','').replace('\n', ''))
 			file.close()
 			var scene = PackedScene.new()
 			var root = ClassDB.instantiate(rootType)
@@ -210,7 +194,15 @@ func gen_scene(type):
 			scene.pack(root)
 			DirAccess.make_dir_recursive_absolute(scenePath.get_base_dir())
 			ResourceSaver.save(scene, scenePath)
+			root.name = str(ResourceLoader.get_resource_uid(scenePath))
+			scene.pack(root)
+			ResourceSaver.save(scene, scenePath)
 		else:
+			content = '<?xml version="1.0" encoding="UTF-8"?><Control></Control>' + content
+			DirAccess.make_dir_recursive_absolute(xmlDirPath)
+			var file = FileAccess.open(xmlPath, FileAccess.WRITE)
+			file.store_string(content.replace('	','').replace('\n', ''))
+			file.close()
 			DirAccess.make_dir_recursive_absolute(scenePath.get_base_dir())
 			var scene = PackedScene.new()
 			var root = Control.new()
@@ -235,22 +227,32 @@ func gen_scenes():
 func gen_super_script(nodeType):
 	var superScript = preload('res://addons/gmui/scripts/common/gcontrol.gd')
 	superScript.source_code = superScript.source_code.replace('extends Control', 'extends ' + nodeType)
-	DirAccess.make_dir_recursive_absolute('res://dist/super_scripts')
-	ResourceSaver.save(superScript, 'res://dist/super_scripts/' + nodeType + '.gd')
-	superScript.source_code = superScript.source_code.replace('extends ' + nodeType, 'extends Control')
+	DirAccess.make_dir_recursive_absolute(distPath + '/super_scripts')
+	ResourceSaver.save(superScript, distPath + '/super_scripts/%s.gd' % nodeType)
+	superScript.source_code = superScript.source_code.replace('extends %s' % nodeType, 'extends Control')
 		
 func gen_script(gmuiFile, scenePath, nodeType):
-	var scriptPath = scenePath.replace('res://dist/scenes', 'res://dist/scripts')
+	var scriptPath = scenePath.replace(distPath + '/scenes', distPath + '/scripts')
 	var content = FileAccess.get_file_as_string(gmuiFile)
 	var regex = RegEx.new()
-	regex.compile('<script>(.|\n)*</script>')
+	regex.compile('<script.*>(.|\n)*</script>')
 	var regexMatch = regex.search(content)
 	var scriptDirPath = scriptPath.get_base_dir()
 	var distScriptPath = scriptPath.trim_suffix('tscn') + 'gd'
-	if regexMatch != null and regexMatch.strings.size() > 0:
-		var scriptContent = regexMatch.strings[0]
+	if regexMatch != null and regexMatch.strings[0].strip_edges() != '':
+		var scriptContent = regexMatch.strings[0].strip_edges()
+		regex.compile('src=".*"')
+		regexMatch = regex.search(scriptContent)
+		var outerScriptCode = ''
+		if regexMatch != null and regexMatch.strings[0].strip_edges():
+			outerScriptCode = load(regexMatch.strings[0].strip_edges().replace('src=', '').replace('"', '')).source_code
+			scriptContent = scriptContent.replace(regexMatch.strings[0], '')
+		regex.compile('(<script.*>)|(</script>)')
+		var regexMatchs = regex.search_all(scriptContent)
+		for rm in regexMatchs:
+			scriptContent = scriptContent.replace(rm.strings[0], '')
 		scriptContent = scriptContent.lstrip('<script>\n').rstrip('\n</script>')
-		scriptContent = '	extends "res://dist/super_scripts/%s.gd"\n' % nodeType + scriptContent
+		scriptContent = '	extends "%s/super_scripts/%s.gd"\n	%s' % [distPath, nodeType, outerScriptCode] + scriptContent
 		regex.compile('\n*\t+.*\n*')
 		regexMatch = regex.search_all(scriptContent)
 		var standardContent = ''
@@ -266,45 +268,6 @@ func gen_script(gmuiFile, scenePath, nodeType):
 		file.store_string('extends "res://addons/gmui/scripts/common/gcontrol.gd"')
 		file.close()
 	return distScriptPath
-
-#func gen_script(type, nodeType):
-#	var scriptPaths = []
-#	var filePaths = FileUtils.get_all_file('res://' + type)
-#	for filePath in filePaths:
-#		var content = FileAccess.get_file_as_string(filePath)
-#		var regex = RegEx.new()
-#		regex.compile('<script>(.|\n)*</script>')
-#		var regexMatch = regex.search(content)
-#		var scriptPath = filePath.replace('res://' + type, 'res://dist/scripts/' + type)
-#		var scriptDirPath = scriptPath.get_base_dir()
-#		var distScriptPath = scriptPath.trim_suffix('gmui') + 'gd'
-#		if regexMatch != null and regexMatch.strings.size() > 0:
-#			var scriptContent = regexMatch.strings[0]
-#			scriptContent = scriptContent.lstrip('<script>\n').rstrip('\n</script>')
-#			scriptContent = '	extends "res://dist/super_scripts/%s.gd"\n' % nodeType + scriptContent
-#			regex.compile('\n*\t+.*\n*')
-#			regexMatch = regex.search_all(scriptContent)
-#			var standardContent = ''
-#			for matchs in regexMatch:
-#				standardContent += matchs.strings[0].substr(1)
-#			DirAccess.make_dir_recursive_absolute(scriptDirPath)
-#			var file = FileAccess.open(distScriptPath, FileAccess.WRITE)
-#			file.store_string(standardContent)
-#			file.close()
-#		else:
-#			DirAccess.make_dir_recursive_absolute(distScriptPath.get_base_dir())
-#			var file = FileAccess.open(distScriptPath, FileAccess.WRITE)
-#			file.store_string('extends "res://addons/gmui/scripts/common/gcontrol.gd"')
-#			file.close()
-#		scriptPaths.append(distScriptPath)
-#	return scriptPaths
-#		FileAccess.open()
-#func gen_gmui():
-#	var xmlPaths = FileUtils.get_all_file('res://layoutss')
-#	for xmlPath in xmlPaths:
-#		var xmlParser = XMLParser.new()
-#		xmlParser.open(xmlPath)
-#		while xmlParser.read():
 
 func _exit_tree():
 	vms.isInited.clear()

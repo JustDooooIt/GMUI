@@ -13,12 +13,11 @@ func operate():
 	var nodeType = xmlParser.get_node_name()
 	var count = xmlParser.get_attribute_count()
 	node.type = nodeType
+	node.name = str(randi())
 	for i in count:
 		var attrName = xmlParser.get_attribute_name(i)
 		var attrValue = xmlParser.get_attribute_value(i)
-		if attrName == 'name':
-			node.name = attrValue
-		elif attrName == 'g-model':
+		if attrName == 'g-model':
 			node.model = {'cName': cName, 'rName': attrValue, 'isCompModel': false}
 		elif attrName == 'ref':
 			node.ref['name'] = attrValue
