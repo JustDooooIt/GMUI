@@ -18,9 +18,11 @@ var template = null
 var sceneXMLPath = ''
 var sceneXML = null
 var model = {}
+var modelName = ''
 var staticProps = {}
 var dynamicProps = {}
 var properties = {}
+var ref = {}
 var children = []
 
 func _init():

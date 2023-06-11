@@ -1,10 +1,12 @@
 class_name FileUtils extends RefCounted
 
 static func xml_to_scene_path(path):
-	return path.replace('res://layouts', 'res://scenes').replace('.xml', '.tscn')
+	path = path.replace('res://dist/layouts', 'res://dist/scenes')
+	return path.replace('.xml', '.tscn')
 
 static func scene_to_xml_path(path):
-	return path.replace('res://scenes', 'res://layouts').replace('.tscn', '.xml')
+	path = path.replace('res://dist/scenes', 'res://dist/layouts')
+	return path.replace('.tscn', '.xml')
 
 static func get_all_file(path, files = []):
 	var dirAccess:DirAccess = DirAccess.open(path)

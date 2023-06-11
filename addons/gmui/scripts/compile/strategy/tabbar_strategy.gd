@@ -1,4 +1,4 @@
-class_name LineEditStrategy extends RefCounted
+class_name TabBarStrategy extends RefCounted
 
 var node = null
 var xmlParser = null
@@ -17,6 +17,8 @@ func operate():
 		if attrName == 'name':
 			node.name = attrValue
 		elif attrName == 'g-model':
-			node.model = {'cName': 'text', 'rName': attrValue}
+			node.model = {'cName': 'current_tab', 'rName': attrValue}
+		elif attrName == 'ref':
+			node.ref['name'] = attrValue
 		else:
 			node.properties[attrName] = str_to_var(attrValue)

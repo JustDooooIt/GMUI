@@ -1,4 +1,4 @@
-extends Node2D
+extends VBoxContainer
 
 var oldVNode = null
 var ast = null
@@ -11,6 +11,7 @@ var renderFunc = null
 var newVNode = null
 var staticProps = {}
 var dynamicProps = {}
+var modelName = ''
 var isInit = true
 var gmuiParent = null
 
@@ -84,13 +85,13 @@ func _get_current_ast(ast):
 	if ast.isScene and ast.path == _path:
 		staticProps = ast.staticProps
 		dynamicProps = ast.dynamicProps
+		modelName = ast.modelName
 		return ast.sceneXML
 	elif ast.isSlot:
 		return _get_current_ast(ast.template)
 	else:
 		for child in ast.children:
-			var res
-			res = _get_current_ast(child)
+			var res = _get_current_ast(child)
 			if res != null:
 				return res
 
@@ -138,6 +139,7 @@ func _init_render():
 			_set_parent_vm()
 			ast = _get_current_ast(gmuiParent.ast)
 			_init_props()
+			_set_ast_model(ast)
 #			get_parent().ast.children.erase(ast)
 #			oldVNode = _get_current_vnode(oldVNode)
 #			_erase_vnode(get_parent().newVNode)
@@ -145,12 +147,13 @@ func _init_render():
 #			renderFunc = Function.new(code, _vh)
 #			newVNode = renderFunc.exec()
 			newVNode = VNodeHelper.create_vnodes(ast, vm)
+			_set_component_model(newVNode)
 			_patch.run(oldVNode, newVNode)
 	oldVNode = newVNode
 	_set_ref(oldVNode)
 	if vm.parent != null:
-		if vm.parent.refs.has(oldVNode.ref['name']):
-			vm.parent.refs[oldVNode.ref['name']] = vm
+		if !oldVNode.ref.is_empty() and vm.parent.refs.has(oldVNode.ref['name']):
+			vm.parent.refs[oldVNode.ref['name']] = oldVNode
 #	else:
 #		if self.owner == null:
 #			var xmlPath = FileUtils.scene_to_xml_path(self.scene_file_path)
@@ -182,6 +185,18 @@ func _init_props():
 		data[key] = null
 	vm.define_props(data)
 
+func _set_ast_model(ast):
+	if !ast.model.is_empty() and ast.model.rName == modelName:
+		vm.define_props({modelName: vm.parent.data.rget(modelName)})
+	for child in ast.children:
+		_set_ast_model(child)
+
+func _set_component_model(vnode):
+	if !vnode.model.is_empty() and vnode.model.rName == modelName:
+		vnode.model['isCompModel'] = true
+	for child in vnode.children:
+		_set_component_model(child)
+
 func _mounted():
 	pass
 
@@ -197,11 +212,11 @@ func _remove_child(node):
 		child.queue_free()
 
 func _set_ref(vnode):
-	if !vnode.ref.is_empty():
+	if vnode!=null and !vnode.ref.is_empty():
 		vm.refs[vnode.ref['name']] = vnode
 	for child in vnode.children:
 		_set_ref(child)
-		
+
 #func _notification(what):
 #	if what == NOTIFICATION_SCENE_INSTANTIATED:
 #		print(self.name)

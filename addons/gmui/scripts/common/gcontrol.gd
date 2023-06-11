@@ -1,17 +1,19 @@
-@tool
 extends Control
 
 var oldVNode = null
 var ast = null
 var vmId = _vms.get_id()
-var vm = GoVM.new()
+var vm = GMUI.new()
 var watcher = null
 var isComponent = true
-var code
-var renderFunc
-var newVNode
-var staticProps
-var dynamicProps
+var code = null
+var renderFunc = null
+var newVNode = null
+var staticProps = {}
+var dynamicProps = {}
+var modelName = ''
+var isInit = true
+var gmuiParent = null
 
 signal mounted
 signal updated
@@ -21,16 +23,19 @@ signal sended_ast
 func _init():
 	_vms.set_vm(vm)
 	ready.connect(_init_watcher)
-	ready.connect(_set_parent_vm)
+#	ready.connect(_set_parent_vm)
 	init_finish.connect(_mounted)
 	updated.connect(_updated)
 #	tree_entered.connect(build_ast)
 #	self.set_scene_instance_load_placeholder(true)
 #	ready.connect(dont_init)
 
-func _set_parent_vm():
-	if self != get_tree().current_scene and self != get_tree().edited_scene_root and get_parent().isComponent:
-		vm.parent = get_parent().vm
+func _set_parent_vm(node = get_parent()):
+	if 'isComponent' in node and node.scene_file_path != '':
+		vm.parent = node.vm
+		gmuiParent = node
+	elif node.get_parent() != null:
+		_set_parent_vm(node.get_parent())
 
 #func _enter_tree():
 #	print(self.name)
@@ -65,7 +70,10 @@ func _ready():
 func _init_watcher():
 	watcher = Watcher.new(_init_render)
 	watcher.getter = _update
+#	_mounted()
+#	_updated()
 	emit_signal('init_finish')
+#	emit_signal('updated')
 
 func _get_current_ast(ast):
 	var _path = _get_path()
@@ -77,13 +85,13 @@ func _get_current_ast(ast):
 	if ast.isScene and ast.path == _path:
 		staticProps = ast.staticProps
 		dynamicProps = ast.dynamicProps
+		modelName = ast.modelName
 		return ast.sceneXML
 	elif ast.isSlot:
 		return _get_current_ast(ast.template)
 	else:
 		for child in ast.children:
-			var res
-			res = _get_current_ast(child)
+			var res = _get_current_ast(child)
 			if res != null:
 				return res
 
@@ -107,36 +115,45 @@ func _erase_vnode(node):
 		_erase_vnode(child)
 
 func _update():
-	var code = CodeGen.render_func(ast, vm, staticProps, dynamicProps)
-	var renderFunc = Function.new(code, _vh)
-	var newVNode = renderFunc.exec()
+#	var code = CodeGen.render_func(ast, vm, staticProps, dynamicProps)
+#	var renderFunc = Function.new(code, _vh)
+#	var newVNode = renderFunc.exec()
+	newVNode = VNodeHelper.create_vnodes(ast, vm)
 	_patch.run(oldVNode, newVNode)
 	oldVNode = newVNode
+	_set_ref(oldVNode)
 	emit_signal('updated')
 
 func _init_render():
-	oldVNode = _vh.rtree_to_vtree(self)
+	oldVNode = VNodeHelper.rtree_to_vtree(self)
 	if !Engine.is_editor_hint():
 		if self == get_tree().current_scene:
 			var xmlPath = FileUtils.scene_to_xml_path(self.scene_file_path)
 			ast = TinyXMLParser.parse_xml(xmlPath)
-			code = CodeGen.render_func(ast, vm)
-			renderFunc = Function.new(code, _vh)
-			newVNode = renderFunc.exec()
+#			code = CodeGen.render_func(ast, vm)
+#			renderFunc = Function.new(code, _vh)
+#			newVNode = renderFunc.exec()
+			newVNode = VNodeHelper.create_vnodes(ast, vm)
 			_patch.run(oldVNode, newVNode)
-			oldVNode = newVNode
 		else:
-			vm.parent = get_parent().vm
-			ast = _get_current_ast(get_parent().ast)
+			_set_parent_vm()
+			ast = _get_current_ast(gmuiParent.ast)
 			_init_props()
+			_set_ast_model(ast)
 #			get_parent().ast.children.erase(ast)
 #			oldVNode = _get_current_vnode(oldVNode)
 #			_erase_vnode(get_parent().newVNode)
-			code = CodeGen.render_func(ast, vm, staticProps, dynamicProps)
-			renderFunc = Function.new(code, _vh)
-			newVNode = renderFunc.exec()
+#			code = CodeGen.render_func(ast, vm, staticProps, dynamicProps)
+#			renderFunc = Function.new(code, _vh)
+#			newVNode = renderFunc.exec()
+			newVNode = VNodeHelper.create_vnodes(ast, vm)
+			_set_component_model(newVNode)
 			_patch.run(oldVNode, newVNode)
-			oldVNode = newVNode
+	oldVNode = newVNode
+	_set_ref(oldVNode)
+	if vm.parent != null:
+		if !oldVNode.ref.is_empty() and vm.parent.refs.has(oldVNode.ref['name']):
+			vm.parent.refs[oldVNode.ref['name']] = oldVNode
 #	else:
 #		if self.owner == null:
 #			var xmlPath = FileUtils.scene_to_xml_path(self.scene_file_path)
@@ -168,6 +185,18 @@ func _init_props():
 		data[key] = null
 	vm.define_props(data)
 
+func _set_ast_model(ast):
+	if !ast.model.is_empty() and ast.model.rName == modelName:
+		vm.define_props({modelName: vm.parent.data.rget(modelName)})
+	for child in ast.children:
+		_set_ast_model(child)
+
+func _set_component_model(vnode):
+	if !vnode.model.is_empty() and vnode.model.rName == modelName:
+		vnode.model['isCompModel'] = true
+	for child in vnode.children:
+		_set_component_model(child)
+
 func _mounted():
 	pass
 
@@ -176,6 +205,17 @@ func _updated():
 
 func _process(delta):
 	pass
+
+func _remove_child(node):
+	for child in node.get_children():
+		_remove_child(child)
+		child.queue_free()
+
+func _set_ref(vnode):
+	if vnode!=null and !vnode.ref.is_empty():
+		vm.refs[vnode.ref['name']] = vnode
+	for child in vnode.children:
+		_set_ref(child)
 
 #func _notification(what):
 #	if what == NOTIFICATION_SCENE_INSTANTIATED:

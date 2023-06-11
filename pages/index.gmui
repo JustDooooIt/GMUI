@@ -1,0 +1,6 @@
+<VBoxContainer name="container">
+	<Control name="control"></Control>
+</VBoxContainer>
+
+<script>
+</script>

@@ -1,4 +1,4 @@
-class_name LineEditModelStrategy extends RefCounted
+class_name CheckButtonModelStrategy extends RefCounted
 
 var rnode
 var vnode
@@ -10,21 +10,13 @@ func _init(rnode, vnode):
 func operate():
 	if vnode.model.has('rName'):
 		var vm = vnode.vm
-		rnode.text_changed.connect(
-			func(text):
-				vm.data.rset.bind(vnode.model['rName'], text)
-		)
-		vm.data.setted.connect(
-			func(key, value): 
-				if value.length() > 0: rnode.caret_column = value.length()
-		)
+		rnode.toggled.connect(vm.data._rset.bind(vnode.model['rName']))
 		if vnode.model.isCompModel:
 			vm.parent.data.setted.connect(
 				func(key, value):
 					vm.data.rset(key, value)
 			)
-			rnode.text_changed.connect(
+			rnode.toggled.connect(
 				func(text):
 					vm.parent.data.rset(vnode.model['rName'], text)
 			)
-#	rnode.caret_column = rnode.text.length - 1

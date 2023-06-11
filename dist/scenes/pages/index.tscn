@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cpwiey774gc3c"]
+
+[ext_resource type="Script" path="res://dist/scripts/pages/index.gd" id="1_td5m0"]
+
+[node name="Root" type="VBoxContainer"]
+script = ExtResource("1_td5m0")

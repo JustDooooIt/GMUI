@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://buc3wdlr2i8sc"]
+
+[sub_resource type="GDScript" id="GDScript_i1x5w"]
+script/source = "extends \"res://addons/gmui/scripts/common/gcontrol.gd\"
+var data = vm.define_reactive({'username': '1'})
+"
+
+[node name="Root" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = SubResource("GDScript_i1x5w")

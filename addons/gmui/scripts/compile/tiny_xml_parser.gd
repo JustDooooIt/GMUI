@@ -42,15 +42,21 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 					var attrValue = xmlParser.get_attribute_value(i)
 					if attrName == 'name':
 						newNode.name = attrValue
-					elif attrName == 'scene_xml_path':
-						newNode.sceneXMLPath = attrValue
+					elif attrName == 'scenePath':
+						var xmlPath = attrValue.replace('.gmui', '.xml')
+						xmlPath = attrValue.replace('res://dist/components', 'res://dist/layouts/components').replace('.gmui', '.xml')
+						newNode.sceneXMLPath = xmlPath
 						newNode.isScene = true
-						newNode.sceneXML = _parse_xml(attrValue, paths, newNode.name, false)
+						newNode.sceneXML = _parse_xml(xmlPath, paths, newNode.name, false)
 						newNode.sceneXML.name = newNode.name
 					elif attrName.contains('g-bind:'):
 						newNode.dynamicProps[attrName.split(':')[1]] = attrValue
+					elif attrName == 'ref':
+						newNode.sceneXML.ref['name'] = attrValue
+					elif attrName == 'g-model':
+						newNode.modelName = attrValue
 					else:
-						newNode.staticProps[attrName] = str_to_var(attrValue)
+						newNode.staticProps[attrName] = attrValue
 			elif nodeType == 'Template':
 				var hasName = false
 				for i in count:
@@ -73,8 +79,18 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 				if !hasName:
 					newNode.name = '__default__'
 				newNode.isSlot = true
-			elif nodeType == 'LineEdit':
-				LineEditStrategy.new(newNode, xmlParser).operate()
+			elif nodeType == 'LineEdit' or nodeType == 'TextEdit' or nodeType == 'CodeEdit':
+				ControlStrategy.new(newNode, 'text', xmlParser).operate()
+			elif nodeType == 'TabBar' or nodeType == 'TabContainer':
+				ControlStrategy.new(newNode, 'current_tab', xmlParser).operate()
+			elif nodeType == 'ColorPicker':
+				ControlStrategy.new(newNode, 'color', xmlParser).operate()
+			elif nodeType == 'CheckButton' or nodeType == 'CheckBox':
+				ControlStrategy.new(newNode, 'button_pressed', xmlParser).operate()
+			elif nodeType == 'SpinBox':
+				ControlStrategy.new(newNode, 'value', xmlParser).operate()
+			elif nodeType == 'OptionButton':
+				ControlStrategy.new(newNode, 'selected', xmlParser).operate()
 			else:
 				for i in count:
 					var attrName = xmlParser.get_attribute_name(i)
@@ -83,8 +99,10 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 						newNode.name = attrValue
 					elif attrName.contains('g-bind:'):
 						newNode.bindDict[attrName.split(':')[1]] = attrValue
+					elif attrName == 'ref':
+						newNode.ref['name'] = attrValue
 					else:
-						newNode.properties[attrName] = str_to_var(attrValue)
+						newNode.properties[attrName] = attrValue
 			if cur != null:
 				cur.children.append(newNode)
 				newNode.parent = cur

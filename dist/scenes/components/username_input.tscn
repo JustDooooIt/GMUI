@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://def1mk5ejxggc"]
+
+[ext_resource type="Script" path="res://dist/scripts/components/username_input.gd" id="1_tqimy"]
+
+[node name="Root" type="HBoxContainer"]
+script = ExtResource("1_tqimy")

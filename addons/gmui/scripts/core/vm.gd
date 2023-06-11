@@ -1,11 +1,12 @@
 @tool
-class_name GoVM extends Node
+class_name GMUI extends Node
 
 var data = ReactiveDictionary.new()
 var dynamicProps = {}
 var staticProps = {}
 var parent = null
 var children = []
+var refs = {}
 
 #signal send_props()
 

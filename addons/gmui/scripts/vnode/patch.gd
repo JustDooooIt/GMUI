@@ -34,13 +34,31 @@ func _add_rnode_by_vnode(rnode, vnode, mode = Node.INTERNAL_MODE_DISABLED):
 	else:
 		newRNode = ClassDB.instantiate(vnode.type)
 		newRNode.name = vnode.name
-		if newRNode is LineEdit:
-			LineEditModelStrategy.new(newRNode, vnode).operate()
 		rnode.add_child(newRNode)
 #		newRNode.owner = PathUtils.get_owner(rnode)
 		for child in vnode.children:
 			_add_rnode_by_vnode(newRNode, child)
-
+		if newRNode is LineEdit:
+			LineEditModelStrategy.new(newRNode, vnode).operate()
+		elif newRNode is TabBar:
+			TabBarModelStrategy.new(newRNode, vnode).operate()
+		elif newRNode is TabContainer:
+			TabContainerModelStrategy.new(newRNode, vnode).operate()
+		elif newRNode is ColorPicker:
+			ColorPickerModelStrategy.new(newRNode, vnode).operate()
+		elif newRNode is CheckButton:
+			CheckButtonModelStrategy.new(newRNode, vnode).operate()
+		elif newRNode is CheckBox:
+			CheckBoxModelStrategy.new(newRNode, vnode).operate()
+		elif newRNode is TextEdit:
+			TextEditModelStrategy.new(newRNode, vnode).operate()
+		elif newRNode is CodeEdit:
+			CodeEditModelStrategy.new(newRNode, vnode).operate()
+		elif newRNode is SpinBox:
+			SpinBoxModelStrategy.new(newRNode, vnode).operate()
+		elif newRNode is OptionButton:
+			OptionButtonModelStrategy.new(newRNode, vnode).operate()
+			
 func _create_rnode_tree(rnode, vnode, mode = Node.INTERNAL_MODE_DISABLED):
 	vnode.rnode = rnode
 	for child in vnode.children:
@@ -50,19 +68,33 @@ func _create_rnode_tree(rnode, vnode, mode = Node.INTERNAL_MODE_DISABLED):
 			newRNode = scene.instantiate()
 #			dont_init(newRNode)
 			newRNode.name = child.name
-			_set_properties_tree(newRNode, child)
 			rnode.add_child(newRNode)
+			_set_properties_tree(newRNode, child)
 		else:
 			newRNode = ClassDB.instantiate(child.type)
 			newRNode.name = child.name
-			if newRNode is LineEdit:
-				LineEditModelStrategy.new(newRNode, child).operate()
 			rnode.add_child(newRNode)
 #		newRNode.owner = PathUtils.get_owner(rnode)
-			_set_properties(newRNode,child)
 			_create_rnode_tree(newRNode, child)
-			
-
+			_set_properties(newRNode,child)
+			if newRNode is LineEdit:
+				LineEditModelStrategy.new(newRNode, child).operate()
+			elif newRNode is TabBar:
+				TabBarModelStrategy.new(newRNode, child).operate()
+			elif newRNode is TabContainer:
+				TabContainerModelStrategy.new(newRNode, child).operate()
+			elif newRNode is ColorPicker:
+				ColorPickerModelStrategy.new(newRNode, child).operate()
+			elif newRNode is CheckButton:
+				CheckButtonModelStrategy.new(newRNode, child).operate()
+			elif newRNode is CheckBox:
+				CheckBoxModelStrategy.new(newRNode, child).operate()
+			elif newRNode is TextEdit:
+				TextEditModelStrategy.new(newRNode, child).operate()
+			elif newRNode is CodeEdit:
+				CodeEditModelStrategy.new(newRNode, child).operate()
+			elif newRNode is OptionButton:
+				OptionButtonModelStrategy.new(newRNode, child).operate()
 #func get_scene_child(rootNode, node = rootNode, map = {}):
 #	for child in node.get_children:
 #		if child.scene_file_path != '':
@@ -98,22 +130,40 @@ func _create_rnode_tree_with_root(rnode, vnode):
 		newRNode = ClassDB.instantiate(vnode.type)
 		newRNode.name = vnode.name
 		vnode.rnode = rnode
-		if newRNode is LineEdit:
-			LineEditModelStrategy.new(newRNode, vnode).operate()
 		_set_properties(rnode, vnode)
 		if rnode != null:
 			rnode.add_child(newRNode)
 		for child in vnode.children:
 			_create_rnode_tree_with_root(newRNode, child)
+		if newRNode is LineEdit:
+			LineEditModelStrategy.new(newRNode, vnode).operate()
+		elif newRNode is TabBar:
+			TabBarModelStrategy.new(newRNode, vnode).operate()
+		elif newRNode is TabContainer:
+			TabContainerModelStrategy.new(newRNode, vnode).operate()
+		elif newRNode is ColorPicker:
+			ColorPickerModelStrategy.new(newRNode, vnode).operate()
+		elif newRNode is CheckButton:
+			CheckButtonModelStrategy.new(newRNode, vnode).operate()
+		elif newRNode is CheckBox:
+			CheckBoxModelStrategy.new(newRNode, vnode).operate()
+		elif newRNode is TextEdit:
+			TextEditModelStrategy.new(newRNode, vnode).operate()
+		elif newRNode is CodeEdit:
+			CodeEditModelStrategy.new(newRNode, vnode).operate()
+		elif newRNode is OptionButton:
+			OptionButtonModelStrategy.new(newRNode, vnode).operate()
 	return newRNode
 
 func _patch_properties(oldVNode, newVNode):
 	if oldVNode.properties != newVNode.properties:
-		for key in oldVNode.properties.keys():
-			oldVNode.rnode.set(key, null)
+		for key in newVNode.properties:
+			oldVNode.rnode.set(key, newVNode.properties[key])
+#		for key in oldVNode.properties.keys():
+#			oldVNode.rnode.set(key, null)
 		oldVNode.properties = newVNode.properties
-		for key in oldVNode.properties.keys():
-			oldVNode.rnode.set(key, oldVNode.properties[key])
+#		for key in oldVNode.properties.keys():
+#			oldVNode.rnode.set(key, oldVNode.properties[key])
 
 func _updateChildren(rnode, oldVNodes, newVNodes):
 	var oldStart = 0
@@ -198,8 +248,8 @@ func _updateChildren(rnode, oldVNodes, newVNodes):
 				_add_rnode_by_vnode(rnode, newVNodes[i], Node.INTERNAL_MODE_FRONT)
 
 func _remove_all_child(node):
-	for child in node.children:
-		_remove_all_child(node)
+	for child in node.get_children():
+		_remove_all_child(child)
 		node.remove_child(child)
 		child.free()
 
@@ -210,7 +260,6 @@ func _add_all_child_vnode(oldVNode, newVNode):
 	oldVNode.children = newVNode.children
 
 func _is_same_node(oldNode, newNode):
-#	return oldNode.isRoot or (oldNode.path == newNode.path and oldNode.type == newNode.type)
 	return oldNode.isRoot or (oldNode.name == newNode.name and oldNode.type == newNode.type)
 	
 func _get_dict(children):
@@ -221,10 +270,12 @@ func _get_dict(children):
 
 func _set_properties(rnode, vnode):
 	var vProperties = vnode.properties
-	for key in vProperties.keys():
-		rnode.set(key, vProperties[key])
+	if rnode != null:
+		for key in vProperties.keys():
+			rnode.set(key, vProperties[key])
 
 func _set_properties_tree(rnode, vnode):
 	_set_properties(rnode, vnode)
-	for i in vnode.children.size():
-		_set_properties_tree(rnode.get_children()[i], vnode.children[i])
+	for i in rnode.get_children().size():
+		if i < vnode.children.size():
+			_set_properties_tree(rnode.get_children()[i], vnode.children[i])
