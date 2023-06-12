@@ -10,10 +10,11 @@ config_version=5
 
 [application]
 
-config/name="GMUI"
+config/name="demo"
+config/description="a wonderful project"
 run/main_scene="res://addons/gmui/dist/scenes/pages/index.tscn"
 config/features=PackedStringArray("4.0", "Forward Plus")
-config/icon="res://textures/icon.svg"
+config/icon="addons/gmui/gmui.png"
 
 [autoload]
 

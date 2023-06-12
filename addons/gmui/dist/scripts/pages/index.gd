@@ -12,3 +12,6 @@ func _mounted():
 			data.rset('username', '')
 			data.rset('password', '')
 	)
+func _updated():
+	print('username:', data.rget('username'))
+	print('password:', data.rget('password'))

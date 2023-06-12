@@ -35,6 +35,9 @@ func _enter_tree():
 #	scene_changed.connect(init_node)
 #	scene_changed.connect(set_xml_content)
 #	scene_changed.connect(bind_load_xml_signal)
+	ProjectSettings.set_setting('application/config/name', configJson.data['name'])
+	ProjectSettings.set_setting('application/config/description', configJson.data['description'])
+	ProjectSettings.set_setting('application/config/icon', configJson.data['icon'])
 	genBtn.pressed.connect(gen)
 	DirAccess.make_dir_absolute('res://components')
 	DirAccess.make_dir_absolute('res://pages')
@@ -295,7 +298,7 @@ func load_gumui_json():
 
 func set_main_scene():
 	var mainScenePath = configJson.data['main_page']
-	mainScenePath = distPath + '/scenes/' + mainScenePath.replace('.gmui', '.tscn')
+	mainScenePath = distPath + '/scenes/' + mainScenePath.replace('res://', '').replace('.gmui', '.tscn')
 	ProjectSettings.set('application/run/main_scene', mainScenePath)
 	
 func _exit_tree():
