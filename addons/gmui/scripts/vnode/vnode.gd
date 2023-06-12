@@ -14,6 +14,7 @@ var model = {}
 var vmId = null
 var vm = null
 var ref = {}
+var id = {}
 var parent = null
 var children = []
 var rnode = null

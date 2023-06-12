@@ -14,6 +14,7 @@ var dynamicProps = {}
 var modelName = ''
 var isInit = true
 var gmuiParent = null
+var distPath = 'res://addons/gmui/dist'
 
 signal mounted
 signal updated
@@ -21,6 +22,7 @@ signal init_finish
 signal sended_ast
 
 func _init():
+	super._init()
 	_vms.set_vm(vm)
 	ready.connect(_init_watcher)
 #	ready.connect(_set_parent_vm)
@@ -126,10 +128,12 @@ func _update():
 
 func _init_render():
 	oldVNode = VNodeHelper.rtree_to_vtree(self)
+	oldVNode.isRoot = true
 	if !Engine.is_editor_hint():
-		if self == get_tree().current_scene:
+		if oldVNode.isRoot:
 			var xmlPath = FileUtils.scene_to_xml_path(self.scene_file_path)
 			ast = TinyXMLParser.parse_xml(xmlPath)
+			self.name = ast.name
 #			code = CodeGen.render_func(ast, vm)
 #			renderFunc = Function.new(code, _vh)
 #			newVNode = renderFunc.exec()
@@ -206,17 +210,30 @@ func _updated():
 func _process(delta):
 	pass
 
-func _remove_child(node):
+func _remove_children(node):
 	for child in node.get_children():
-		_remove_child(child)
+		_remove_children(child)
 		child.queue_free()
 
 func _set_ref(vnode):
-	if vnode!=null and !vnode.ref.is_empty():
-		vm.refs[vnode.ref['name']] = vnode
+	if vnode!=null:
+		if !vnode.ref.is_empty() or !vnode.id.is_empty():
+			vm.refs[vnode.ref['name']] = vnode
+			vm.ids[vnode.id['name']] = vnode
 	for child in vnode.children:
 		_set_ref(child)
 
+func change_component_from_file(path):
+	path = path.replace('res://components', 'res://addons/gmui/dist/scenes/components')
+	path = path.replace('.gmui', '.tscn')
+	var scene = load(path)
+	_remove_children(self)
+	self.replace_by(scene.instantiate())
+
+func change_scene_from_file(path):
+	path = path.replace('res://pages', 'res://addons/gmui/dist/scenes/pages')
+	path = path.replace('.gmui', '.tscn')
+	get_tree().change_scene_to_file(path)
 #func _notification(what):
 #	if what == NOTIFICATION_SCENE_INSTANTIATED:
 #		print(self.name)

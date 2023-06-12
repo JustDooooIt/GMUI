@@ -7,6 +7,7 @@ var staticProps = {}
 var parent = null
 var children = []
 var refs = {}
+var ids = refs
 
 #signal send_props()
 

@@ -21,5 +21,13 @@ func operate():
 			node.model = {'cName': cName, 'rName': attrValue, 'isCompModel': false}
 		elif attrName == 'ref':
 			node.ref['name'] = attrValue
+		elif attrName == 'id':
+			node.id['name'] = attrValue
 		else:
 			node.properties[attrName] = attrValue
+
+func get_value(value):
+	var newValue = str_to_var(value)
+	if newValue == null:
+		return value
+	return newValue

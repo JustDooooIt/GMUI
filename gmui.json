@@ -1,9 +1,8 @@
 {
-    "name": "demo",
-    "description": "a wonderful project",
-    "icon": "addons/gmui/gmui.png",
-    "main_page": "pages/index.gmui",
-    "version": "1.0.0",
-
-    "environment": "gmui_1.0.0"
+	"name": "demo",
+	"description": "a wonderful project",
+	"icon": "addons/gmui/gmui.png",
+	"main_page": "pages/index.gmui",
+	"version": "1.0.0",
+	"environment": "gmui_1.0.0"
 }

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://g44anojwqlqe"]
+
+[ext_resource type="Script" path="res://addons/gmui/dist/scripts/components/component.gd" id="1_kxpmv"]
+
+[node name="Root" type="HBoxContainer"]
+script = ExtResource("1_kxpmv")

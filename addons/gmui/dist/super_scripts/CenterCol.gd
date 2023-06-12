@@ -1,4 +1,4 @@
-extends VBoxContainer
+extends CenterCol
 
 var oldVNode = null
 var ast = null

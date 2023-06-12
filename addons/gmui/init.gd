@@ -13,6 +13,7 @@ var xmlContent = {}
 var isSyncToScene = false
 var dock = preload("res://addons/gmui/scenes/layout_option.tscn").instantiate()
 var genBtn = dock.get_node('./GenFileBtn')
+var configJson = load_gumui_json()
 @onready var vms = Engine.get_singleton('_vms')
 @onready var patch = Engine.get_singleton('_patch')
 
@@ -106,15 +107,16 @@ func add_xml_node(node, parent):
 #		pass
 #	pass
 #
-#func _handles(object):
-#	if object is Node or object is Resource:
-#		return true
-#	else:
-#		return false
+func _handles(object):
+	if object is Node or object is Resource:
+		return true
+	else:
+		return false
 #
-#func _edit(object):
-#	if object != null:
-#		editObj = object
+func _edit(object):
+	if object != null:
+		if object is Resource and object.resource_path.get_file() == 'gmui.json':
+			editObj = object
 #		if object is Resource and object.resource_path.get_extension() == 'xml':
 #			if !editorDict.has(object.resource_path):
 #				var codeEdit = scriptEditor.get_current_editor().get_base_editor()
@@ -126,6 +128,8 @@ func _save_external_data():
 #		print('xml')
 #		xml_to_scene()
 		pass
+	elif editObj is Resource and editObj.resource_path.get_file() == 'gmui.json':
+		set_main_scene()
 	elif editObj is Node:
 #		print('node')
 		pass
@@ -185,7 +189,11 @@ func gen_scene(type):
 			file.store_string(content.replace('	','').replace('\n', ''))
 			file.close()
 			var scene = PackedScene.new()
-			var root = ClassDB.instantiate(rootType)
+			var root = null
+			if !ClassDB.class_exists(rootType):
+				root = load('res://addons/gmui/ui/%s/%s.tscn' % [rootType, rootType]).instantiate()
+			else:
+				root = ClassDB.instantiate(rootType)
 			root.name = 'Root'
 			gen_super_script(rootType)
 			var scriptPath = gen_script(filePath, scenePath, rootType)
@@ -193,9 +201,6 @@ func gen_scene(type):
 			root.set_script(script)
 			scene.pack(root)
 			DirAccess.make_dir_recursive_absolute(scenePath.get_base_dir())
-			ResourceSaver.save(scene, scenePath)
-			root.name = str(ResourceLoader.get_resource_uid(scenePath))
-			scene.pack(root)
 			ResourceSaver.save(scene, scenePath)
 		else:
 			content = '<?xml version="1.0" encoding="UTF-8"?><Control></Control>' + content
@@ -268,7 +273,31 @@ func gen_script(gmuiFile, scenePath, nodeType):
 		file.store_string('extends "res://addons/gmui/scripts/common/gcontrol.gd"')
 		file.close()
 	return distScriptPath
+	
+func load_gumui_json():
+	var isExist = FileAccess.file_exists('res://gmui.json')
+	if isExist:
+		return preload('res://gmui.json')
+	else:
+		var content = \
+		{
+			"name": "demo",
+			"description": "a wonderful project",
+			"icon": "addons/gmui/gmui.png",
+			"main_page": "pages/index.gmui",
+			"version": "1.0.0",
+			"environment": "gmui_1.0.0"
+		}
+		var str = JSON.stringify(content)
+		var fileAccess = FileAccess.open('res://', FileAccess.WRITE)
+		fileAccess.store_string(str)
+		return JSON.parse_string(str)
 
+func set_main_scene():
+	var mainScenePath = configJson.data['main_page']
+	mainScenePath = distPath + '/scenes/' + mainScenePath.replace('.gmui', '.tscn')
+	ProjectSettings.set('application/run/main_scene', mainScenePath)
+	
 func _exit_tree():
 	vms.isInited.clear()
 #	scene_changed.disconnect(set_bue)

@@ -10,7 +10,10 @@ func _init(rnode, vnode):
 func operate():
 	if vnode.model.has('rName'):
 		var vm = vnode.vm
-		rnode.item_selected.connect(vm.data._rset.bind(vnode.model['rName']))
+		rnode.item_selected.connect(
+			func(id):
+				vm.data.rset(vnode.model['rName'], id)
+		)
 		if vnode.model.isCompModel:
 			vm.parent.data.setted.connect(
 				func(key, value):

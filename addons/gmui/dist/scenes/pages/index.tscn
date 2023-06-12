@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://ctcv4ugappxkm"]
+[gd_scene load_steps=2 format=3 uid="uid://exsl1l5hf1ql"]
 
-[ext_resource type="Script" path="res://addons/gmui/dist/scripts/pages/index.gd" id="1_aehi7"]
+[ext_resource type="Script" path="res://addons/gmui/dist/scripts/pages/index.gd" id="1_ooo78"]
 
-[node name="6111886056644765604" type="VBoxContainer"]
-script = ExtResource("1_aehi7")
+[node name="Root" type="VBoxContainer"]
+script = ExtResource("1_ooo78")

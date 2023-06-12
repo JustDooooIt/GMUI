@@ -17,7 +17,6 @@ config/icon="res://textures/icon.svg"
 
 [autoload]
 
-_bues="*res://addons/gmui/scripts/common/vms.gd"
 _vh="*res://addons/gmui/scripts/vnode/vnode_helper.gd"
 _vms="*res://addons/gmui/scripts/common/vms.gd"
 _values="*res://addons/gmui/scripts/observer/values.gd"

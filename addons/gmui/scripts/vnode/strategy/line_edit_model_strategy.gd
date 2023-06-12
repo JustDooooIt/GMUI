@@ -12,7 +12,7 @@ func operate():
 		var vm = vnode.vm
 		rnode.text_changed.connect(
 			func(text):
-				vm.data.rset.bind(vnode.model['rName'], text)
+				vm.data.rset(vnode.model['rName'], text)
 		)
 		vm.data.setted.connect(
 			func(key, value): 

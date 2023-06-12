@@ -1,7 +1,6 @@
 <HBoxContainer>
-	<Control></Control>
+	<Label text="text"></Label>
 </HBoxContainer>
 
 <script>
-
 </script>

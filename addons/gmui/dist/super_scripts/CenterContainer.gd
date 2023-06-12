@@ -1,4 +1,4 @@
-extends VBoxContainer
+extends CenterContainer
 
 var oldVNode = null
 var ast = null
@@ -22,7 +22,6 @@ signal init_finish
 signal sended_ast
 
 func _init():
-	super._init()
 	_vms.set_vm(vm)
 	ready.connect(_init_watcher)
 #	ready.connect(_set_parent_vm)

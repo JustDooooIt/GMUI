@@ -2,6 +2,24 @@ class_name TinyXMLParser extends RefCounted
 
 var placeholder = '__default__'
 
+static func convert_type(type):
+	if type == 'Text':
+		return 'Label'
+	elif type == 'Widget':
+		return 'Scene'
+	elif type == 'Row':
+		return 'HBoxContainer'
+	elif type == 'Col':
+		return 'VBoxContainer'
+	else:
+		return type
+
+static func convert_prop_name(propName):
+	if propName == 'placeholder_text':
+		return 'hint_text'
+	else:
+		return propName
+
 static func parse_xml(content, isBuffer = false):
 	var tree = _parse_xml(content, [], null, true, isBuffer)
 	set_tree_parent(tree)
@@ -27,31 +45,39 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 		var type = xmlParser.get_node_type()
 		if type == XMLParser.NODE_ELEMENT:
 			level+=1
-			var nodeType = xmlParser.get_node_name()
+			var nodeType = convert_type(xmlParser.get_node_name())
 			var count = xmlParser.get_attribute_count()
 			var newNode = TreeNode.new()
-			newNode.type = nodeType
+			newNode.type = convert_type(nodeType)
 			if cur == null:
 				treeRoot = newNode
 				newNode.path = '.'
 				newNode.isRoot = isRoot
-				newNode.name = str(ResourceLoader.get_resource_uid(FileUtils.xml_to_scene_path(content)))
-				for i in count:
-					var attrName = xmlParser.get_attribute_name(i)
-					var attrValue = xmlParser.get_attribute_value(i)
-					if attrName.contains('g-bind:'):
-						newNode.bindDict[attrName.split(':')[1]] = attrValue
-					elif attrName == 'ref':
-						newNode.ref['name'] = attrValue
-					else:
-						newNode.properties[attrName] = attrValue
-#				paths = ['.']
-			elif nodeType == 'Scene':
 				newNode.name = str(randi())
 				for i in count:
 					var attrName = xmlParser.get_attribute_name(i)
 					var attrValue = xmlParser.get_attribute_value(i)
+					if attrName.contains('g-bind:'):
+						var value = str_to_var(attrValue)
+						if value == null:
+							newNode.bindDict[attrName.split(':')[1]] = attrValue
+						else:
+							attrName = convert_prop_name(attrName)
+							newNode.properties[attrName] = attrValue
+					elif attrName == 'ref':
+						newNode.ref['name'] = attrValue
+					else:
+						attrName = convert_prop_name(attrName)
+						newNode.properties[attrName] = attrValue
+#				paths = ['.']
+			elif nodeType == 'Scene':
+				newNode.name = str(randi())
+				var sceneXML = null
+				for i in count:
+					var attrName = xmlParser.get_attribute_name(i)
+					var attrValue = xmlParser.get_attribute_value(i)
 #					if attrName == 'name':
+
 					if attrName == 'scenePath':
 						var xmlPath = attrValue.replace('.gmui', '.xml')
 						xmlPath = attrValue.replace('res://dist/components', 'res://dist/layouts/components').replace('.gmui', '.xml')
@@ -59,13 +85,25 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 						newNode.isScene = true
 						newNode.sceneXML = _parse_xml(xmlPath, paths, newNode.name, false)
 						newNode.sceneXML.name = newNode.name
-					elif attrName.contains('g-bind:'):
-						newNode.dynamicProps[attrName.split(':')[1]] = attrValue
+						sceneXML = newNode.sceneXML
+				for i in count:
+					var attrName = xmlParser.get_attribute_name(i)
+					var attrValue = xmlParser.get_attribute_value(i)
+					if attrName.contains('g-bind:'):
+						var value = str_to_var(attrValue)
+						if value == null:
+							newNode.dynamicProps[attrName.split(':')[1]] = attrValue
+						else:
+							attrName = convert_prop_name(attrName)
+							newNode.staticProps[attrName] = attrValue
 					elif attrName == 'ref':
 						newNode.sceneXML.ref['name'] = attrValue
+					elif attrName == 'id':
+						newNode.sceneXML.id['name'] = attrValue
 					elif attrName == 'g-model':
 						newNode.modelName = attrValue
 					else:
+						attrName = convert_prop_name(attrName)
 						newNode.staticProps[attrName] = attrValue
 			elif nodeType == 'Template':
 				var hasName = false
@@ -89,13 +127,13 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 				if !hasName:
 					newNode.name = '__default__'
 				newNode.isSlot = true
-			elif nodeType == 'LineEdit' or nodeType == 'TextEdit' or nodeType == 'CodeEdit':
+			elif nodeType in ['LineEdit', 'TextEdit', 'CodeEdit']:
 				ControlStrategy.new(newNode, 'text', xmlParser).operate()
-			elif nodeType == 'TabBar' or nodeType == 'TabContainer':
+			elif nodeType in ['TabBar', 'TabContainer']:
 				ControlStrategy.new(newNode, 'current_tab', xmlParser).operate()
 			elif nodeType == 'ColorPicker':
 				ControlStrategy.new(newNode, 'color', xmlParser).operate()
-			elif nodeType == 'CheckButton' or nodeType == 'CheckBox':
+			elif nodeType in ['CheckButton', 'CheckBox']:
 				ControlStrategy.new(newNode, 'button_pressed', xmlParser).operate()
 			elif nodeType == 'SpinBox':
 				ControlStrategy.new(newNode, 'value', xmlParser).operate()
@@ -107,10 +145,18 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 					var attrName = xmlParser.get_attribute_name(i)
 					var attrValue = xmlParser.get_attribute_value(i)
 					if attrName.contains('g-bind:'):
-						newNode.bindDict[attrName.split(':')[1]] = attrValue
+						var value = str_to_var(attrValue)
+						if value == null:
+							newNode.bindDict[attrName.split(':')[1]] = attrValue
+						else:
+							attrName = convert_prop_name(attrName)
+							newNode.properties[attrName] = attrValue
 					elif attrName == 'ref':
 						newNode.ref['name'] = attrValue
+					elif attrName == 'id':
+						newNode.id['name'] = attrValue
 					else:
+						attrName = convert_prop_name(attrName)
 						newNode.properties[attrName] = attrValue
 			if cur != null:
 				cur.children.append(newNode)
@@ -209,7 +255,7 @@ static func get_offset_by_node_path(content, nodePath, isBuffer = false):
 					if level == 0:
 						names.push_front('.')
 					else:
-						names.push_front(attrValue)
+						names.push_frontattrValue
 					names.reverse()
 					if '/'.join(names) == nodePath:
 						start = xmlParser.get_node_offset()
@@ -253,7 +299,7 @@ static func append(content, tag, nodePath, isBuffer = false):
 					if level == 0:
 						names.append('.')
 					else:
-						names.push_front(attrValue)
+						names.push_frontattrValue
 					start = xmlParser.get_node_offset()
 		elif type == XMLParser.NODE_ELEMENT_END:
 			names.reverse()

@@ -10,5 +10,8 @@ func _init(rnode, vnode):
 func operate():
 	if vnode.model.has('rName'):
 		var vm = vnode.vm
-		rnode.toggled.connect(vm.data._rset.bind(vnode.model['rName']))
+		rnode.toggled.connect(
+			func(flag):
+				vm.data.rset(vnode.model['rName'], flag)
+		)
 	

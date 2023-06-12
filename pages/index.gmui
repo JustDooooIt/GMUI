@@ -1,8 +1,29 @@
-<VBoxContainer>
-	<Control></Control>
-	<Scene scenePath="res://components/username_input.gmui"></Scene>
-</VBoxContainer>
+<CenterCol>
+	<Row>
+		<Text text="用户名"></Text>
+		<LineEdit placeholder_text="请输入用户名" g-model="username"></LineEdit>
+	</Row>
+	<Row>
+		<Text text="密码"></Text>
+		<LineEdit placeholder_text="请输入密码" g-model="password"></LineEdit>
+	</Row>
+	<Row>
+		<Button text="登录" ref="loginBtn"></Button>
+		<Button text="重置" ref="resetBtn"></Button>
+	</Row>
+</CenterCol>
 
-<script src="res://scripts/test.gd">
-	var b = 0
+<script>
+	@onready var data = vm.define_reactive({'username': 'name', 'password': '123'})
+	func _mounted():
+		vm.refs['loginBtn'].rnode.pressed.connect(
+			func():
+				print('username:', data.rget('username'))
+				print('password:', data.rget('password'))
+		)
+		vm.refs['resetBtn'].rnode.pressed.connect(
+			func():
+				data.rset('username', '')
+				data.rset('password', '')
+		)
 </script>

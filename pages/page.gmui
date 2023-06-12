@@ -1,5 +1,7 @@
 <VBoxContainer>
 	<Control></Control>
+	<Control></Control>
+	<Control></Control>
 </VBoxContainer>
 <script>
 	
