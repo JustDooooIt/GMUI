@@ -4,5 +4,6 @@
 	"icon": "res://addons/gmui/gmui.png",
 	"main_page": "res://pages/index.gmui",
 	"version": "1.0.0",
-	"environment": "gmui_1.0.0"
+	"environment": "gmui_1.0.0",
+	"screen": "1080x720"
 }

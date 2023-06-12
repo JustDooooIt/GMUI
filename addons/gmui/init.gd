@@ -38,6 +38,8 @@ func _enter_tree():
 	ProjectSettings.set_setting('application/config/name', configJson.data['name'])
 	ProjectSettings.set_setting('application/config/description', configJson.data['description'])
 	ProjectSettings.set_setting('application/config/icon', configJson.data['icon'])
+	ProjectSettings.set_setting('display/window/size/viewport_width', configJson.data['screen'].split('x')[0])
+	ProjectSettings.set_setting('display/window/size/viewport_height', configJson.data['screen'].split('x')[1])
 	genBtn.pressed.connect(gen)
 	DirAccess.make_dir_absolute('res://components')
 	DirAccess.make_dir_absolute('res://pages')
@@ -289,7 +291,8 @@ func load_gumui_json():
 			"icon": "addons/gmui/gmui.png",
 			"main_page": "pages/index.gmui",
 			"version": "1.0.0",
-			"environment": "gmui_1.0.0"
+			"environment": "gmui_1.0.0",
+			"screen":"1080x720"
 		}
 		var str = JSON.stringify(content)
 		var fileAccess = FileAccess.open('res://', FileAccess.WRITE)

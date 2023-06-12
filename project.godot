@@ -14,7 +14,7 @@ config/name="demo"
 config/description="a wonderful project"
 run/main_scene="res://addons/gmui/dist/scenes/pages/index.tscn"
 config/features=PackedStringArray("4.0", "Forward Plus")
-config/icon="addons/gmui/gmui.png"
+config/icon="res://addons/gmui/gmui.png"
 
 [autoload]
 
@@ -22,6 +22,11 @@ _vh="*res://addons/gmui/scripts/vnode/vnode_helper.gd"
 _vms="*res://addons/gmui/scripts/common/vms.gd"
 _values="*res://addons/gmui/scripts/observer/values.gd"
 _patch="*res://addons/gmui/scripts/vnode/patch.gd"
+
+[display]
+
+window/size/viewport_width="1080"
+window/size/viewport_height="720"
 
 [editor_plugins]
 
