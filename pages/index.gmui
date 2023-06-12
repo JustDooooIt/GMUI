@@ -1,11 +1,11 @@
 <CenterCol>
 	<Row>
 		<Text text="用户名"></Text>
-		<LineEdit placeholder_text="请输入用户名" g-model="username"></LineEdit>
+		<LineEdit hint_text="请输入用户名" g-model="username"></LineEdit>
 	</Row>
 	<Row>
 		<Text text="密码"></Text>
-		<LineEdit placeholder_text="请输入密码" g-model="password"></LineEdit>
+		<LineEdit hint_text="请输入密码" g-model="password"></LineEdit>
 	</Row>
 	<Row>
 		<Button text="登录" ref="loginBtn"></Button>
