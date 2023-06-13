@@ -1,17 +1,17 @@
-<CenterCol>
+<Column>
 	<Row>
 		<Text text="用户名"></Text>
-		<LineEdit hint_text="请输入用户名" g-model="username"></LineEdit>
+		<LineEdit placeholder_text="请输入用户名" g-model="username"></LineEdit>
 	</Row>
-	<Row>
+	<Row align="center">
 		<Text text="密码"></Text>
-		<LineEdit hint_text="请输入密码" g-model="password"></LineEdit>
+		<LineEdit placeholder_text="请输入密码" g-model="password"></LineEdit>
 	</Row>
-	<Row>
+	<Row align="center">
 		<Button text="登录" ref="loginBtn"></Button>
 		<Button text="重置" ref="resetBtn"></Button>
 	</Row>
-</CenterCol>
+</Column>
 
 <script>
 	@onready var data = vm.define_reactive({'username': 'name', 'password': '123'})

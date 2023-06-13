@@ -1,4 +1,4 @@
-extends CenterCol
+extends Center
 
 var oldVNode = null
 var ast = null

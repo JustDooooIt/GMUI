@@ -200,7 +200,7 @@ func gen_scene(type):
 			var root = null
 			rootType = TinyXMLParser.convert_type(rootType)
 			if !ClassDB.class_exists(rootType):
-				root = load('res://addons/gmui/ui/%s/%s.tscn' % [rootType, rootType]).instantiate()
+				root = load('res://addons/gmui/ui/scenes/%s.tscn' % [rootType]).instantiate()
 			else:
 				root = ClassDB.instantiate(rootType)
 			root.name = 'Root'

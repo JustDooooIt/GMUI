@@ -7,18 +7,18 @@ static func convert_type(type):
 		return 'Label'
 	elif type == 'Widget':
 		return 'Scene'
-	elif type == 'Row':
-		return 'HBoxContainer'
-	elif type == 'Col':
-		return 'VBoxContainer'
+#	elif type == 'Row':
+#		return 'HBoxContainer'
+#	elif type == 'Column':
+#		return 'VBoxContainer'
 	else:
 		return type
 
 static func convert_prop_name(propName):
-	if propName == 'placeholder_text':
-		return 'hint_text'
-	else:
-		return propName
+#	if propName == 'hint_text':
+#		return 'placeholder_text'
+#	else:
+	return propName
 
 static func parse_xml(content, isBuffer = false):
 	var tree = _parse_xml(content, [], null, true, isBuffer)
@@ -45,7 +45,7 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 		var type = xmlParser.get_node_type()
 		if type == XMLParser.NODE_ELEMENT:
 			level+=1
-			var nodeType = convert_type(xmlParser.get_node_name())
+			var nodeType = xmlParser.get_node_name()
 			var count = xmlParser.get_attribute_count()
 			var newNode = TreeNode.new()
 			newNode.type = convert_type(nodeType)
@@ -58,7 +58,7 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 					var attrName = xmlParser.get_attribute_name(i)
 					var attrValue = xmlParser.get_attribute_value(i)
 					if attrName.contains('g-bind:'):
-						var value = str_to_var(attrValue)
+						var value = attrValue
 						if value == null:
 							newNode.bindDict[attrName.split(':')[1]] = attrValue
 						else:
@@ -69,6 +69,9 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 					else:
 						attrName = convert_prop_name(attrName)
 						newNode.properties[attrName] = attrValue
+				var builtinNames = FileUtils.get_all_file('res://addons/gmui/ui/scenes')
+				newNode.isBuiltComponent = builtinNames.find('res://addons/gmui/ui/scenes/' + nodeType + '.tscn') != -1
+#					set_align(newNode, nodeType, attrName, attrValue)
 #				paths = ['.']
 			elif nodeType == 'Scene':
 				newNode.name = str(randi())
@@ -77,7 +80,6 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 					var attrName = xmlParser.get_attribute_name(i)
 					var attrValue = xmlParser.get_attribute_value(i)
 #					if attrName == 'name':
-
 					if attrName == 'scenePath':
 						var xmlPath = attrValue.replace('.gmui', '.xml')
 						xmlPath = attrValue.replace('res://dist/components', 'res://dist/layouts/components').replace('.gmui', '.xml')
@@ -90,12 +92,8 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 					var attrName = xmlParser.get_attribute_name(i)
 					var attrValue = xmlParser.get_attribute_value(i)
 					if attrName.contains('g-bind:'):
-						var value = str_to_var(attrValue)
-						if value == null:
-							newNode.dynamicProps[attrName.split(':')[1]] = attrValue
-						else:
-							attrName = convert_prop_name(attrName)
-							newNode.staticProps[attrName] = attrValue
+						attrName = convert_prop_name(attrName)
+						newNode.staticProps[attrName] = attrValue
 					elif attrName == 'ref':
 						newNode.sceneXML.ref['name'] = attrValue
 					elif attrName == 'id':
@@ -140,16 +138,20 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 			elif nodeType == 'OptionButton':
 				ControlStrategy.new(newNode, 'selected', xmlParser).operate()
 			else:
+				var builtinNames = FileUtils.get_all_file('res://addons/gmui/ui/scenes')
+				newNode.isBuiltComponent = builtinNames.find('res://addons/gmui/ui/scenes/' + nodeType + '.tscn') != -1
 				newNode.name = str(randi())
 				for i in count:
 					var attrName = xmlParser.get_attribute_name(i)
 					var attrValue = xmlParser.get_attribute_value(i)
 					if attrName.contains('g-bind:'):
-						var value = str_to_var(attrValue)
-						if value == null:
-							newNode.bindDict[attrName.split(':')[1]] = attrValue
+						attrName = convert_prop_name(attrName)
+						var expression = Expression.new()
+						var res = expression.parse(attrValue)
+						if res == OK:
+							var value = expression.execute()
+							newNode.properties[attrName] = value
 						else:
-							attrName = convert_prop_name(attrName)
 							newNode.properties[attrName] = attrValue
 					elif attrName == 'ref':
 						newNode.ref['name'] = attrValue
@@ -158,6 +160,7 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 					else:
 						attrName = convert_prop_name(attrName)
 						newNode.properties[attrName] = attrValue
+#					set_align(newNode, nodeType, attrName, attrValue)
 			if cur != null:
 				cur.children.append(newNode)
 				newNode.parent = cur
@@ -324,3 +327,19 @@ static func append(content, tag, nodePath, isBuffer = false):
 		var file = FileAccess.open(content, FileAccess.WRITE)
 		file.store_buffer(newBytes)
 		file.close()
+
+static func set_align(newNode, nodeType, attrName, attrValue):
+	if nodeType == 'Column':
+		if attrName == 'align':
+			if attrValue == 'center':
+				newNode.properties['anchor_bottom'] = 0.5
+				newNode.properties['anchor_top'] = 0.5
+				newNode.properties['anchor_right'] = 0.5
+				newNode.properties['anchor_left'] = 0.5
+	elif nodeType == 'Row':
+		if attrName == 'align':
+			if attrValue == 'center':
+				newNode.properties['anchor_bottom'] = 0.5
+				newNode.properties['anchor_top'] = 0.5
+				newNode.properties['anchor_right'] = 0.5
+				newNode.properties['anchor_left'] = 0.5

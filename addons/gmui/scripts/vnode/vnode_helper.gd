@@ -21,7 +21,7 @@ class_name VNodeHelper extends Node
 #	vnode.bindDict = bindDict
 #	return vnode
 
-static func create_vnode(type = '', name = '' , isScene = false, sceneXMLPath = '', properties = {}, bindDict = {}, vm = null, model = {}, ref = {}, id = {}, children = []):
+static func create_vnode(type = '', name = '' , isScene = false, sceneXMLPath = '', properties = {}, bindDict = {}, vm = null, model = {}, ref = {}, id = {}, isBuiltComponent = false, children = []):
 	var vnode = VNode.new()
 	vnode.name = name
 	vnode.type = type
@@ -38,6 +38,7 @@ static func create_vnode(type = '', name = '' , isScene = false, sceneXMLPath = 
 	elif ref.is_empty() and !id.is_empty():
 		vnode.id = id
 		vnode.ref = id
+	vnode.isBuiltComponent = isBuiltComponent
 	return vnode
 
 static func create_vnodes(ast, vm, staticProps = {}, dynamicProps = {}):
@@ -53,7 +54,7 @@ static func create(ast, isScene, sceneXMLPath, bindDict, staticProps, dynamicPro
 		elif node.ref.is_empty() and !node.id.is_empty():
 			vm.ids = {node.id['name']: null}
 			vm.refs = vm.ids
-		return create_vnode(node.type, node.name, true, ast.sceneXMLPath, node.properties, vm, ast.model, ast.ref, ast.id)
+		return create_vnode(node.type, node.name, true, ast.sceneXMLPath, node.properties, vm, ast.model, ast.ref, ast.isBuiltComponent, ast.id)
 #		return 'vnode("%s", "%s", %s, "%s", %s, %s, %s, [])' % [node.type, node.name, true, ast.sceneXMLPath, node.properties, id, ast.model]
 #		vnodes.append(vnode_func(node, true, path, ast.sceneXMLPath, ast.staticProps, ast.dynamicProps, node.bindDict, vm))
 #		return ','.join(vnodes)
@@ -81,7 +82,7 @@ static func create(ast, isScene, sceneXMLPath, bindDict, staticProps, dynamicPro
 				vm.refs = vm.ids
 			if !ast.model.is_empty():
 				ast.properties[ast.model.cName] = vm.data.rget(ast.model.rName)
-			return create_vnode(ast.type, ast.name, isScene, sceneXMLPath, ast.properties, ast.bindDict, vm, ast.model, ast.ref, ast.id)
+			return create_vnode(ast.type, ast.name, isScene, sceneXMLPath, ast.properties, ast.bindDict, vm, ast.model, ast.ref, ast.id, ast.isBuiltComponent)
 		else:
 			for key in dynamicProps.keys():
 				vm.data.rset(key, vm.parent.data.rget(key), false)
@@ -99,7 +100,7 @@ static func create(ast, isScene, sceneXMLPath, bindDict, staticProps, dynamicPro
 				var vnode = create(child, false,  '', child.bindDict, staticProps, dynamicProps, vm)
 				if vnode != null:
 					vnodes.append(vnode)
-			return create_vnode(ast.type, ast.name, isScene, sceneXMLPath, ast.properties, ast.bindDict, vm, ast.model, ast.ref, ast.id, vnodes)
+			return create_vnode(ast.type, ast.name, isScene, sceneXMLPath, ast.properties, ast.bindDict, vm, ast.model, ast.ref, ast.id, ast.isBuiltComponent, vnodes)
 
 static func rtree_to_vtree(rnode, vnode = null):
 	if vnode == null:

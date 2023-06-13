@@ -74,6 +74,13 @@ func _create_rnode_tree(rnode, vnode, mode = Node.INTERNAL_MODE_DISABLED):
 			newRNode.name = child.name
 			rnode.add_child(newRNode)
 			_set_properties_tree(newRNode, child)
+		elif child.isBuiltComponent:
+			var scene = load('res://addons/gmui/ui/scenes/%s.tscn' % [child.type])
+			newRNode = scene.instantiate()
+			newRNode.name = child.name
+			rnode.add_child(newRNode)
+			_create_rnode_tree(newRNode, child)
+			_set_properties_tree(newRNode, child)
 		else:
 			newRNode = ClassDB.instantiate(child.type)
 			newRNode.name = child.name
@@ -81,6 +88,7 @@ func _create_rnode_tree(rnode, vnode, mode = Node.INTERNAL_MODE_DISABLED):
 #		newRNode.owner = PathUtils.get_owner(rnode)
 			_create_rnode_tree(newRNode, child)
 			_set_properties(newRNode,child)
+		child.rnode = newRNode
 		if newRNode is LineEdit:
 			LineEditModelStrategy.new(newRNode, child).operate()
 		elif newRNode is TabBar:
@@ -131,7 +139,7 @@ func _create_rnode_tree_with_root(rnode, vnode):
 		if rnode != null:
 			rnode.add_child(newRNode)
 	elif !ClassDB.class_exists(vnode.type):
-		var scene = load('res://addons/gmui/ui/%s/%s.tscn' % [vnode.type, vnode.type])
+		var scene = load('res://addons/gmui/ui/scenes/%s.tscn' % [vnode.type])
 		newRNode = scene.instantiate()
 		vnode.rnode = rnode
 		if rnode != null:

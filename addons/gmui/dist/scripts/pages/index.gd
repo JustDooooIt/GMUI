@@ -1,4 +1,4 @@
-extends "res://addons/gmui/dist/super_scripts/CenterCol.gd"
+extends "res://addons/gmui/dist/super_scripts/Column.gd"
 
 @onready var data = vm.define_reactive({'username': 'name', 'password': '123'})
 func _mounted():

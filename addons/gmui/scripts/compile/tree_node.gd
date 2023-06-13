@@ -24,6 +24,7 @@ var dynamicProps = {}
 var properties = {}
 var ref = {}
 var id = {}
+var isBuiltComponent = false
 var children = []
 
 func _init():

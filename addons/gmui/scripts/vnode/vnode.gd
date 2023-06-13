@@ -19,6 +19,7 @@ var parent = null
 var children = []
 var rnode = null
 var isReplace = false
+var isBuiltComponent = false
 
 func replace(newVNode):
 	if parent == null:
