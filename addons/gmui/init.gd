@@ -37,7 +37,7 @@ func _enter_tree():
 #	scene_changed.connect(bind_load_xml_signal)
 	ProjectSettings.set_setting('application/config/name', configJson.data['name'])
 	ProjectSettings.set_setting('application/config/description', configJson.data['description'])
-	ProjectSettings.set_setting('application/config/icon', configJson.data['icon'])
+	ProjectSettings.set_setting('application/config/icon', 'res:/' + configJson.data['icon'])
 	ProjectSettings.set_setting('display/window/size/viewport_width', configJson.data['screen'].split('x')[0])
 	ProjectSettings.set_setting('display/window/size/viewport_height', configJson.data['screen'].split('x')[1])
 	genBtn.pressed.connect(gen)
@@ -195,6 +195,7 @@ func gen_scene(type):
 			file.close()
 			var scene = PackedScene.new()
 			var root = null
+			rootType = TinyXMLParser.convert_type(rootType)
 			if !ClassDB.class_exists(rootType):
 				root = load('res://addons/gmui/ui/%s/%s.tscn' % [rootType, rootType]).instantiate()
 			else:
@@ -288,11 +289,12 @@ func load_gumui_json():
 		{
 			"name": "demo",
 			"description": "a wonderful project",
-			"icon": "addons/gmui/gmui.png",
-			"main_page": "pages/index.gmui",
+			"icon": "/addons/gmui/gmui.png",
+			"main_page": "/index.gmui",
 			"version": "1.0.0",
 			"environment": "gmui_1.0.0",
-			"screen":"1080x720"
+			"screen":"1080x720",
+			"gmui_dir": "/pages"
 		}
 		var str = JSON.stringify(content)
 		var fileAccess = FileAccess.open('res://', FileAccess.WRITE)
@@ -301,7 +303,7 @@ func load_gumui_json():
 
 func set_main_scene():
 	var mainScenePath = configJson.data['main_page']
-	mainScenePath = distPath + '/scenes/' + mainScenePath.replace('res://', '').replace('.gmui', '.tscn')
+	mainScenePath = distPath + '/scenes/pages' + mainScenePath.replace('.gmui', '.tscn')
 	ProjectSettings.set('application/run/main_scene', mainScenePath)
 	
 func _exit_tree():
