@@ -290,7 +290,7 @@ func load_gumui_json():
 			"name": "demo",
 			"description": "a wonderful project",
 			"icon": "/addons/gmui/gmui.png",
-			"main_page": "/index.gmui",
+			"main_page": "index.gmui",
 			"version": "1.0.0",
 			"environment": "gmui_1.0.0",
 			"screen":"1080x720",
@@ -303,7 +303,7 @@ func load_gumui_json():
 
 func set_main_scene():
 	var mainScenePath = configJson.data['main_page']
-	mainScenePath = distPath + '/scenes/pages' + mainScenePath.replace('.gmui', '.tscn')
+	mainScenePath = distPath + '/scenes/pages/' + mainScenePath.replace('.gmui', '.tscn')
 	ProjectSettings.set('application/run/main_scene', mainScenePath)
 	
 func _exit_tree():
