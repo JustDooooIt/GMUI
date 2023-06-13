@@ -35,6 +35,7 @@ func _enter_tree():
 #	scene_changed.connect(init_node)
 #	scene_changed.connect(set_xml_content)
 #	scene_changed.connect(bind_load_xml_signal)
+	set_main_scene()
 	ProjectSettings.set_setting('application/config/name', configJson.data['name'])
 	ProjectSettings.set_setting('application/config/description', configJson.data['description'])
 	ProjectSettings.set_setting('application/config/icon', 'res:/' + configJson.data['icon'])
@@ -186,8 +187,10 @@ func gen_scene(type):
 		var xmlDirPath = xmlPath.get_base_dir()
 		regex.compile('[^</>]\\w*[^</>]')
 		var regexMatch = regex.search(content)
-		var rootType = regexMatch.strings[0].strip_edges()
-		if regexMatch != null and rootType != '':
+		var rootType = ''
+		if regexMatch != null: 
+			rootType = regexMatch.strings[0].strip_edges()
+		if rootType != null and rootType != '':
 			content = '<?xml version="1.0" encoding="UTF-8"?>\n' + content
 			DirAccess.make_dir_recursive_absolute(xmlDirPath)
 			var file = FileAccess.open(xmlPath, FileAccess.WRITE)
@@ -283,7 +286,7 @@ func gen_script(gmuiFile, scenePath, nodeType):
 func load_gumui_json():
 	var isExist = FileAccess.file_exists('res://gmui.json')
 	if isExist:
-		return preload('res://gmui.json')
+		return load('res://gmui.json')
 	else:
 		var content = \
 		{
