@@ -109,6 +109,7 @@ static func rtree_to_vtree(rnode, vnode = null):
 		else:
 			vnode = create_vnode(rnode.get_class(), rnode.name, true, FileUtils.scene_to_xml_path(rnode.scene_file_path))	
 		vnode.rnode = rnode
+		vnode.isReplace = rnode.isReplace
 	for child in rnode.get_children():
 		var newVNode = VNode.new()
 		rtree_to_vtree(child, newVNode)

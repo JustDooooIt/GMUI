@@ -18,6 +18,7 @@ var id = {}
 var parent = null
 var children = []
 var rnode = null
+var isReplace = false
 
 func replace(newVNode):
 	if parent == null:

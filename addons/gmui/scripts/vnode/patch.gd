@@ -31,6 +31,10 @@ func _add_rnode_by_vnode(rnode, vnode, mode = Node.INTERNAL_MODE_DISABLED):
 		newRNode = scene.instantiate()
 #		dont_init(newRNode)
 		rnode.add_child(newRNode)
+	elif !ClassDB.class_exists(vnode.type):
+		var scene = load('res://addons/gmui/ui/%s/%s.tscn' % [vnode.type, vnode.type])
+		newRNode = scene.instantiate()
+		rnode.add_child(newRNode)
 	else:
 		newRNode = ClassDB.instantiate(vnode.type)
 		newRNode.name = vnode.name
@@ -38,26 +42,26 @@ func _add_rnode_by_vnode(rnode, vnode, mode = Node.INTERNAL_MODE_DISABLED):
 #		newRNode.owner = PathUtils.get_owner(rnode)
 		for child in vnode.children:
 			_add_rnode_by_vnode(newRNode, child)
-		if newRNode is LineEdit:
-			LineEditModelStrategy.new(newRNode, vnode).operate()
-		elif newRNode is TabBar:
-			TabBarModelStrategy.new(newRNode, vnode).operate()
-		elif newRNode is TabContainer:
-			TabContainerModelStrategy.new(newRNode, vnode).operate()
-		elif newRNode is ColorPicker:
-			ColorPickerModelStrategy.new(newRNode, vnode).operate()
-		elif newRNode is CheckButton:
-			CheckButtonModelStrategy.new(newRNode, vnode).operate()
-		elif newRNode is CheckBox:
-			CheckBoxModelStrategy.new(newRNode, vnode).operate()
-		elif newRNode is TextEdit:
-			TextEditModelStrategy.new(newRNode, vnode).operate()
-		elif newRNode is CodeEdit:
-			CodeEditModelStrategy.new(newRNode, vnode).operate()
-		elif newRNode is SpinBox:
-			SpinBoxModelStrategy.new(newRNode, vnode).operate()
-		elif newRNode is OptionButton:
-			OptionButtonModelStrategy.new(newRNode, vnode).operate()
+	if newRNode is LineEdit:
+		LineEditModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is TabBar:
+		TabBarModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is TabContainer:
+		TabContainerModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is ColorPicker:
+		ColorPickerModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is CheckButton:
+		CheckButtonModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is CheckBox:
+		CheckBoxModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is TextEdit:
+		TextEditModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is CodeEdit:
+		CodeEditModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is SpinBox:
+		SpinBoxModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is OptionButton:
+		OptionButtonModelStrategy.new(newRNode, vnode).operate()
 			
 func _create_rnode_tree(rnode, vnode, mode = Node.INTERNAL_MODE_DISABLED):
 	vnode.rnode = rnode
@@ -77,24 +81,24 @@ func _create_rnode_tree(rnode, vnode, mode = Node.INTERNAL_MODE_DISABLED):
 #		newRNode.owner = PathUtils.get_owner(rnode)
 			_create_rnode_tree(newRNode, child)
 			_set_properties(newRNode,child)
-			if newRNode is LineEdit:
-				LineEditModelStrategy.new(newRNode, child).operate()
-			elif newRNode is TabBar:
-				TabBarModelStrategy.new(newRNode, child).operate()
-			elif newRNode is TabContainer:
-				TabContainerModelStrategy.new(newRNode, child).operate()
-			elif newRNode is ColorPicker:
-				ColorPickerModelStrategy.new(newRNode, child).operate()
-			elif newRNode is CheckButton:
-				CheckButtonModelStrategy.new(newRNode, child).operate()
-			elif newRNode is CheckBox:
-				CheckBoxModelStrategy.new(newRNode, child).operate()
-			elif newRNode is TextEdit:
-				TextEditModelStrategy.new(newRNode, child).operate()
-			elif newRNode is CodeEdit:
-				CodeEditModelStrategy.new(newRNode, child).operate()
-			elif newRNode is OptionButton:
-				OptionButtonModelStrategy.new(newRNode, child).operate()
+		if newRNode is LineEdit:
+			LineEditModelStrategy.new(newRNode, child).operate()
+		elif newRNode is TabBar:
+			TabBarModelStrategy.new(newRNode, child).operate()
+		elif newRNode is TabContainer:
+			TabContainerModelStrategy.new(newRNode, child).operate()
+		elif newRNode is ColorPicker:
+			ColorPickerModelStrategy.new(newRNode, child).operate()
+		elif newRNode is CheckButton:
+			CheckButtonModelStrategy.new(newRNode, child).operate()
+		elif newRNode is CheckBox:
+			CheckBoxModelStrategy.new(newRNode, child).operate()
+		elif newRNode is TextEdit:
+			TextEditModelStrategy.new(newRNode, child).operate()
+		elif newRNode is CodeEdit:
+			CodeEditModelStrategy.new(newRNode, child).operate()
+		elif newRNode is OptionButton:
+			OptionButtonModelStrategy.new(newRNode, child).operate()
 #func get_scene_child(rootNode, node = rootNode, map = {}):
 #	for child in node.get_children:
 #		if child.scene_file_path != '':
@@ -126,6 +130,12 @@ func _create_rnode_tree_with_root(rnode, vnode):
 		vnode.rnode = rnode
 		if rnode != null:
 			rnode.add_child(newRNode)
+	elif !ClassDB.class_exists(vnode.type):
+		var scene = load('res://addons/gmui/ui/%s/%s.tscn' % [vnode.type, vnode.type])
+		newRNode = scene.instantiate()
+		vnode.rnode = rnode
+		if rnode != null:
+			rnode.add_child(newRNode)
 	else:
 		newRNode = ClassDB.instantiate(vnode.type)
 		newRNode.name = vnode.name
@@ -135,24 +145,24 @@ func _create_rnode_tree_with_root(rnode, vnode):
 			rnode.add_child(newRNode)
 		for child in vnode.children:
 			_create_rnode_tree_with_root(newRNode, child)
-		if newRNode is LineEdit:
-			LineEditModelStrategy.new(newRNode, vnode).operate()
-		elif newRNode is TabBar:
-			TabBarModelStrategy.new(newRNode, vnode).operate()
-		elif newRNode is TabContainer:
-			TabContainerModelStrategy.new(newRNode, vnode).operate()
-		elif newRNode is ColorPicker:
-			ColorPickerModelStrategy.new(newRNode, vnode).operate()
-		elif newRNode is CheckButton:
-			CheckButtonModelStrategy.new(newRNode, vnode).operate()
-		elif newRNode is CheckBox:
-			CheckBoxModelStrategy.new(newRNode, vnode).operate()
-		elif newRNode is TextEdit:
-			TextEditModelStrategy.new(newRNode, vnode).operate()
-		elif newRNode is CodeEdit:
-			CodeEditModelStrategy.new(newRNode, vnode).operate()
-		elif newRNode is OptionButton:
-			OptionButtonModelStrategy.new(newRNode, vnode).operate()
+	if newRNode is LineEdit:
+		LineEditModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is TabBar:
+		TabBarModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is TabContainer:
+		TabContainerModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is ColorPicker:
+		ColorPickerModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is CheckButton:
+		CheckButtonModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is CheckBox:
+		CheckBoxModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is TextEdit:
+		TextEditModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is CodeEdit:
+		CodeEditModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is OptionButton:
+		OptionButtonModelStrategy.new(newRNode, vnode).operate()
 	return newRNode
 
 func _patch_properties(oldVNode, newVNode):
@@ -260,7 +270,7 @@ func _add_all_child_vnode(oldVNode, newVNode):
 	oldVNode.children = newVNode.children
 
 func _is_same_node(oldNode, newNode):
-	return oldNode.isRoot or (oldNode.name == newNode.name and oldNode.type == newNode.type)
+	return(oldNode.name == newNode.name)
 	
 func _get_dict(children):
 	var dict = {}

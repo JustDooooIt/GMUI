@@ -27,4 +27,3 @@ func operate():
 				func(text):
 					vm.parent.data.rset(vnode.model['rName'], text)
 			)
-#	rnode.caret_column = rnode.text.length - 1

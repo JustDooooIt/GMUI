@@ -1,7 +1,9 @@
-<HBoxContainer>
-	<Control></Control>
-</HBoxContainer>
+<Row>
+	<Text text="用户名"></Text>
+	<LineEdit hint_text="请输入用户名" g-model="username"></LineEdit>
+</Row>
 
 <script>
-
+	func _updated():
+		print(vm.data.rget('username'))
 </script>

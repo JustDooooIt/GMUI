@@ -15,6 +15,7 @@ var modelName = ''
 var isInit = true
 var gmuiParent = null
 var distPath = 'res://addons/gmui/dist'
+var isReplace = false
 
 signal mounted
 signal updated
@@ -128,12 +129,13 @@ func _update():
 
 func _init_render():
 	oldVNode = VNodeHelper.rtree_to_vtree(self)
-	oldVNode.isRoot = true
+#	oldVNode.isRoot = true
 	if !Engine.is_editor_hint():
-		if oldVNode.isRoot:
+		if self == get_tree().current_scene or oldVNode.isReplace:
 			var xmlPath = FileUtils.scene_to_xml_path(self.scene_file_path)
 			ast = TinyXMLParser.parse_xml(xmlPath)
 			self.name = ast.name
+			oldVNode.name = ast.name
 #			code = CodeGen.render_func(ast, vm)
 #			renderFunc = Function.new(code, _vh)
 #			newVNode = renderFunc.exec()
@@ -228,7 +230,9 @@ func change_component_from_file(path):
 	path = path.replace('.gmui', '.tscn')
 	var scene = load(path)
 	_remove_children(self)
-	self.replace_by(scene.instantiate())
+	var root = scene.instantiate()
+	root.isReplace = true
+	self.replace_by(root)
 
 func change_scene_from_file(path):
 	path = path.replace('res://pages', 'res://addons/gmui/dist/scenes/pages')
