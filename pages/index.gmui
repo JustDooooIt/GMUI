@@ -1,7 +1,12 @@
 <Column>
 	<Row>
+<<<<<<< HEAD
 		<Text text="用户名"></Text>
 		<LineEdit placeholder_text="请输入用户名" g-model="username"></LineEdit>
+=======
+		<Text text="账号"></Text>
+		<LineEdit hint_text="请输入账号" g-model="username"></LineEdit>
+>>>>>>> 93ecd7859f14f13d31c008f516d6f6dc692a5daf
 	</Row>
 	<Row align="center">
 		<Text text="密码"></Text>

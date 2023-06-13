@@ -1,10 +1,10 @@
 {
-	"name": "GMUI",
+	"name": "demo",
 	"description": "a wonderful project",
-	"icon": "/addons/gmui/gmui.png",
-	"main_page": "index.gmui",
 	"version": "1.0.0",
-	"environment": "gmui_1.0.0",
+	"icon": "/addons/gmui/gmui.png",
+	"gmui_dir": "/pages",
+	"main_page": "index.gmui",
 	"screen": "1080x720",
-	"gmui_dir": "/pages"
+	"environment": "gmui_1.0.0"
 }
