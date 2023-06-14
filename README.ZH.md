@@ -1,7 +1,7 @@
 # GMUI - Godot MVVM UI  
 Godot游戏引擎的 MVVM UI框架   
 > [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[中文文档](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)   
-> GMUI版本：1.0.0   &nbsp;&nbsp;&nbsp;Godot版本：4.x  
+> GMUI版本：1.0.0   &nbsp;&nbsp;&nbsp;&nbsp;Godot版本：4.x  
 
 ## 快速入门  
 
@@ -12,13 +12,16 @@ Godot游戏引擎的 MVVM UI框架
 
 ### 最简单的页面  
 在根目录下的pages文件夹里新建index.gmui文件，然后写入  
+
 ```xml
-```
+```  
+
 运行项目，即可看到你写的空白页面。没错，你什么代码都不需要写，一个GMUI项目就运行起来啦！GMUI的出发点是尽可能的简单，不需要书写任何多余的代码。  
 > 如果提示需要主场景，请选择`addons/gmui/dist/scenes/pages/index.tscn`或相应目录的场景文件   
 
 ### 注册登录界面  
 为了尽快拿出一个可供使用的版本，目前GMUI复用了Godot的内置节点作为组件。后期会提供更加好看的默认组件，也欢迎社区的朋友贡献组件库。接下来通过一个没有实际功能的注册登陆界面进行演示：
+
 ```xml
 <Column>
 	<Row>
@@ -38,6 +41,7 @@ Godot游戏引擎的 MVVM UI框架
 
 ### 双向数据绑定  
 双向数据绑定也是小菜一碟！若要书写逻辑代码，请在.gmui文件最下方的位置添加一个`Script`标签。下方的案例中，点击登录按钮就会打印用户输入的内容。
+
 ```xml
 <Column align="center">
 	<Row align="center">
@@ -78,6 +82,7 @@ Godot游戏引擎的 MVVM UI框架
 ![ShowPic](https://s1.ax1x.com/2023/06/14/pCnM956.png)
 
 如果您不喜欢这种样式，也可以将所有UI代码放入一个`Template`标签中，示例如下：
+
 ```xml
 <Template>
 	// 您的UI代码  
@@ -91,9 +96,12 @@ Godot游戏引擎的 MVVM UI框架
 ```
 
 ### 获取、修改节点  
+
 ```xml
 ```
+
 ### 页面跳转和组件替换  
+
 ```xml
 ```
 
