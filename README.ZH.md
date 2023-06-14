@@ -1,186 +1,167 @@
-# GMUI - Godot MVVM UI
-Godot游戏引擎的 MVVM UI框架
-> [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[中文文档](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)  
-> 注意：目前处于早期开发阶段  
-> 支持版本：4.x
+# GMUI - Godot MVVM UI  
+Godot游戏引擎的 MVVM UI框架   
+> [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[中文文档](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)   
+> GMUI版本：1.0.0   &nbsp;&nbsp;&nbsp;&nbsp;Godot版本：4.x  
 
-## 快速开始
+## 快速入门  
 
-#### 简单使用
+### 前置工作  
+1. 在Godot资源商店安装插件  
+> 也可以下载插件包手动导入  
+2. 进入项目设置，启用插件(勾选)  
 
-1. 新场景必须在根目录的`scenes`文件夹里创建，并且需要使用GMUI提供的`GNode`，`GNode2D`，`GNode3D`，`GControl`节点，然后在`layouts`文件夹里创建XML文件，示例如下：
-
-![Screenshot 2023-06-05 171104](https://github.com/JustDooooIt/GoVM/assets/43512399/758ec2c1-eb21-4cd1-9daf-26e54bf3c191)  
+### 最简单的页面  
+在根目录下的pages文件夹里新建index.gmui文件，然后写入  
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
+```  
 
-<Node2D name="MainScene">
-</Node2D>
+运行项目，即可看到你写的空白页面。没错，你什么代码都不需要写，一个GMUI项目就运行起来啦！GMUI的出发点是尽可能的简单，不需要书写任何多余的代码。  
+> 如果提示需要主场景，请选择`addons/gmui/dist/scenes/pages/index.tscn`或相应目录的场景文件   
+
+### 注册登录界面  
+为了尽快拿出一个可供使用的版本，目前GMUI复用了Godot的内置节点作为组件。后期会提供更加好看的默认组件，也欢迎社区的朋友贡献组件库。接下来通过一个没有实际功能的注册登陆界面进行演示：
+
+```xml
+<Row align="center">
+    <Column align="center">
+        <Row>
+	    <Text text="用户名"></Text>
+	    <LineEdit placeholder_text="请输入用户名"></LineEdit>
+	    </Row>
+	    <Row>
+		<Text text="密码"></Text>
+		<LineEdit placeholder_text="请输入密码"></LineEdit>
+	    </Row>
+	    <Row>
+		<Button text="登录"></Button>
+		<Button text="重置"></Button>
+	 </Row>
+    </Column>
+</Row>
 ```
 
-> 由于一个已知的bug，除`GNode`外，其他节点不会自动挂载脚本，需手动挂载  
-
-2. 在XML文件中写入节点  
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-
-<Node2D name="MainScene">
-	<Node2D name="node1"></Node2D>
-</Node2D>
-```  
-
-> 运行游戏即可看到，新的节点被自动创建
-
-#### 单向数据绑定
-
-1. 创建的场景的根节点有默认的脚本，您需要继承这个脚本
-
-2. 在`ready`方法定义响应式数据，如下：
-
-```gdscript
-extends "res://addons/gmui/scripts/common/g_node_2d.gd"
-
-@onready var data = vm.define_reactive({'visible': false, 'text': 'text'})
-	
-func _mounted():
-	await get_tree().create_timer(5).timeout
-	data.rset('visible', true)
-	print('mounted')
-
-func _updated():
-	print('updated')
-```  
-
-> `vm`是位于父脚本的变量，是管理当前场景数据的实例  
-
-> `vm.define_reactive`可以将字典转换为响应式对象  
-
-> `mounted`方法会在ready之后执行，即组件渲染完成后执行  
-
-> `updated`方法会在你更改数据时执行    
-
-3. 最后，在XML中使用`g-bind`指令获取数据即可  
+### 双向数据绑定  
+双向数据绑定也是小菜一碟！若要书写逻辑代码，请在.gmui文件最下方的位置添加一个`Script`标签。下方的案例中，点击登录按钮就会打印用户输入的内容。
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
+<Row align="center">
+    <Column align="center">
+        <Row>
+	    <Text text="用户名"></Text>
+	    <LineEdit placeholder_text="请输入用户名" g-model="username"></LineEdit>
+	    </Row>
+	    <Row>
+		<Text text="密码"></Text>
+		<LineEdit placeholder_text="请输入密码" g-model="password"></LineEdit>
+	    </Row>
+	    <Row>
+		<Button text="登录" ref="loginBtn"></Button>
+		<Button text="重置" ref="resetBtn"></Button>
+	 </Row>
+    </Column>
+</Row>
 
-<Node2D name="MainScene">
-	<Node2D name="node1" g-bind:visible="visible"></Node2D>
-</Node2D>
-```  
-
-4. 如果要修改数据，可以调用`define_reactive`返回的对象的`rset`，获取则使用`rget`  
-
-```gdscript  
-var data = vm.define_reactive({'name': value})
-data.rset('name', newValue)
-var v = data.rget('name')
-```  
-
-#### 父子场景传值  
-
-1. 首先使用`Scene`标签引入其他场景的XML文件，然后输入您要传递的参数  
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-
-<Node2D name="MainScene">
-	<Scene name="SubScene1" scene_xml_path="res://layouts/sub_scene1.xml" visible="true"></Scene>
-</Node2D>
-```  
-
-2. 在子场景中使用`g-bind`指令获取变量  
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-
-<Node2D name="SubScene1">
-	<Node2D name="node1" g-bind:visible="visible"></Node2D>
-</Node2D>
-```  
-
-3. 在子场景中向父场景传递参数，可以使用signal  
-
-```gdscript
-extends "res://addons/gmui/scripts/common/g_node_2d.gd"
-
-signal send_value(value)
-
-func _ready():
-	var parent = self.get_parent()
-	send_value.connect(parent.set_value)
-	
-func _mounted():
-	emit_signal('send_value', 10)
-```  
-
-```gdscript   
-extends "res://addons/gmui/scripts/common/g_node_2d.gd"
-
-var value
-
-@onready var data = vm.define_reactive({'value':10})
-
-func _mounted():
-	print('mounted')
-
-func _updated():
-	print('updated')
-
-func set_value(value):
-	data.rset('value', value)
-```   
-
-4. 最后关于插槽的用法，示例如下    
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-
-<Scene name="SubScene2" scene_xml_path="res://layouts/sub_scene2.xml">
-	<Template>
-		<Node2D name="node"></Node2D>
-	</Template>
-</Scene>
-```  
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-
-<Node2D name="SubScene2">
-	<Slot></Slot>
-</Node2D>
-```  
-
-您也可以给slot加上name="name"属性，然后在template加上slot="name"即可使用具名插槽，作用是可以在一个场景区分多个插槽
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<Node2D name="MainScene">
-	<Scene name="SubScene1" scene_xml_path="res://layouts/sub_scene1.xml">
-		<Template slot="slot1">
-			<Node name="node1"></Node>
-		</Template>
-		<Template slot="slot2">
-			<Node name="node2"></Node>
-		</Template>
-	</Scene>
-</Node2D>
+<Script>
+    @onready var data = vm.define_reactive({'username': 'name', 'password': '123'})
+    func _mounted():
+        vm.refs['loginBtn'].rnode.pressed.connect(
+    	    func():
+	        print('username:', data.rget('username'))
+	        print('password:', data.rget('password'))
+        )
+        vm.refs['resetBtn'].rnode.pressed.connect(
+	    func():
+	        data.rset('username', '')
+	        data.rset('password', '')
+        )
+    func _updated():
+        print('username:', data.rget('username'))
+        print('password:', data.rget('password'))
+</Script>
 ```
 
+运行项目可以看到类似的效果：  
+![ShowPic](https://s1.ax1x.com/2023/06/14/pCnM956.png)
+
+如果您不喜欢这种样式，也可以将所有UI代码放入一个`Template`标签中，示例如下：
+
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<Node2D name="SubScene1">
-	<Slot name="slot1"></Slot>
-	<Slot name="slot2"></Slot>
-</Node2D>
+<Template>
+	// 您的UI代码  
+	// 您的UI代码  
+	// ......  
+</Template>
+
+<Script>
+
+</Script>
 ```
 
-> 看完这些，您可能会觉得十分甚至九分像Vue，事实也正是如此
+### 获取、修改节点  
+如果您在普通节点声明ref时，您会获得一个虚拟节点，您可以通过mv.refs['name']来获取虚拟节点
+```xml
+<Control>
+    <Label text="my text" ref="label"></Label>
+</Control>
 
-## 路线图
-1. [x] 单向数据绑定  
-2. [ ] 双向数据绑定  
+<Script>
+    func _mounted():
+        print(vm.refs['label'].rnode.text)
+</Script>
+```
+
+如果您在组件声明ref，您会获得一个该组件的vm实例
+username_input.gmui
+```xml
+<Control>
+    <Text text="component text" ref="text1"></Text>
+</Control>
+```
+```xml
+<Control>
+    <Widget scenePath="res://components/username_input.gmui" ref="widget"></Widget>
+</Control>
+
+<Script>
+    func _mounted():
+	var widget = vm.refs['widget'].refs['text1']
+</Script>
+```
+
+当您想执行节点内的方法时，请使用exec_func方法，参数为方法名以及参数数组
+```xml
+<Control>
+    <Label text="my text" id="label"></Label>
+</Control>
+
+<Script>
+    func _mounted():
+        vm.ids['label'].exec_func('set_text', ['new text'])
+</Script>
+```
+注意！虚拟节点虽然有真实节点，但请不要直接通过它修改真实节点的状态，请调用exec_func或者绑定响应式数据！
+### 页面跳转和组件替换  
+
+页面跳转请使用change_scene_from_file，参数为page目录下的gmui文件路径
+```xml
+<Column>
+    <Text text="my text"></Text>
+    <Button ref="btn" text="跳转"></Button>
+</Column>
+
+<Script>
+    func _mounted():
+    vm.refs['btn'].rnode.pressed.connect(
+        func():
+	    self.change_scene_from_file('res://pages/page.gmui')
+        )
+</Script>
+```
+
+## 路线图  
+0. [x] 双向数据绑定  
+1. [ ] 全新的UI组件库  
+2. [ ] 更多的布局组件  
 3. [ ] C# 语言支持  
-4. [ ] 声明式UI  
-5. [ ] ...  
+4. [ ] 响应式UI编程  
