@@ -1,4 +1,4 @@
-extends Row
+extends HBoxContainer
 
 var oldVNode = null
 var ast = null
@@ -16,6 +16,7 @@ var isInit = true
 var gmuiParent = null
 var distPath = 'res://addons/gmui/dist'
 var isReplace = false
+var commands = []
 
 signal mounted
 signal updated
@@ -76,6 +77,7 @@ func _init_watcher():
 #	_mounted()
 #	_updated()
 	emit_signal('init_finish')
+	exec_commands()
 #	emit_signal('updated')
 
 func _get_current_ast(ast):
@@ -90,6 +92,8 @@ func _get_current_ast(ast):
 		dynamicProps = ast.dynamicProps
 		modelName = ast.modelName
 		return ast.sceneXML
+	elif ast.isBuiltComponent and ast.path == _path:
+		return ast
 	elif ast.isSlot:
 		return _get_current_ast(ast.template)
 	else:
@@ -238,6 +242,10 @@ func change_scene_from_file(path):
 	path = path.replace('res://pages', 'res://addons/gmui/dist/scenes/pages')
 	path = path.replace('.gmui', '.tscn')
 	get_tree().change_scene_to_file(path)
+	
+func exec_commands():
+	for command in commands:
+		command.call()
 #func _notification(what):
 #	if what == NOTIFICATION_SCENE_INSTANTIATED:
 #		print(self.name)

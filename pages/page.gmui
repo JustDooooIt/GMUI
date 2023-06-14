@@ -1,21 +1,4 @@
-<<<<<<< HEAD
 
-=======
-<CenterCol>
-	<Row>
-		<Text text="账号"></Text>
-		<LineEdit hint_text="请输入账号" g-model="username"></LineEdit>
-	</Row>
-	<Row>
-		<Text text="密码"></Text>
-		<LineEdit hint_text="请输入密码" g-model="password"></LineEdit>
-	</Row>
-	<Row>
-		<Button text="登录" ref="loginBtn"></Button>
-		<Button text="重置" ref="resetBtn"></Button>
-	</Row>
-</CenterCol>
->>>>>>> 93ecd7859f14f13d31c008f516d6f6dc692a5daf
 
 <script>
 </script>

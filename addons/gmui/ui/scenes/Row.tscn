@@ -1,6 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://c5l86n8tcl58u"]
-
-[ext_resource type="Script" path="res://addons/gmui/ui/scripts/Row.gd" id="1_4xihb"]
+[gd_scene format=3 uid="uid://c5l86n8tcl58u"]
 
 [node name="Row" type="HBoxContainer"]
 anchors_preset = 8
@@ -10,4 +8,3 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_4xihb")

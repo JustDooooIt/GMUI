@@ -69,9 +69,9 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 					else:
 						attrName = convert_prop_name(attrName)
 						newNode.properties[attrName] = attrValue
+					set_align(newNode, nodeType, attrName, attrValue)
 				var builtinNames = FileUtils.get_all_file('res://addons/gmui/ui/scenes')
 				newNode.isBuiltComponent = builtinNames.find('res://addons/gmui/ui/scenes/' + nodeType + '.tscn') != -1
-#					set_align(newNode, nodeType, attrName, attrValue)
 #				paths = ['.']
 			elif nodeType == 'Scene':
 				newNode.name = str(randi())
@@ -150,9 +150,9 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 						var res = expression.parse(attrValue)
 						if res == OK:
 							var value = expression.execute()
-							newNode.properties[attrName] = value
+							newNode.properties[attrName.split(':')[1]] = value
 						else:
-							newNode.properties[attrName] = attrValue
+							newNode.properties[attrName.split(':')[1]] = attrValue
 					elif attrName == 'ref':
 						newNode.ref['name'] = attrValue
 					elif attrName == 'id':
@@ -160,7 +160,7 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 					else:
 						attrName = convert_prop_name(attrName)
 						newNode.properties[attrName] = attrValue
-#					set_align(newNode, nodeType, attrName, attrValue)
+					set_align(newNode, nodeType, attrName, attrValue)
 			if cur != null:
 				cur.children.append(newNode)
 				newNode.parent = cur
@@ -329,17 +329,52 @@ static func append(content, tag, nodePath, isBuffer = false):
 		file.close()
 
 static func set_align(newNode, nodeType, attrName, attrValue):
+	var methodName = 'set_anchors_and_offsets_preset'
 	if nodeType == 'Column':
 		if attrName == 'align':
-			if attrValue == 'center':
-				newNode.properties['anchor_bottom'] = 0.5
-				newNode.properties['anchor_top'] = 0.5
-				newNode.properties['anchor_right'] = 0.5
-				newNode.properties['anchor_left'] = 0.5
+			match attrValue:
+				'center':
+					newNode.commands.append(
+						{
+							'methodName': methodName,
+							'args': [Control.PRESET_CENTER]
+						}
+					)
+				'top':
+					newNode.commands.append(
+						{
+							'methodName': methodName,
+							'args': [Control.PRESET_CENTER_TOP]
+						}
+					)
+				'bottom':
+					newNode.commands.append(
+						{
+							'methodName': methodName,
+							'args': [Control.PRESET_CENTER_BOTTOM]
+						}
+					)
 	elif nodeType == 'Row':
 		if attrName == 'align':
-			if attrValue == 'center':
-				newNode.properties['anchor_bottom'] = 0.5
-				newNode.properties['anchor_top'] = 0.5
-				newNode.properties['anchor_right'] = 0.5
-				newNode.properties['anchor_left'] = 0.5
+			match attrValue:
+				'center':
+					newNode.commands.append(
+						{
+							'methodName': methodName,
+							'args': [Control.PRESET_CENTER]
+						}
+					)
+				'left':
+					newNode.commands.append(
+						{
+							'methodName': methodName,
+							'args': [Control.PRESET_CENTER_LEFT]
+						}
+					)
+				'right':
+					newNode.commands.append(
+						{
+							'methodName': methodName,
+							'args': [Control.PRESET_CENTER_RIGHT]
+						}
+					)

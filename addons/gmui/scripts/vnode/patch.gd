@@ -42,6 +42,10 @@ func _add_rnode_by_vnode(rnode, vnode, mode = Node.INTERNAL_MODE_DISABLED):
 #		newRNode.owner = PathUtils.get_owner(rnode)
 		for child in vnode.children:
 			_add_rnode_by_vnode(newRNode, child)
+	for command in vnode.commands:
+		var methodName = command['methodName']
+		var args = command['args']
+		rnode.commands.append(Callable(newRNode, methodName).bindv(args))
 	if newRNode is LineEdit:
 		LineEditModelStrategy.new(newRNode, vnode).operate()
 	elif newRNode is TabBar:
@@ -88,7 +92,10 @@ func _create_rnode_tree(rnode, vnode, mode = Node.INTERNAL_MODE_DISABLED):
 #		newRNode.owner = PathUtils.get_owner(rnode)
 			_create_rnode_tree(newRNode, child)
 			_set_properties(newRNode,child)
-		child.rnode = newRNode
+		for command in child.commands:
+			var methodName = command['methodName']
+			var args = command['args']
+			rnode.commands.append(Callable(newRNode, methodName).bindv(args))
 		if newRNode is LineEdit:
 			LineEditModelStrategy.new(newRNode, child).operate()
 		elif newRNode is TabBar:
@@ -153,6 +160,10 @@ func _create_rnode_tree_with_root(rnode, vnode):
 			rnode.add_child(newRNode)
 		for child in vnode.children:
 			_create_rnode_tree_with_root(newRNode, child)
+	for command in vnode.commands:
+		var methodName = command['methodName']
+		var args = command['args']
+		rnode.commands.append(Callable(newRNode, methodName).bindv(args))
 	if newRNode is LineEdit:
 		LineEditModelStrategy.new(newRNode, vnode).operate()
 	elif newRNode is TabBar:

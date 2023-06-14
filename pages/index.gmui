@@ -1,18 +1,13 @@
-<Column>
-	<Row>
-<<<<<<< HEAD
+<Column align="center">
+	<Row align="center">
 		<Text text="用户名"></Text>
 		<LineEdit placeholder_text="请输入用户名" g-model="username"></LineEdit>
-=======
-		<Text text="账号"></Text>
-		<LineEdit hint_text="请输入账号" g-model="username"></LineEdit>
->>>>>>> 93ecd7859f14f13d31c008f516d6f6dc692a5daf
 	</Row>
-	<Row align="center">
+	<Row>
 		<Text text="密码"></Text>
 		<LineEdit placeholder_text="请输入密码" g-model="password"></LineEdit>
 	</Row>
-	<Row align="center">
+	<Row>
 		<Button text="登录" ref="loginBtn"></Button>
 		<Button text="重置" ref="resetBtn"></Button>
 	</Row>
@@ -21,6 +16,7 @@
 <script>
 	@onready var data = vm.define_reactive({'username': 'name', 'password': '123'})
 	func _mounted():
+		self.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 		vm.refs['loginBtn'].rnode.pressed.connect(
 			func():
 				print('username:', data.rget('username'))

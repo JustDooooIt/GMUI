@@ -196,15 +196,18 @@ func gen_scene(type):
 			var file = FileAccess.open(xmlPath, FileAccess.WRITE)
 			file.store_string(content.replace('	','').replace('\n', ''))
 			file.close()
-			var scene = PackedScene.new()
 			var root = null
-			rootType = TinyXMLParser.convert_type(rootType)
+			var scene = null
+#			rootType = TinyXMLParser.convert_type(rootType)
+			var convertedType = convert_type(rootType)
 			if !ClassDB.class_exists(rootType):
-				root = load('res://addons/gmui/ui/scenes/%s.tscn' % [rootType]).instantiate()
+				scene = load('res://addons/gmui/ui/scenes/%s.tscn' % [rootType])
+				gen_ui_super_script(rootType)
 			else:
-				root = ClassDB.instantiate(rootType)
+				scene = PackedScene.new()
+				gen_super_script(rootType)
+			root = ClassDB.instantiate(convertedType)
 			root.name = 'Root'
-			gen_super_script(rootType)
 			var scriptPath = gen_script(filePath, scenePath, rootType)
 			var script = load(scriptPath)
 			root.set_script(script)
@@ -244,8 +247,54 @@ func gen_super_script(nodeType):
 	DirAccess.make_dir_recursive_absolute(distPath + '/super_scripts')
 	ResourceSaver.save(superScript, distPath + '/super_scripts/%s.gd' % nodeType)
 	superScript.source_code = superScript.source_code.replace('extends %s' % nodeType, 'extends Control')
-		
+	
+func gen_ui_super_script(nodeType):
+	var realType = convert_type(nodeType)
+	var superScript = preload('res://addons/gmui/scripts/common/gcontrol.gd')
+	superScript.source_code = superScript.source_code.replace('extends Control', 'extends ' + realType)
+	DirAccess.make_dir_recursive_absolute('res://addons/gmui/ui/super_scripts')
+	ResourceSaver.save(superScript, distPath + '/super_scripts/%s.gd' % nodeType)
+	superScript.source_code = superScript.source_code.replace('extends %s' % realType, 'extends Control')
+
 func gen_script(gmuiFile, scenePath, nodeType):
+	var scriptPath = scenePath.replace(distPath + '/scenes', distPath + '/scripts')
+	var content = FileAccess.get_file_as_string(gmuiFile)
+	var regex = RegEx.new()
+	regex.compile('<script.*>(.|\n)*</script>')
+	var regexMatch = regex.search(content)
+	var scriptDirPath = scriptPath.get_base_dir()
+	var distScriptPath = scriptPath.trim_suffix('tscn') + 'gd'
+	if regexMatch != null and regexMatch.strings[0].strip_edges() != '':
+		var scriptContent = regexMatch.strings[0].strip_edges()
+		regex.compile('src=".*"')
+		regexMatch = regex.search(scriptContent)
+		var outerScriptCode = ''
+		if regexMatch != null and regexMatch.strings[0].strip_edges():
+			outerScriptCode = load(regexMatch.strings[0].strip_edges().replace('src=', '').replace('"', '')).source_code
+			scriptContent = scriptContent.replace(regexMatch.strings[0], '')
+		regex.compile('(<script.*>)|(</script>)')
+		var regexMatchs = regex.search_all(scriptContent)
+		for rm in regexMatchs:
+			scriptContent = scriptContent.replace(rm.strings[0], '')
+#		scriptContent = scriptContent.lstrip('<script>\n').rstrip('\n</script>')
+		scriptContent = '	extends "%s/super_scripts/%s.gd"\n	%s' % [distPath, nodeType, outerScriptCode] + scriptContent
+		regex.compile('\n*\t+.*\n*')
+		regexMatch = regex.search_all(scriptContent)
+		var standardContent = ''
+		for matchs in regexMatch:
+			standardContent += matchs.strings[0].substr(1)
+		DirAccess.make_dir_recursive_absolute(scriptDirPath)
+		var file = FileAccess.open(distScriptPath, FileAccess.WRITE)
+		file.store_string(standardContent)
+		file.close()
+	else:
+		DirAccess.make_dir_recursive_absolute(distScriptPath.get_base_dir())
+		var file = FileAccess.open(distScriptPath, FileAccess.WRITE)
+		file.store_string('extends "res://addons/gmui/scripts/common/gcontrol.gd"')
+		file.close()
+	return distScriptPath
+	
+func gen_ui_script(gmuiFile, scenePath, nodeType):
 	var scriptPath = scenePath.replace(distPath + '/scenes', distPath + '/scripts')
 	var content = FileAccess.get_file_as_string(gmuiFile)
 	var regex = RegEx.new()
@@ -309,6 +358,13 @@ func set_main_scene():
 	mainScenePath = distPath + '/scenes/pages/' + mainScenePath.replace('.gmui', '.tscn')
 	ProjectSettings.set('application/run/main_scene', mainScenePath)
 	
+func convert_type(type):
+	match type:
+		'Center': return 'Container'
+		'Row': return 'HBoxContainer'
+		'Column': return 'VBoxContainer'
+	return type	
+
 func _exit_tree():
 	vms.isInited.clear()
 #	scene_changed.disconnect(set_bue)

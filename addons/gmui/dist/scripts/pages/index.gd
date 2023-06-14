@@ -2,6 +2,7 @@ extends "res://addons/gmui/dist/super_scripts/Column.gd"
 
 @onready var data = vm.define_reactive({'username': 'name', 'password': '123'})
 func _mounted():
+	self.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	vm.refs['loginBtn'].rnode.pressed.connect(
 		func():
 			print('username:', data.rget('username'))

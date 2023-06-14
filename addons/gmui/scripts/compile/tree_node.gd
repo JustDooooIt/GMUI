@@ -25,6 +25,7 @@ var properties = {}
 var ref = {}
 var id = {}
 var isBuiltComponent = false
+var commands = []
 var children = []
 
 func _init():
