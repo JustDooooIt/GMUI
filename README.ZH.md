@@ -43,39 +43,40 @@ Godot游戏引擎的 MVVM UI框架
 双向数据绑定也是小菜一碟！若要书写逻辑代码，请在.gmui文件最下方的位置添加一个`Script`标签。下方的案例中，点击登录按钮就会打印用户输入的内容。
 
 ```xml
-<Column align="center">
-	<Row align="center">
-		<Text text="账户"></Text>
-		<LineEdit placeholder_text="请输入账户" g-model="username"></LineEdit>
-	</Row>
-	<Row>
+<Row align="center">
+    <Column align="center">
+        <Row>
+	    <Text text="用户名"></Text>
+	    <LineEdit placeholder_text="请输入用户名" g-model="username"></LineEdit>
+	    </Row>
+	    <Row>
 		<Text text="密码"></Text>
 		<LineEdit placeholder_text="请输入密码" g-model="password"></LineEdit>
-	</Row>
-	<Row>
+	    </Row>
+	    <Row>
 		<Button text="登录" ref="loginBtn"></Button>
 		<Button text="重置" ref="resetBtn"></Button>
-	</Row>
-</Column>
+	 </Row>
+    </Column>
+</Row>
 
-<script>
-	@onready var data = vm.define_reactive({'username': 'name', 'password': '123'})
-	func _mounted():
-		self.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-		vm.refs['loginBtn'].rnode.pressed.connect(
-			func():
-				print('username:', data.rget('username'))
-				print('password:', data.rget('password'))
-		)
-		vm.refs['resetBtn'].rnode.pressed.connect(
-			func():
-				data.rset('username', '')
-				data.rset('password', '')
-		)
-	func _updated():
-		print('username:', data.rget('username'))
-		print('password:', data.rget('password'))
-</script>
+<Script>
+    @onready var data = vm.define_reactive({'username': 'name', 'password': '123'})
+    func _mounted():
+        vm.refs['loginBtn'].rnode.pressed.connect(
+    	    func():
+	        print('username:', data.rget('username'))
+	        print('password:', data.rget('password'))
+        )
+        vm.refs['resetBtn'].rnode.pressed.connect(
+	    func():
+	        data.rset('username', '')
+	        data.rset('password', '')
+        )
+    func _updated():
+        print('username:', data.rget('username'))
+        print('password:', data.rget('password'))
+</Script>
 ```
 
 运行项目可以看到类似的效果：  
@@ -96,13 +97,57 @@ Godot游戏引擎的 MVVM UI框架
 ```
 
 ### 获取、修改节点  
-
+如果您在普通节点声明ref时，您会获得一个虚拟节点，您可以通过mv.refs['name']来获取虚拟节点
 ```xml
+<Control>
+	<Label text="my text" ref="label"></Label>
+</Control>
+
+<Script>
+	func _mounted():
+		print(vm.refs['label'].rnode.text)
+</Script>
+```
+
+如果您在组件声明ref，您会获得一个该组件的vm实例
+username_input.gmui
+```xml
+<Control>
+    <Text text="component text" ref="text1"></Text>
+</Control>
+```
+```xml
+<Control>
+    <Widget scenePath="res://components/username_input.gmui" ref="widget"></Widget>
+</Control>
+
+<Script>
+    func _mounted():
+	var widget = vm.refs['widget'].refs['text1']
+</Script>
+```
+
+当您想执行节点内的方法时，请使用exec_func方法，参数为方法名以及参数数组
+```xml
+<Control>
+    <Label text="my text" id="label"></Label>
+</Control>
+
+<Script>
+    func _mounted():
+        vm.ids['label'].exec_func('set_text', ['new text'])
+</Script>
 ```
 
 ### 页面跳转和组件替换  
 
+页面跳转请使用change_scene_from_file，参数为page目录下的gmui文件路径
 ```xml
+<Text text="my text"></Text>
+<Script>
+    func _mounted():
+        self.change_scene_from_file('res://pages/page.gmui')
+</Script>
 ```
 
 ## 路线图  
