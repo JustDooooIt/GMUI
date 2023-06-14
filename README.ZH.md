@@ -102,12 +102,12 @@ Godot游戏引擎的 MVVM UI框架
 如果您在普通节点声明ref时，您会获得一个虚拟节点，您可以通过mv.refs['name']来获取虚拟节点
 ```xml
 <Control>
-	<Label text="my text" ref="label"></Label>
+    <Label text="my text" ref="label"></Label>
 </Control>
 
 <Script>
-	func _mounted():
-		print(vm.refs['label'].rnode.text)
+    func _mounted():
+        print(vm.refs['label'].rnode.text)
 </Script>
 ```
 
@@ -145,10 +145,17 @@ username_input.gmui
 
 页面跳转请使用change_scene_from_file，参数为page目录下的gmui文件路径
 ```xml
-<Text text="my text"></Text>
+<Column>
+    <Text text="my text"></Text>
+    <Button ref="btn" text="跳转"></Button>
+</Column>
+
 <Script>
     func _mounted():
-        self.change_scene_from_file('res://pages/page.gmui')
+    vm.refs['btn'].rnode.pressed.connect(
+        func():
+	    self.change_scene_from_file('res://pages/page.gmui')
+        )
 </Script>
 ```
 
