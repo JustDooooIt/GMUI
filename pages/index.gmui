@@ -1,7 +1,7 @@
 <Column align="center">
 	<Row align="center">
-		<Text text="用户名"></Text>
-		<LineEdit placeholder_text="请输入用户名" g-model="username"></LineEdit>
+		<Text text="账户"></Text>
+		<LineEdit placeholder_text="请输入账户" g-model="username"></LineEdit>
 	</Row>
 	<Row>
 		<Text text="密码"></Text>
