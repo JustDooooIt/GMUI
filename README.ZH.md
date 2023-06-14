@@ -140,7 +140,7 @@ username_input.gmui
         vm.ids['label'].exec_func('set_text', ['new text'])
 </Script>
 ```
-
+注意！虚拟节点虽然有真实节点，但请不要直接通过它修改真实节点的状态，请调用exec_func或者绑定响应式数据！
 ### 页面跳转和组件替换  
 
 页面跳转请使用change_scene_from_file，参数为page目录下的gmui文件路径
