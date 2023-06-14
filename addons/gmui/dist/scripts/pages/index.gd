@@ -1,18 +1,5 @@
-extends "res://addons/gmui/dist/super_scripts/Column.gd"
+extends "res://addons/gmui/dist/super_scripts/Control.gd"
 
-@onready var data = vm.define_reactive({'username': 'name', 'password': '123'})
-func _mounted():
-	self.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	vm.refs['loginBtn'].rnode.pressed.connect(
-		func():
-			print('username:', data.rget('username'))
-			print('password:', data.rget('password'))
-	)
-	vm.refs['resetBtn'].rnode.pressed.connect(
-		func():
-			data.rset('username', '')
-			data.rset('password', '')
-	)
+@onready var data = vm.define_reactive({'text': 'my text'})
 func _updated():
-	print('username:', data.rget('username'))
-	print('password:', data.rget('password'))
+	print(data.rget('text'))

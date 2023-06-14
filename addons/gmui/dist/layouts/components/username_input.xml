@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?><Row><Text text="用户名"></Text><LineEdit hint_text="请输入用户名" g-model="username"></LineEdit></Row>
+<?xml version="1.0" encoding="UTF-8"?><Control><Text text="component text" ref="text1"></Text></Control>

@@ -63,16 +63,12 @@ static func create(ast, isScene, sceneXMLPath, bindDict, staticProps, dynamicPro
 	var vnodes = []
 	if ast.isScene:
 		var node = ast.sceneXML
-		if !node.ref.is_empty() and node.id.is_empty():
-			vm.refs = {node.ref['name']: null}
-			vm.ids = vm.refs
-		elif node.ref.is_empty() and !node.id.is_empty():
-			vm.ids = {node.id['name']: null}
-			vm.refs = vm.ids
-		return create_vnode(node.type, node.name, true, ast.sceneXMLPath, node.properties, vm, ast.model, ast.ref, ast.id, ast.isBuiltComponent, ast.commands)
-#		return 'vnode("%s", "%s", %s, "%s", %s, %s, %s, [])' % [node.type, node.name, true, ast.sceneXMLPath, node.properties, id, ast.model]
-#		vnodes.append(vnode_func(node, true, path, ast.sceneXMLPath, ast.staticProps, ast.dynamicProps, node.bindDict, vm))
-#		return ','.join(vnodes)
+		if !node.model.is_empty():
+			if vm.data.has(node.model.rName):
+				node.properties[node.model.cName] = vm.data.rget(node.model.rName)
+			else:
+				node.properties[node.model.cName] = null
+		return create_vnode(node.type, node.name, true, ast.sceneXMLPath, node.properties, ast.bindDict, vm, node.model, ast.ref, ast.id, ast.isBuiltComponent, ast.commands)
 	elif ast.isSlot:
 		var template = ast.template
 		if template != null:
@@ -89,14 +85,17 @@ static func create(ast, isScene, sceneXMLPath, bindDict, staticProps, dynamicPro
 				vm.data.rset(key, vm.parent.data.rget(key), false)
 			for key in ast.bindDict.keys():
 				ast.properties[key] = vm.data.rget(ast.bindDict[key])
-			if !ast.ref.is_empty() and ast.id.is_empty():
-				vm.refs = {ast.ref['name']: null}
-				vm.ids = vm.refs
-			elif ast.ref.is_empty() and !ast.id.is_empty():
-				vm.ids = {ast.id['name']: null}
-				vm.refs = vm.ids
+#			if !ast.ref.is_empty() and ast.id.is_empty():
+#				vm.refs[ast.ref['name']] = []
+#				vm.ids[ast.ref['name']] = []
+#			elif ast.ref.is_empty() and !ast.id.is_empty():
+#				vm.ids[ast.id['name']] = []
+#				vm.refs[ast.id['name']] = []
 			if !ast.model.is_empty():
-				ast.properties[ast.model.cName] = vm.data.rget(ast.model.rName)
+				if vm.data.has(ast.model.rName):
+					ast.properties[ast.model.cName] = vm.data.rget(ast.model.rName)
+				else:
+					ast.properties[ast.model.cName] = null
 			return create_vnode(ast.type, ast.name, isScene, sceneXMLPath, ast.properties, ast.bindDict, vm, ast.model, ast.ref, ast.id, ast.isBuiltComponent, ast.commands)
 		else:
 			for key in dynamicProps.keys():
@@ -104,14 +103,17 @@ static func create(ast, isScene, sceneXMLPath, bindDict, staticProps, dynamicPro
 			for child in ast.children:
 				for key in child.bindDict.keys():
 					child.properties[key] = vm.data.rget(child.bindDict[key])
-				if !child.ref.is_empty() and child.id.is_empty():
-					vm.refs = {child.ref['name']: null}
-					vm.ids = vm.refs
-				elif child.ref.is_empty() and !child.id.is_empty():
-					vm.ids = {child.id['name']: null}
-					vm.refs = vm.ids
+#				if !child.ref.is_empty() and child.id.is_empty():
+#					vm.refs[child.ref['name']] = []
+#					vm.ids[child.ref['name']] = []
+#				elif child.ref.is_empty() and !child.id.is_empty():
+#					vm.ids[child.id['name']] = []
+#					vm.refs[child.id['name']] = []
 				if !child.model.is_empty():
-					child.properties[child.model.cName] = vm.data.rget(child.model.rName)
+					if vm.data.has(child.model.rName):
+						child.properties[child.model.cName] = vm.data.rget(child.model.rName)
+					else:
+						child.properties[child.model.cName] = null
 				var vnode = create(child, false,  '', child.bindDict, staticProps, dynamicProps, vm)
 				if vnode != null:
 					vnodes.append(vnode)

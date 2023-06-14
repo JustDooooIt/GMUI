@@ -1,0 +1,6 @@
+<Text text="my text"></Text>
+
+<Script>
+	func _mounted():
+		self.change_scene_from_file('res://pages/page.gmui')
+</Script>

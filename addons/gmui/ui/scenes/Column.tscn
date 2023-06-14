@@ -1,3 +1,4 @@
 [gd_scene format=3 uid="uid://b6prywml6glp2"]
 
 [node name="Column" type="VBoxContainer"]
+offset_bottom = 204.0

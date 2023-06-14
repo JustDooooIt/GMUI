@@ -3,9 +3,9 @@ class_name TinyXMLParser extends RefCounted
 var placeholder = '__default__'
 
 static func convert_type(type):
-	if type == 'Text':
-		return 'Label'
-	elif type == 'Widget':
+#	if type == 'Text':
+#		return 'Label'
+	if type == 'Widget':
 		return 'Scene'
 #	elif type == 'Row':
 #		return 'HBoxContainer'
@@ -54,26 +54,33 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 				newNode.path = '.'
 				newNode.isRoot = isRoot
 				newNode.name = str(randi())
-				for i in count:
-					var attrName = xmlParser.get_attribute_name(i)
-					var attrValue = xmlParser.get_attribute_value(i)
-					if attrName.contains('g-bind:'):
-						var value = attrValue
-						if value == null:
-							newNode.bindDict[attrName.split(':')[1]] = attrValue
+				if newNode.type in ['LineEdit', 'TextEdit', 'CodeEdit', 
+					'TabBar', 'TabContainer','ColorPicker',
+					'CheckButton', 'CheckBox', 'SpinBox', 'OptionButton']:
+						model(newNode, xmlParser)
+				else:
+					for i in count:
+						var attrName = xmlParser.get_attribute_name(i)
+						var attrValue = xmlParser.get_attribute_value(i)
+						if attrName.contains('g-bind:'):
+							var value = attrValue
+							if value == null:
+								newNode.bindDict[attrName.split(':')[1]] = attrValue
+							else:
+								attrName = convert_prop_name(attrName)
+								newNode.properties[attrName] = attrValue
+						elif attrName == 'ref':
+							newNode.ref['name'] = attrValue
+						elif attrName == 'id':
+							newNode.id['name'] = attrValue
 						else:
 							attrName = convert_prop_name(attrName)
 							newNode.properties[attrName] = attrValue
-					elif attrName == 'ref':
-						newNode.ref['name'] = attrValue
-					else:
-						attrName = convert_prop_name(attrName)
-						newNode.properties[attrName] = attrValue
-					set_align(newNode, nodeType, attrName, attrValue)
+						set_align(newNode, nodeType, attrName, attrValue)
 				var builtinNames = FileUtils.get_all_file('res://addons/gmui/ui/scenes')
 				newNode.isBuiltComponent = builtinNames.find('res://addons/gmui/ui/scenes/' + nodeType + '.tscn') != -1
 #				paths = ['.']
-			elif nodeType == 'Scene':
+			elif newNode.type == 'Scene':
 				newNode.name = str(randi())
 				var sceneXML = null
 				for i in count:
@@ -92,18 +99,26 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 					var attrName = xmlParser.get_attribute_name(i)
 					var attrValue = xmlParser.get_attribute_value(i)
 					if attrName.contains('g-bind:'):
-						attrName = convert_prop_name(attrName)
-						newNode.staticProps[attrName] = attrValue
+						var expression = Expression.new()
+						var res = expression.parse(attrValue)
+						if res == OK:
+							var value = expression.execute()
+							if expression.has_execute_failed():
+								newNode.dynamicProps[attrName.split(':')[1]] = attrValue
+							else:
+								newNode.dynamicProps[attrName.split(':')[1]] = value
+						else:
+							newNode.dynamicProps[attrName.split(':')[1]] = attrValue
 					elif attrName == 'ref':
-						newNode.sceneXML.ref['name'] = attrValue
+						newNode.ref['name'] = attrValue
 					elif attrName == 'id':
-						newNode.sceneXML.id['name'] = attrValue
+						newNode.id['name'] = attrValue
 					elif attrName == 'g-model':
 						newNode.modelName = attrValue
 					else:
 						attrName = convert_prop_name(attrName)
 						newNode.staticProps[attrName] = attrValue
-			elif nodeType == 'Template':
+			elif newNode.type == 'Template':
 				var hasName = false
 				for i in count:
 					var attrName = xmlParser.get_attribute_name(i)
@@ -114,7 +129,7 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 				if !hasName:
 					newNode.name = '__default__'
 				newNode.isTemplate = true
-			elif nodeType == 'Slot':
+			elif newNode.type == 'Slot':
 				var hasName = false
 				for i in count:
 					var attrName = xmlParser.get_attribute_name(i)
@@ -125,18 +140,10 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 				if !hasName:
 					newNode.name = '__default__'
 				newNode.isSlot = true
-			elif nodeType in ['LineEdit', 'TextEdit', 'CodeEdit']:
-				ControlStrategy.new(newNode, 'text', xmlParser).operate()
-			elif nodeType in ['TabBar', 'TabContainer']:
-				ControlStrategy.new(newNode, 'current_tab', xmlParser).operate()
-			elif nodeType == 'ColorPicker':
-				ControlStrategy.new(newNode, 'color', xmlParser).operate()
-			elif nodeType in ['CheckButton', 'CheckBox']:
-				ControlStrategy.new(newNode, 'button_pressed', xmlParser).operate()
-			elif nodeType == 'SpinBox':
-				ControlStrategy.new(newNode, 'value', xmlParser).operate()
-			elif nodeType == 'OptionButton':
-				ControlStrategy.new(newNode, 'selected', xmlParser).operate()
+			elif newNode.type in ['LineEdit', 'TextEdit', 'CodeEdit', 
+				'TabBar', 'TabContainer','ColorPicker',
+				'CheckButton', 'CheckBox', 'SpinBox', 'OptionButton']:
+					model(newNode, xmlParser)
 			else:
 				var builtinNames = FileUtils.get_all_file('res://addons/gmui/ui/scenes')
 				newNode.isBuiltComponent = builtinNames.find('res://addons/gmui/ui/scenes/' + nodeType + '.tscn') != -1
@@ -150,7 +157,10 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 						var res = expression.parse(attrValue)
 						if res == OK:
 							var value = expression.execute()
-							newNode.properties[attrName.split(':')[1]] = value
+							if expression.has_execute_failed():
+								newNode.bindDict[attrName.split(':')[1]] = attrValue
+							else:
+								newNode.properties[attrName.split(':')[1]] = value
 						else:
 							newNode.properties[attrName.split(':')[1]] = attrValue
 					elif attrName == 'ref':
@@ -329,52 +339,77 @@ static func append(content, tag, nodePath, isBuffer = false):
 		file.close()
 
 static func set_align(newNode, nodeType, attrName, attrValue):
-	var methodName = 'set_anchors_and_offsets_preset'
+	var setAnchorsAndOffsetsPreset = 'set_anchors_and_offsets_preset'
+	var setHSizeFlags = 'set_h_size_flags'
+	var setVSizeFlags = 'set_v_size_flags'
 	if nodeType == 'Column':
 		if attrName == 'align':
 			match attrValue:
 				'center':
-					newNode.commands.append(
-						{
-							'methodName': methodName,
-							'args': [Control.PRESET_CENTER]
-						}
+					newNode.commands.append_array(
+						[
+							command(setAnchorsAndOffsetsPreset, [Control.PRESET_HCENTER_WIDE]),
+							command(setVSizeFlags, [Control.SIZE_SHRINK_CENTER])
+						]
 					)
 				'top':
-					newNode.commands.append(
-						{
-							'methodName': methodName,
-							'args': [Control.PRESET_CENTER_TOP]
-						}
+					newNode.commands.append_array(
+						[
+							command(setAnchorsAndOffsetsPreset, [Control.PRESET_TOP_WIDE]),
+							command(setVSizeFlags, [Control.SIZE_SHRINK_BEGIN])
+						]
 					)
 				'bottom':
-					newNode.commands.append(
-						{
-							'methodName': methodName,
-							'args': [Control.PRESET_CENTER_BOTTOM]
-						}
+					newNode.commands.append_array(
+						[
+							command(setAnchorsAndOffsetsPreset, [Control.PRESET_BOTTOM_WIDE]),
+							command(setVSizeFlags, [Control.SIZE_SHRINK_END])
+						]
 					)
 	elif nodeType == 'Row':
 		if attrName == 'align':
 			match attrValue:
 				'center':
-					newNode.commands.append(
-						{
-							'methodName': methodName,
-							'args': [Control.PRESET_CENTER]
-						}
+					newNode.commands.append_array(
+						[
+							command(setAnchorsAndOffsetsPreset, [Control.PRESET_VCENTER_WIDE]), 
+							command(setHSizeFlags, [Control.SIZE_SHRINK_CENTER])
+						]
+					)
+					newNode.commands.append_array(
+						[
+							command(setAnchorsAndOffsetsPreset, [Control.PRESET_VCENTER_WIDE]), 
+							command(setHSizeFlags, [Control.SIZE_SHRINK_CENTER])
+						]
 					)
 				'left':
-					newNode.commands.append(
-						{
-							'methodName': methodName,
-							'args': [Control.PRESET_CENTER_LEFT]
-						}
+					newNode.commands.append_array(
+						[
+							command(setAnchorsAndOffsetsPreset, [Control.PRESET_LEFT_WIDE]),
+							command(setHSizeFlags, [Control.SIZE_SHRINK_BEGIN])
+						]
 					)
 				'right':
 					newNode.commands.append(
-						{
-							'methodName': methodName,
-							'args': [Control.PRESET_CENTER_RIGHT]
-						}
+						[
+							command(setAnchorsAndOffsetsPreset, [Control.PRESET_RIGHT_WIDE]),
+							command(setHSizeFlags, [Control.SIZE_SHRINK_END])
+						]
 					)
+
+static func command(methodName, args):
+	return {'methodName': methodName,'args': args}
+
+static func model(newNode, xmlParser):
+	if newNode.type in ['LineEdit', 'TextEdit', 'CodeEdit']:
+		ControlStrategy.new(newNode, 'text', xmlParser).operate()
+	elif newNode.type in ['TabBar', 'TabContainer']:
+		ControlStrategy.new(newNode, 'current_tab', xmlParser).operate()
+	elif newNode.type == 'ColorPicker':
+		ControlStrategy.new(newNode, 'color', xmlParser).operate()
+	elif newNode.type in ['CheckButton', 'CheckBox']:
+		ControlStrategy.new(newNode, 'button_pressed', xmlParser).operate()
+	elif newNode.type == 'SpinBox':
+		ControlStrategy.new(newNode, 'value', xmlParser).operate()
+	elif newNode.type == 'OptionButton':
+		ControlStrategy.new(newNode, 'selected', xmlParser).operate()

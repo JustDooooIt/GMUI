@@ -19,6 +19,17 @@ func observe():
 			elif data[key] is Array:
 				self.rdata[key] = ReactiveArray.new(data[key])
 
+func has(key):
+	var keys = key.split('.')
+	if keys.size() < 2:
+		return data.has(key)
+	else:
+		var d = data[keys[0]]
+		for i in range(1, keys.size() - 1):
+			if d is Dictionary:
+				d = d[keys[i]]
+		return d.has(key)
+
 func rget(key):
 	if _values.curWatcher != null:
 		dep.depend()

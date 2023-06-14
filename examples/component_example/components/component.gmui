@@ -1,5 +1,6 @@
 <Control>
 	<Text text="component text" ref="text1"></Text>
+	<Text text="component text" ref="text2"></Text>
 </Control>
 
 <Script>

@@ -161,6 +161,7 @@ func _init_render():
 			_patch.run(oldVNode, newVNode)
 	oldVNode = newVNode
 	_set_ref(oldVNode)
+	normalize_refs()
 	if vm.parent != null:
 		if !oldVNode.ref.is_empty() and vm.parent.refs.has(oldVNode.ref['name']):
 			vm.parent.refs[oldVNode.ref['name']] = oldVNode
@@ -223,12 +224,35 @@ func _remove_children(node):
 
 func _set_ref(vnode):
 	if vnode!=null:
-		if !vnode.ref.is_empty() or !vnode.id.is_empty():
-			vm.refs[vnode.ref['name']] = vnode
-			vm.ids[vnode.id['name']] = vnode
+		if vnode.isScene:
+			if !vnode.ref.is_empty() or !vnode.id.is_empty():
+				if !vm.refs.has(vnode.ref['name']):
+					vm.refs[vnode.ref['name']] = [vnode.rnode.vm]
+				else:
+					vm.refs[vnode.ref['name']].append(vnode.rnode.vm)
+				if !vm.ids.has(vnode.id['name']):
+					vm.ids[vnode.id['name']] = [vnode.rnode.vm]
+				else:
+					vm.ids[vnode.id['name']].append(vnode.rnode.vm)
+		else:
+			if !vnode.ref.is_empty() or !vnode.id.is_empty():
+				if !vm.refs.has(vnode.ref['name']):
+					vm.refs[vnode.ref['name']] = [vnode]
+				else:
+					vm.refs[vnode.ref['name']].append(vnode)
+				if !vm.ids.has(vnode.id['name']):
+					vm.ids[vnode.id['name']] = [vnode]
+				else:
+					vm.ids[vnode.id['name']].append(vnode)
 	for child in vnode.children:
 		_set_ref(child)
 
+func normalize_refs():
+	for key in vm.refs.keys():
+		if vm.refs[key] is Array and vm.refs[key].size() <= 1:
+			vm.refs[key] = vm.refs[key][0]
+			vm.ids[key] = vm.ids[key][0]
+			
 func change_component_from_file(path):
 	path = path.replace('res://components', 'res://addons/gmui/dist/scenes/components')
 	path = path.replace('.gmui', '.tscn')

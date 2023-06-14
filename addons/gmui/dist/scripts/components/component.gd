@@ -1,2 +1,2 @@
-extends "res://addons/gmui/dist/super_scripts/HBoxContainer.gd"
+extends "res://addons/gmui/dist/super_scripts/Column.gd"
 

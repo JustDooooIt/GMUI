@@ -53,6 +53,7 @@ func _build():
 	add_autoload_singleton('_vms', 'res://addons/gmui/scripts/common/vms.gd')
 	add_autoload_singleton('_values', 'res://addons/gmui/scripts/observer/values.gd')
 	add_autoload_singleton('_patch', 'res://addons/gmui/scripts/vnode/patch.gd')
+	DirAccess.remove_absolute('res://addons/gmui/dist')
 	gen()
 	return true
 
@@ -173,13 +174,13 @@ func gen_scene(type):
 	for filePath in filePaths:
 		var content = FileAccess.get_file_as_string(filePath)
 		var regex = RegEx.new()
-		regex.compile('<script.*>(.|\n)*</script>')
+		regex.compile('<Script.*>(.|\n)*</Script>')
 		var regexMatchs = regex.search_all(content)
 		if regexMatchs != null and regexMatchs.size() > 0:
 			for regexMatch in regexMatchs:
 				content = content.replace(regexMatch.strings[0], '')
 		content = content.replace('scenePath="res://components', 'scenePath="%s/layouts/components' % distPath)
-		content = content.replace('<template>', '').replace('</template>', '')
+		content = content.replace('<Template>', '').replace('</Template>', '')
 		var xmlPath = filePath.replace('res://' + type, distPath + '/layouts/' + type)
 		xmlPath = xmlPath.trim_suffix('gmui') + 'xml'
 		var scenePath = xmlPath.replace(distPath + '/layouts', distPath + '/scenes')
@@ -260,7 +261,7 @@ func gen_script(gmuiFile, scenePath, nodeType):
 	var scriptPath = scenePath.replace(distPath + '/scenes', distPath + '/scripts')
 	var content = FileAccess.get_file_as_string(gmuiFile)
 	var regex = RegEx.new()
-	regex.compile('<script.*>(.|\n)*</script>')
+	regex.compile('<Script.*>(.|\n)*</Script>')
 	var regexMatch = regex.search(content)
 	var scriptDirPath = scriptPath.get_base_dir()
 	var distScriptPath = scriptPath.trim_suffix('tscn') + 'gd'
@@ -272,7 +273,7 @@ func gen_script(gmuiFile, scenePath, nodeType):
 		if regexMatch != null and regexMatch.strings[0].strip_edges():
 			outerScriptCode = load(regexMatch.strings[0].strip_edges().replace('src=', '').replace('"', '')).source_code
 			scriptContent = scriptContent.replace(regexMatch.strings[0], '')
-		regex.compile('(<script.*>)|(</script>)')
+		regex.compile('(<Script.*>)|(</Script>)')
 		var regexMatchs = regex.search_all(scriptContent)
 		for rm in regexMatchs:
 			scriptContent = scriptContent.replace(rm.strings[0], '')
@@ -310,7 +311,7 @@ func gen_ui_script(gmuiFile, scenePath, nodeType):
 		if regexMatch != null and regexMatch.strings[0].strip_edges():
 			outerScriptCode = load(regexMatch.strings[0].strip_edges().replace('src=', '').replace('"', '')).source_code
 			scriptContent = scriptContent.replace(regexMatch.strings[0], '')
-		regex.compile('(<script.*>)|(</script>)')
+		regex.compile('(<Script.*>)|(</Script>)')
 		var regexMatchs = regex.search_all(scriptContent)
 		for rm in regexMatchs:
 			scriptContent = scriptContent.replace(rm.strings[0], '')
@@ -363,6 +364,7 @@ func convert_type(type):
 		'Center': return 'Container'
 		'Row': return 'HBoxContainer'
 		'Column': return 'VBoxContainer'
+		'Text': return 'Label'
 	return type	
 
 func _exit_tree():

@@ -1,33 +1,10 @@
-<Column align="center">
-	<Row align="center">
-		<Text text="用户名"></Text>
-		<LineEdit placeholder_text="请输入用户名" g-model="username"></LineEdit>
-	</Row>
-	<Row>
-		<Text text="密码"></Text>
-		<LineEdit placeholder_text="请输入密码" g-model="password"></LineEdit>
-	</Row>
-	<Row>
-		<Button text="登录" ref="loginBtn"></Button>
-		<Button text="重置" ref="resetBtn"></Button>
-	</Row>
-</Column>
+<Control>
+	<Scene scenePath="res://components/component.gmui" g-model="text"></Scene>
+	<Label g-bind:text="text"></Label>
+</Control>
 
-<script>
-	@onready var data = vm.define_reactive({'username': 'name', 'password': '123'})
-	func _mounted():
-		self.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-		vm.refs['loginBtn'].rnode.pressed.connect(
-			func():
-				print('username:', data.rget('username'))
-				print('password:', data.rget('password'))
-		)
-		vm.refs['resetBtn'].rnode.pressed.connect(
-			func():
-				data.rset('username', '')
-				data.rset('password', '')
-		)
+<Script>
+	@onready var data = vm.define_reactive({'text': 'my text'})
 	func _updated():
-		print('username:', data.rget('username'))
-		print('password:', data.rget('password'))
-</script>
+		print(data.rget('text'))
+</Script>

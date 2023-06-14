@@ -1,6 +1,6 @@
-<HBoxContainer>
-	<Label text="text"></Label>
-</HBoxContainer>
+<Column>
+	<LineEdit g-model="text"></LineEdit>
+</Column>
 
-<script>
-</script>
+<Script>
+</Script>

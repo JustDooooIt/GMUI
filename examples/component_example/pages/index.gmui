@@ -1,0 +1,9 @@
+<Control>
+	<Widget scenePath="res://components/component.gmui" ref="widget"></Widget>
+</Control>
+
+<Script>
+	var data = vm.define_reactive({'test': 'test'})
+	func _mounted():
+		var widget = vm.refs['widget'].refs['text1']
+</Script>
