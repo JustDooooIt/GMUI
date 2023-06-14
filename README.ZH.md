@@ -23,20 +23,22 @@ Godot游戏引擎的 MVVM UI框架
 为了尽快拿出一个可供使用的版本，目前GMUI复用了Godot的内置节点作为组件。后期会提供更加好看的默认组件，也欢迎社区的朋友贡献组件库。接下来通过一个没有实际功能的注册登陆界面进行演示：
 
 ```xml
-<Column>
-	<Row>
-		<Text text="账号"></Text>
-		<LineEdit></LineEdit>
-	</Row>
-	<Row>
+<Row align="center">
+    <Column align="center">
+        <Row>
+	    <Text text="用户名"></Text>
+	    <LineEdit placeholder_text="请输入用户名"></LineEdit>
+	    </Row>
+	    <Row>
 		<Text text="密码"></Text>
-		<LineEdit></LineEdit>
-	</Row>
-	<Row>
+		<LineEdit placeholder_text="请输入密码"></LineEdit>
+	    </Row>
+	    <Row>
 		<Button text="登录"></Button>
 		<Button text="重置"></Button>
-	</Row>
-</Column>
+	 </Row>
+    </Column>
+</Row>
 ```
 
 ### 双向数据绑定  
