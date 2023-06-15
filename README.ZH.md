@@ -84,6 +84,24 @@ Godot游戏引擎的 MVVM UI框架
 运行项目可以看到类似的效果：  
 ![ShowPic](https://s1.ax1x.com/2023/06/14/pCnM956.png)
 
+您还可以对组件使用双向绑定
+```xml
+<LineEdit g-model="text"></LineEdit>
+
+<Script>
+</Script>
+```
+
+```xml
+<Control>
+    <Widget scenePath="res://components/component.gmui" g-model="text"></Widget>
+    <Text g-bind:text="text"></Text>
+</Control>
+<Script>
+	@onready var data = vm.define_reactive({'text': 'my text'})
+</Script>
+```
+
 如果您不喜欢这种样式，也可以将所有UI代码放入一个`Template`标签中，示例如下：
 
 ```xml
