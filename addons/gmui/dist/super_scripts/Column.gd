@@ -262,7 +262,7 @@ func change_component_from_file(path):
 	root.isReplace = true
 	self.replace_by(root)
 
-func change_scene_from_file(path):
+func jump_to(path):
 	path = path.replace('res://pages', 'res://addons/gmui/dist/scenes/pages')
 	path = path.replace('.gmui', '.tscn')
 	get_tree().change_scene_to_file(path)

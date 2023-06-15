@@ -136,7 +136,7 @@ func _create_rnode_tree_with_root(rnode, vnode, vmRoot = null):
 	else:
 		newRNode = ClassDB.instantiate(vnode.type)
 		newRNode.name = vnode.name
-		_set_properties(rnode, vnode)
+		_set_properties(newRNode, vnode)
 		if rnode != null:
 			rnode.add_child(newRNode)
 		for child in vnode.children:

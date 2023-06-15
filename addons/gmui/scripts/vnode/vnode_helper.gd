@@ -63,12 +63,12 @@ static func create(ast, isScene, sceneXMLPath, bindDict, staticProps, dynamicPro
 	var vnodes = []
 	if ast.isScene:
 		var node = ast.sceneXML
-		if !node.model.is_empty():
-			if vm.data.has(node.model.rName):
-				node.properties[node.model.cName] = vm.data.rget(node.model.rName)
-			else:
-				node.properties[node.model.cName] = null
-		return create_vnode(node.type, node.name, true, ast.sceneXMLPath, node.properties, ast.bindDict, vm, node.model, ast.ref, ast.id, ast.isBuiltComponent, ast.commands)
+#		if !node.model.is_empty():
+#			if vm.data.has(node.model.rName):
+#				node.properties[node.model.cName] = vm.data.rget(node.model.rName)
+#			else:
+#				node.properties[node.model.cName] = null
+		return create_vnode(node.type, node.name, true, ast.sceneXMLPath, node.properties, ast.bindDict, vm, ast.model, ast.ref, ast.id, ast.isBuiltComponent, ast.commands)
 	elif ast.isSlot:
 		var template = ast.template
 		if template != null:

@@ -167,6 +167,8 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 						newNode.ref['name'] = attrValue
 					elif attrName == 'id':
 						newNode.id['name'] = attrValue
+					elif attrName == 'g-model':
+						newNode.modelName = attrValue
 					else:
 						attrName = convert_prop_name(attrName)
 						newNode.properties[attrName] = attrValue
