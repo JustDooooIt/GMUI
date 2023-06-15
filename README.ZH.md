@@ -161,19 +161,23 @@ username_input.gmui
 注意！虚拟节点虽然有真实节点，但请不要直接通过它修改真实节点的状态，请调用exec_func或者绑定响应式数据！
 ### 页面跳转和组件替换  
 
-页面跳转请使用change_scene_from_file，参数为page目录下的gmui文件路径
+页面跳转请使用jump_to，参数为page目录下的gmui文件路径
 ```xml
-<Column>
-    <Text text="my text"></Text>
-    <Button ref="btn" text="跳转"></Button>
+<Column align="center">
+    <Row align="center">
+        <Text text="my text"></Text>
+    </Row>
+    <Row align="center">
+	<Button text="jump" ref="btn"></Button>
+    </Row>
 </Column>
 
 <Script>
     func _mounted():
-    vm.refs['btn'].rnode.pressed.connect(
-        func():
-	    self.change_scene_from_file('res://pages/page.gmui')
-        )
+        vm.refs['btn'].rnode.pressed.connect(
+            func():
+		self.jump_to('res://pages/page.gmui')
+	)
 </Script>
 ```
 
