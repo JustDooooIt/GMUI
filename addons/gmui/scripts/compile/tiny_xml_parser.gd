@@ -87,7 +87,7 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 					var attrName = xmlParser.get_attribute_name(i)
 					var attrValue = xmlParser.get_attribute_value(i)
 #					if attrName == 'name':
-					if attrName == 'scenePath':
+					if attrName == 'path':
 						var xmlPath = attrValue.replace('.gmui', '.xml')
 						xmlPath = attrValue.replace('res://dist/components', 'res://dist/layouts/components').replace('.gmui', '.xml')
 						newNode.sceneXMLPath = xmlPath
@@ -152,7 +152,7 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 					var attrName = xmlParser.get_attribute_name(i)
 					var attrValue = xmlParser.get_attribute_value(i)
 					if attrName.contains('g-bind:'):
-						attrName = convert_prop_name(attrName)
+#						attrName = convert_prop_name(attrName)
 						var expression = Expression.new()
 						var res = expression.parse(attrValue)
 						if res == OK:
@@ -162,7 +162,7 @@ static func _parse_xml(content, paths = [], outerName = null, isRoot = false, is
 							else:
 								newNode.properties[attrName.split(':')[1]] = value
 						else:
-							newNode.properties[attrName.split(':')[1]] = attrValue
+							newNode.bindDict[attrName.split(':')[1]] = attrValue
 					elif attrName == 'ref':
 						newNode.ref['name'] = attrValue
 					elif attrName == 'id':

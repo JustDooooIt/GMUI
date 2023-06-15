@@ -1,5 +1,5 @@
 <Control>
-	<Widget scenePath="res://components/component.gmui" g-model="text"></Widget>
+	<Widget path="res://components/component.gmui" g-model="text"></Widget>
 	<Text g-bind:text="text"></Text>
 </Control>
 <Script>

@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?><Column align="center"><Row align="center"><Text text="my text"></Text></Row><Row align="center"><Button text="jump" ref="btn"></Button></Row></Column>
+<?xml version="1.0" encoding="UTF-8"?><Control><Scene path="res://addons/gmui/dist/layouts/components/component.gmui" g-model="text"></Scene></Control>

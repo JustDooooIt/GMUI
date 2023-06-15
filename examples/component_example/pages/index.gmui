@@ -1,5 +1,5 @@
 <Control>
-	<Widget scenePath="res://components/component.gmui" ref="widget"></Widget>
+	<Widget path="res://components/component.gmui" ref="widget"></Widget>
 </Control>
 
 <Script>

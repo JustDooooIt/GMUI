@@ -1,6 +1,4 @@
-<Column>
-	<LineEdit g-model="text"></LineEdit>
-</Column>
+<Control><LineEdit g-model="text"></LineEdit></Control>
 
 <Script>
 </Script>

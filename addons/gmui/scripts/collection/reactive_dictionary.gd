@@ -69,5 +69,5 @@ func rset_rnode(key, rnode):
 	var value = rnode.get(key)
 	rset(key, value)
 
-func _rset(value, key, canNotify = true):
+func reversal_rset(value, key, canNotify = true):
 	rset(key, value, canNotify)

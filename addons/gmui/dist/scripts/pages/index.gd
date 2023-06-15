@@ -1,7 +1,5 @@
-extends "res://addons/gmui/dist/super_scripts/Column.gd"
+extends "res://addons/gmui/dist/super_scripts/Control.gd"
 
-func _mounted():
-	vm.refs['btn'].rnode.pressed.connect(
-		func():
-			self.jump_to('res://pages/page.gmui')
-	)
+@onready var data = vm.define_reactive({'text': 'my text'})
+func _updated():
+	print(data.rget('text'))

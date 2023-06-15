@@ -94,7 +94,7 @@ Godot游戏引擎的 MVVM UI框架
 
 ```xml
 <Control>
-    <Widget scenePath="res://components/component.gmui" g-model="text"></Widget>
+    <Widget path="res://components/component.gmui" g-model="text"></Widget>
     <Text g-bind:text="text"></Text>
 </Control>
 <Script>
@@ -138,7 +138,7 @@ username_input.gmui
 ```
 ```xml
 <Control>
-    <Widget scenePath="res://components/username_input.gmui" ref="widget"></Widget>
+    <Widget path="res://components/username_input.gmui" ref="widget"></Widget>
 </Control>
 
 <Script>

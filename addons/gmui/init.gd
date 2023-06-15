@@ -179,7 +179,7 @@ func gen_scene(type):
 		if regexMatchs != null and regexMatchs.size() > 0:
 			for regexMatch in regexMatchs:
 				content = content.replace(regexMatch.strings[0], '')
-		content = content.replace('scenePath="res://components', 'scenePath="%s/layouts/components' % distPath)
+		content = content.replace('path="res://components', 'path="%s/layouts/components' % distPath)
 		content = content.replace('<Template>', '').replace('</Template>', '')
 		var xmlPath = filePath.replace('res://' + type, distPath + '/layouts/' + type)
 		xmlPath = xmlPath.trim_suffix('gmui') + 'xml'

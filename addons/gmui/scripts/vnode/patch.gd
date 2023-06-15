@@ -8,12 +8,16 @@ func run(oldVNode, newVNode):
 		_create_rnode_tree(oldVNode, newVNode)
 	else:
 		if !_is_same_node(oldVNode, newVNode):
-			var newRoot = _create_rnode_tree_with_root(null, newVNode)
-#			set_all_owner(PathUtils.get_owner(oldVNode.rnode), newRoot)
-			oldVNode.rnode.replace_by(newRoot)
-			newVNode.rnode = newRoot
-			return newVNode
+			if oldVNode.rnode != Engine.get_main_loop().current_scene:
+				var newRoot = _create_rnode_tree_with_root(null, newVNode)
+	#			set_all_owner(PathUtils.get_owner(oldVNode.rnode), newRoot)
+				oldVNode.rnode.replace_by(newRoot)
+				newVNode.rnode = newRoot
+				return newVNode
+			else:
+				push_error('The root node cannot be replaced')
 		_patch_properties(oldVNode, newVNode)
+#		bind_model(oldVNode.rnode, newVNode)
 		if oldVNode.children.size() > 0 and newVNode.children.size() > 0:
 			_updateChildren(oldVNode.rnode, oldVNode.children, newVNode.children)
 		elif oldVNode.children.size() > 0:
@@ -42,7 +46,6 @@ func _add_rnode_by_vnode(rnode, vnode, vmRoot = null, mode = Node.INTERNAL_MODE_
 			rnode.commands.append(Callable(newRNode, methodName).bindv(args))
 		for child in vnode.children:
 			_add_rnode_by_vnode(newRNode, child, rnode)
-		bind_model(newRNode, vnode)
 	else:
 		newRNode = ClassDB.instantiate(vnode.type)
 		newRNode.name = vnode.name
@@ -50,7 +53,7 @@ func _add_rnode_by_vnode(rnode, vnode, vmRoot = null, mode = Node.INTERNAL_MODE_
 #		newRNode.owner = PathUtils.get_owner(rnode)
 		for child in vnode.children:
 			_add_rnode_by_vnode(newRNode, child)
-		bind_model(newRNode, vnode)
+	bind_model(newRNode, vnode)
 			
 func _create_rnode_tree(rnode, vnode, vmRoot = null, mode = Node.INTERNAL_MODE_DISABLED):
 	vnode.rnode = rnode
@@ -81,7 +84,6 @@ func _create_rnode_tree(rnode, vnode, vmRoot = null, mode = Node.INTERNAL_MODE_D
 				var methodName = command['methodName']
 				var args = command['args']
 				vmRoot.commands.append(Callable(newRNode, methodName).bindv(args))
-			bind_model(newRNode, child)
 		else:
 			newRNode = ClassDB.instantiate(child.type)
 			newRNode.name = child.name
@@ -89,7 +91,7 @@ func _create_rnode_tree(rnode, vnode, vmRoot = null, mode = Node.INTERNAL_MODE_D
 #		newRNode.owner = PathUtils.get_owner(rnode)
 			_create_rnode_tree(newRNode, child, rnode)
 			_set_properties(newRNode,child)
-			bind_model(newRNode, child)
+		bind_model(newRNode, child)
 #func get_scene_child(rootNode, node = rootNode, map = {}):
 #	for child in node.get_children:
 #		if child.scene_file_path != '':
@@ -132,7 +134,6 @@ func _create_rnode_tree_with_root(rnode, vnode, vmRoot = null):
 			vmRoot.commands.append(Callable(newRNode, methodName).bindv(args))
 		for child in vnode.children:
 			_create_rnode_tree_with_root(newRNode, child, rnode)
-		bind_model(newRNode, vnode)
 	else:
 		newRNode = ClassDB.instantiate(vnode.type)
 		newRNode.name = vnode.name
@@ -141,7 +142,7 @@ func _create_rnode_tree_with_root(rnode, vnode, vmRoot = null):
 			rnode.add_child(newRNode)
 		for child in vnode.children:
 			_create_rnode_tree_with_root(newRNode, child, null)
-		bind_model(newRNode, vnode)
+	bind_model(newRNode, vnode)
 	return newRNode
 
 func _patch_properties(oldVNode, newVNode):

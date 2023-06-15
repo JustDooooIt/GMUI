@@ -1,16 +1,9 @@
-<Column align="center">
-	<Row align="center">
-		<Text text="my text"></Text>
-	</Row>
-	<Row align="center">
-		<Button text="jump" ref="btn"></Button>
-	</Row>
-</Column>
-
+<Control>
+	<Scene path="res://components/component.gmui" g-model="text"></Scene>
+	<Label g-bind:text="text"></Label>
+</Control>
 <Script>
-	func _mounted():
-		vm.refs['btn'].rnode.pressed.connect(
-			func():
-				self.jump_to('res://pages/page.gmui')
-		)
+	@onready var data = vm.define_reactive({'text': 'my text'})
+	func _updated():
+		print(data.rget('text'))
 </Script>
