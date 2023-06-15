@@ -172,7 +172,7 @@ username_input.gmui
     func _mounted():
     vm.refs['btn'].rnode.pressed.connect(
         func():
-	    self.change_scene_from_file('res://pages/page.gmui')
+	    self.jump_to('res://pages/page.gmui')
         )
 </Script>
 ```
