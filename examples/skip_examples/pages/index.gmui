@@ -1,6 +1,16 @@
-<Text text="my text"></Text>
+<Column align="center">
+	<Row align="center">
+		<Text text="my text"></Text>
+	</Row>
+	<Row align="center">
+		<Button text="jump" ref="btn"></Button>
+	</Row>
+</Column>
 
 <Script>
 	func _mounted():
-		self.jump_to('res://pages/page.gmui')
+		vm.refs['btn'].rnode.pressed.connect(
+			func():
+				self.jump_to('res://pages/page.gmui')
+		)
 </Script>

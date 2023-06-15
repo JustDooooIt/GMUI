@@ -2,7 +2,5 @@
 
 [ext_resource type="Script" path="res://addons/gmui/dist/scripts/pages/index.gd" id="1_ldu7k"]
 
-[node name="Root" type="Control"]
-layout_mode = 3
-anchors_preset = 0
+[node name="Root" type="VBoxContainer"]
 script = ExtResource("1_ldu7k")
