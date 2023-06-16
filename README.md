@@ -46,6 +46,7 @@ In order to come up with a usable version as soon as possible, GMUI has reused G
 ```
 
 Running the project can see similar effects:  
+
 ![ShowPic](https://s1.ax1x.com/2023/06/16/pCMwKX9.png)  
 
 ### Bidirectional data binding  
