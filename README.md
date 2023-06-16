@@ -13,7 +13,7 @@ MVVM UI Framework for Godot Engine
 2. Open project settings and enable plugins(check box)  
 
 ### The simplest page  
-Create a new index.gmui file in the pages folder under the root directory, and then write it to:   
+Create a new index.gmui file in the pages folder under the root directory, and then write it to :   
 
 ```xml
 
@@ -24,7 +24,7 @@ Run the project and you will see the blank page you have written. That's right, 
 >If prompted for the main scene, please select 'addons/gmui/dist/scenes/pages/index. tscn' or the scene file in the corresponding directory  
 
 ### Login interface
-In order to come up with a usable version as soon as possible, GMUI has reused Godot's built-in nodes as components. In the future, we will provide more beautiful default components, and we welcome friends from the community to contribute to the component library. Next, we will demonstrate through a registration and login interface without actual functionality: 
+In order to come up with a usable version as soon as possible, GMUI has reused Godot's built-in nodes as components. In the future, we will provide more beautiful default components, and we welcome friends from the community to contribute to the component library. Next, we will demonstrate through a registration and login interface without actual functionality : 
 
 ```xml
 <Row align="center">
@@ -45,7 +45,7 @@ In order to come up with a usable version as soon as possible, GMUI has reused G
 </Row>
 ```
 
-Running the project can see similar effects:  
+Running the project can see :  
 
 ![ShowPic](https://s1.ax1x.com/2023/06/16/pCMwKX9.png)  
 
@@ -90,7 +90,7 @@ Bidirectional data binding is also a piece of cake! To write logical code, add a
 ```  
 
 
-You can also use bidirectional binding for components:  
+You can also use bidirectional binding for components :  
 
 ```xml
 <LineEdit g-model="text"></LineEdit>
@@ -124,7 +124,7 @@ If you don't like this style, you can also put all UI code into a 'Template' tag
 ```
 
 ### Obtain & modify nodes
-If ref is declared on a regular node, a virtual node will be obtained. You can obtain the virtual node through `mv.refs['name']`:  
+If ref is declared on a regular node, a virtual node will be obtained. You can obtain the virtual node through `mv.refs['name']` :  
 
 ```xml
 <Control>
@@ -137,7 +137,7 @@ If ref is declared on a regular node, a virtual node will be obtained. You can o
 </Script>
 ```  
 
-If you declare ref in a component, you will obtain a VM instance of that component:  
+If you declare ref in a component, you will obtain a VM instance of that component :  
 
 ```xml
 <Control>
@@ -156,7 +156,7 @@ If you declare ref in a component, you will obtain a VM instance of that compone
 </Script>
 ```   
 
-When you want to execute a method within a node, please use the exec_func method with the method name and parameter array as parameters:  
+When you want to execute a method within a node, please use the exec_func method with the method name and parameter array as parameters :  
 
 ```xml
 <Control>
@@ -169,10 +169,10 @@ When you want to execute a method within a node, please use the exec_func method
 </Script>
 ```  
 
-> Note: Although virtual nodes have real nodes, it is best not to directly modify the state of real nodes through them. Please call exec_func or bind responsive data!  
+> Note: Although virtual nodes have real nodes, it is best not to directly modify the state of real nodes through them. Please call exec_func or bind responsive data !  
 
 ### Page Jump and Component Replacement
-The jump to method can be used for page redirection, with the parameter being the path to the. gmui file in the page directory:  
+The jump to method can be used for page redirection, with the parameter being the path to the. gmui file in the page directory :  
 
 ```xml
 <Column align="center">
