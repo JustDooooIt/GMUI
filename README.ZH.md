@@ -27,17 +27,17 @@ Godot游戏引擎的 MVVM UI框架
 <Row align="center">
     <Column align="center">
         <Row>
-	    	<Text text="用户名"></Text>
-	    	<LineEdit placeholder_text="请输入用户名"></LineEdit>
-	    </Row>
-	    <Row>
-			<Text text="密码"></Text>
-			<LineEdit placeholder_text="请输入密码"></LineEdit>
-	    </Row>
-	    <Row>
-			<Button text="登录"></Button>
-			<Button text="重置"></Button>
-	 	</Row>
+            <Text text="用户名"></Text>
+            <LineEdit placeholder_text="请输入用户名"></LineEdit>
+        </Row>
+        <Row>
+            <Text text="密码"></Text>
+            <LineEdit placeholder_text="请输入密码"></LineEdit>
+        </Row>
+        <Row>
+            <Button text="登录"></Button>
+            <Button text="重置"></Button>
+         </Row>
     </Column>
 </Row>
 ```
@@ -53,17 +53,17 @@ Godot游戏引擎的 MVVM UI框架
 <Row align="center">
     <Column align="center">
         <Row>
-	    	<Text text="用户名"></Text>
-	    	<LineEdit placeholder_text="请输入用户名" g-model="username"></LineEdit>
-	    </Row>
-	    <Row>
-			<Text text="密码"></Text>
-			<LineEdit placeholder_text="请输入密码" g-model="password"></LineEdit>
-	    </Row>
-	    <Row>
-			<Button text="登录" ref="loginBtn"></Button>
-			<Button text="重置" ref="resetBtn"></Button>
-	 	</Row>
+            <Text text="用户名"></Text>
+            <LineEdit placeholder_text="请输入用户名" g-model="username"></LineEdit>
+        </Row>
+        <Row>
+            <Text text="密码"></Text>
+            <LineEdit placeholder_text="请输入密码" g-model="password"></LineEdit>
+        </Row>
+        <Row>
+            <Button text="登录" ref="loginBtn"></Button>
+            <Button text="重置" ref="resetBtn"></Button>
+         </Row>
     </Column>
 </Row>
 
@@ -71,14 +71,14 @@ Godot游戏引擎的 MVVM UI框架
     @onready var data = vm.define_reactive({'username': 'name', 'password': '123'})
     func _mounted():
         vm.refs['loginBtn'].rnode.pressed.connect(
-    	    func():
-	        print('username:', data.rget('username'))
-	        print('password:', data.rget('password'))
+            func():
+            print('username:', data.rget('username'))
+            print('password:', data.rget('password'))
         )
         vm.refs['resetBtn'].rnode.pressed.connect(
-	    func():
-	        data.rset('username', '')
-	        data.rset('password', '')
+        func():
+            data.rset('username', '')
+            data.rset('password', '')
         )
     func _updated():
         print('username:', data.rget('username'))
@@ -101,7 +101,7 @@ Godot游戏引擎的 MVVM UI框架
     <Text g-bind:text="text"></Text>
 </Control>
 <Script>
-	@onready var data = vm.define_reactive({'text': 'my text'})
+    @onready var data = vm.define_reactive({'text': 'my text'})
 </Script>
 ```
 
@@ -109,9 +109,9 @@ Godot游戏引擎的 MVVM UI框架
 
 ```xml
 <Template>
-	// 您的UI代码  
-	// 您的UI代码  
-	// ......  
+    // 您的UI代码  
+    // 您的UI代码  
+    // ......  
 </Template>
 
 <Script>
@@ -148,7 +148,7 @@ Godot游戏引擎的 MVVM UI框架
 
 <Script>
     func _mounted():
-	var widget = vm.refs['widget'].refs['text1']
+    var widget = vm.refs['widget'].refs['text1']
 </Script>
 ```  
 
@@ -177,7 +177,7 @@ Godot游戏引擎的 MVVM UI框架
         <Text text="my text"></Text>
     </Row>
     <Row align="center">
-		<Button text="jump" ref="btn"></Button>
+        <Button text="jump" ref="btn"></Button>
     </Row>
 </Column>
 
@@ -185,8 +185,8 @@ Godot游戏引擎的 MVVM UI框架
     func _mounted():
         vm.refs['btn'].rnode.pressed.connect(
             func():
-		self.jump_to('res://pages/page.gmui')
-	)
+        self.jump_to('res://pages/page.gmui')
+    )
 </Script>
 ```
 
