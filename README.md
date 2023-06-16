@@ -46,7 +46,7 @@ In order to come up with a usable version as soon as possible, GMUI has reused G
 ```
 
 Running the project can see similar effects:  
-![ShowPic](https://s1.ax1x.com/2023/06/14/pCnM956.png)  
+![ShowPic](https://s1.ax1x.com/2023/06/16/pCMwKX9.png)  
 
 ### Bidirectional data binding  
 Bidirectional data binding is also a piece of cake! To write logical code, add a 'Script' tag at the bottom of the. gmui file. In the case below, clicking the login button will print the user's input.  
