@@ -11,9 +11,10 @@ Godot游戏引擎的 MVVM UI框架
 2. 进入项目设置，启用插件(勾选)  
 
 ### 最简单的页面  
-在根目录下的pages文件夹里新建index.gmui文件，然后写入  
+在根目录下的pages文件夹里新建index.gmui文件，然后写入：  
 
 ```xml
+
 ```  
 
 运行项目，即可看到你写的空白页面。没错，你什么代码都不需要写，一个GMUI项目就运行起来啦！GMUI的出发点是尽可能的简单，不需要书写任何多余的代码。  
@@ -26,20 +27,23 @@ Godot游戏引擎的 MVVM UI框架
 <Row align="center">
     <Column align="center">
         <Row>
-	    <Text text="用户名"></Text>
-	    <LineEdit placeholder_text="请输入用户名"></LineEdit>
+	    	<Text text="用户名"></Text>
+	    	<LineEdit placeholder_text="请输入用户名"></LineEdit>
 	    </Row>
 	    <Row>
-		<Text text="密码"></Text>
-		<LineEdit placeholder_text="请输入密码"></LineEdit>
+			<Text text="密码"></Text>
+			<LineEdit placeholder_text="请输入密码"></LineEdit>
 	    </Row>
 	    <Row>
-		<Button text="登录"></Button>
-		<Button text="重置"></Button>
-	 </Row>
+			<Button text="登录"></Button>
+			<Button text="重置"></Button>
+	 	</Row>
     </Column>
 </Row>
 ```
+
+运行项目可以看到类似的效果：  
+![ShowPic](https://s1.ax1x.com/2023/06/14/pCnM956.png)
 
 ### 双向数据绑定  
 双向数据绑定也是小菜一碟！若要书写逻辑代码，请在.gmui文件最下方的位置添加一个`Script`标签。下方的案例中，点击登录按钮就会打印用户输入的内容。
@@ -48,17 +52,17 @@ Godot游戏引擎的 MVVM UI框架
 <Row align="center">
     <Column align="center">
         <Row>
-	    <Text text="用户名"></Text>
-	    <LineEdit placeholder_text="请输入用户名" g-model="username"></LineEdit>
+	    	<Text text="用户名"></Text>
+	    	<LineEdit placeholder_text="请输入用户名" g-model="username"></LineEdit>
 	    </Row>
 	    <Row>
-		<Text text="密码"></Text>
-		<LineEdit placeholder_text="请输入密码" g-model="password"></LineEdit>
+			<Text text="密码"></Text>
+			<LineEdit placeholder_text="请输入密码" g-model="password"></LineEdit>
 	    </Row>
 	    <Row>
-		<Button text="登录" ref="loginBtn"></Button>
-		<Button text="重置" ref="resetBtn"></Button>
-	 </Row>
+			<Button text="登录" ref="loginBtn"></Button>
+			<Button text="重置" ref="resetBtn"></Button>
+	 	</Row>
     </Column>
 </Row>
 
@@ -81,10 +85,8 @@ Godot游戏引擎的 MVVM UI框架
 </Script>
 ```
 
-运行项目可以看到类似的效果：  
-![ShowPic](https://s1.ax1x.com/2023/06/14/pCnM956.png)
+您还可以对组件使用双向绑定：
 
-您还可以对组件使用双向绑定
 ```xml
 <LineEdit g-model="text"></LineEdit>
 
@@ -117,7 +119,8 @@ Godot游戏引擎的 MVVM UI框架
 ```
 
 ### 获取、修改节点  
-如果您在普通节点声明ref时，您会获得一个虚拟节点，您可以通过mv.refs['name']来获取虚拟节点
+如果在普通节点声明ref，将会获得一个虚拟节点。您可以通过`mv.refs['name']`来获取虚拟节点
+
 ```xml
 <Control>
     <Label text="my text" ref="label"></Label>
@@ -129,13 +132,14 @@ Godot游戏引擎的 MVVM UI框架
 </Script>
 ```
 
-如果您在组件声明ref，您会获得一个该组件的vm实例
-username_input.gmui
+如果在组件声明ref，将会获得一个该组件的vm实例：
+
 ```xml
 <Control>
     <Text text="component text" ref="text1"></Text>
 </Control>
-```
+```  
+
 ```xml
 <Control>
     <Widget path="res://components/username_input.gmui" ref="widget"></Widget>
@@ -145,9 +149,10 @@ username_input.gmui
     func _mounted():
 	var widget = vm.refs['widget'].refs['text1']
 </Script>
-```
+```  
 
-当您想执行节点内的方法时，请使用exec_func方法，参数为方法名以及参数数组
+当您想执行节点内的方法时，请使用exec_func方法，参数为方法名以及参数数组：
+
 ```xml
 <Control>
     <Label text="my text" id="label"></Label>
@@ -158,17 +163,20 @@ username_input.gmui
         vm.ids['label'].exec_func('set_text', ['new text'])
 </Script>
 ```
-注意！虚拟节点虽然有真实节点，但请不要直接通过它修改真实节点的状态，请调用exec_func或者绑定响应式数据！
+
+> 注意：虚拟节点虽然有真实节点，但最好不要直接通过它修改真实节点的状态，请调用exec_func或者绑定响应式数据！  
+
 ### 页面跳转和组件替换  
 
-页面跳转请使用jump_to，参数为page目录下的gmui文件路径
+页面跳转可以使用jump_to方法，参数为page目录下的.gmui文件路径：
+
 ```xml
 <Column align="center">
     <Row align="center">
         <Text text="my text"></Text>
     </Row>
     <Row align="center">
-	<Button text="jump" ref="btn"></Button>
+		<Button text="jump" ref="btn"></Button>
     </Row>
 </Column>
 

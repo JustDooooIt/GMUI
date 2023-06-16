@@ -1,9 +1,13 @@
-<Control>
-	<Scene path="res://components/component.gmui" g-model="text"></Scene>
-	<Label g-bind:text="text"></Label>
-</Control>
+<Row align="center">
+	<Column align="center">
+		<Button text="Hello World" ref="my_button"></Button>
+	</Column>
+</Row>
+
 <Script>
-	@onready var data = vm.define_reactive({'text': 'my text'})
-	func _updated():
-		print(data.rget('text'))
+	func _mounted():
+		vm.refs['my_button'].rnode.pressed.connect(
+			func():
+			print(vm.refs['my_button'].rnode.text)
+		)
 </Script>

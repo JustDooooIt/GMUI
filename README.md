@@ -1,163 +1,200 @@
-# GMUI - Godot MVVM UI  
-Godot Engine MVVM UI  
-> [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[中文文档](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)  
-> PS：GMUI is currently in the early stages of development .    
-> Support version:4.x
+# GMUI - Godot MVVM UI
+MVVM UI Framework for Godot Engine  
 
-## Quick Start
+> [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[中文文档](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)   
+> GMUI Version：1.0.0   &nbsp;&nbsp;&nbsp;&nbsp;Godot版本：4.x   
 
-#### Easy to use
+## Quick Start  
 
-1. New scenes must be created in the `scenes` folder in the root directory and need to use the `GNode`, `GNode2D`, `GNode3D`, `GControl` nodes provided by GMUI, then create XML files in the `layouts` directory, examples are as follows:
+### Pre-work  
 
-![Screenshot 2023-06-05 171104](https://github.com/JustDooooIt/GoVM/assets/43512399/758ec2c1-eb21-4cd1-9daf-26e54bf3c191)  
+1. Install plugins in the godot asset store  
+> You can also download the plugin package and manually import it  
+2. Open project settings and enable plugins(check box)  
+
+### The simplest page  
+Create a new index.gmui file in the pages folder under the root directory, and then write it to:   
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
 
-<Node2D name="MainScene">
-</Node2D>
 ```
 
-> Due to a known bug, nodes other than `GNode` will not mount the script automatically, you need to mount it manually  
+Run the project and you will see the blank page you have written. That's right, you don't need to write any code, a GMUI project will run! The starting point of GMUI is to be as simple as possible, without the need to write any extra code.  
 
-2. Create a node in the XML file  
+>If prompted for the main scene, please select 'addons/gmui/dist/scenes/pages/index. tscn' or the scene file in the corresponding directory  
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-
-<Node2D name="MainScene">
-	<Node2D name="node1"></Node2D>
-</Node2D>
-```  
-
-> Run the game and see that new nodes are created automatically
-
-#### One-way data binding
-
-1. The root node of the created scene has a default script, which your node need to inherit
-
-2. Define the responsive data in the `ready` method, as follows:
-
-```gdscript
-extends "res://addons/gmui/scripts/common/g_node_2d.gd"
-
-@onready var data = vm.define_reactive({'visible': false, 'text': 'text'})
-	
-func _mounted():
-	await get_tree().create_timer(5).timeout
-	data.rset('visible', true)
-	print('mounted')
-
-func _updated():
-	print('updated')
-```  
-
-> `vm` is a variable that belongs to the parent script and is the instance that manages the current scene data  
-
-> `vm.define_reactive` converts the dictionary to a responsive object  
-
-> `mounted` method will be executed after ready, i.e. after the component has finished rendering  
-
-> `updated` method will be executed when you change the data    
-
-3. Finally, just use the `g-bind` directive in the XML to get the data  
+### Login interface
+In order to come up with a usable version as soon as possible, GMUI has reused Godot's built-in nodes as components. In the future, we will provide more beautiful default components, and we welcome friends from the community to contribute to the component library. Next, we will demonstrate through a registration and login interface without actual functionality: 
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
+<Row align="center">
+    <Column align="center">
+        <Row>
+            <Text text="Username"></Text>
+            <LineEdit placeholder_text="Pls enter username"></LineEdit>
+        </Row>
+        <Row>
+            <Text text="Password"></Text>
+            <LineEdit placeholder_text="Pls enter password"></LineEdit>
+        </Row>
+        <Row>
+            <Button text="login"></Button>
+            <Button text="reset"></Button>
+         </Row>
+    </Column>
+</Row>
+```
 
-<Node2D name="MainScene">
-	<Node2D name="node1" g-bind:visible="visible"></Node2D>
-</Node2D>
-```  
+Running the project can see similar effects:  
+! [ShowPic](https://s1.ax1x.com/2023/06/14/pCnM956.png)  
 
-4. If you want to modify the data, you can call the `rset` of the object returned by `define_reactive`, and use `rget` for fetching  
-
-```gdscript  
-var data = vm.define_reactive({'name': value})
-data.rset('name', newValue)
-var v = data.rget('name')
-```  
-
-#### Passing values from parent to child scenes  
-
-1. First use the `Scene` tag to bring in the XML file of the other scene, then enter the parameters you want to pass  
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-
-<Node2D name="MainScene">
-	<Scene name="SubScene1" scene_xml_path="res://layouts/sub_scene1.xml" visible="true"></Scene>
-</Node2D>
-```  
-
-2. Use the `g-bind` directive in the sub-scene to get the variables  
+### Bidirectional data binding  
+Bidirectional data binding is also a piece of cake! To write logical code, add a 'Script' tag at the bottom of the. gmui file. In the case below, clicking the login button will print the user's input.  
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
+<Row align="center">
+    <Column align="center">
+        <Row>
+            <Text text="Username"></Text>
+            <LineEdit placeholder_text="Pls enter username" g-model="username"></LineEdit>
+        </Row>
+        <Row>
+            <Text text="Password"></Text>
+            <LineEdit placeholder_text="Pls enter password" g-model="password"></LineEdit>
+        </Row>
+        <Row>
+            <Button text="Login" ref="loginBtn"></Button>
+            <Button text="Reset" ref="resetBtn"></Button>
+         </Row>
+    </Column>
+</Row>
 
-<Node2D name="SubScene1">
-	<Node2D name="node1" g-bind:visible="visible"></Node2D>
-</Node2D>
+<Script>
+    @onready var data = vm.define_reactive({'username': 'name', 'password': '123'})
+    func _mounted():
+        vm.refs['loginBtn'].rnode.pressed.connect(
+            func():
+            print('username:', data.rget('username'))
+            print('password:', data.rget('password'))
+        )
+        vm.refs['resetBtn'].rnode.pressed.connect(
+        func():
+            data.rset('username', '')
+            data.rset('password', '')
+        )
+    func _updated():
+        print('username:', data.rget('username'))
+        print('password:', data.rget('password'))
+</Script>
 ```  
 
-3. Passing arguments to the parent scene in the child scene, you can use signal  
 
-```gdscript
-extends "res://addons/gmui/scripts/common/g_node_2d.gd"
+You can also use bidirectional binding for components:  
 
-signal send_value(value)
+```xml
+<LineEdit g-model="text"></LineEdit>
 
-func _ready():
-	var parent = self.get_parent()
-	send_value.connect(parent.set_value)
-	
-func _mounted():
-	emit_signal('send_value', 10)
+<Script>
+</Script>
+```
+
+```xml
+<Control>
+    <Widget path="res://components/component.gmui" g-model="text"></Widget>
+    <Text g-bind:text="text"></Text>
+</Control>
+<Script>
+    @onready var data = vm.define_reactive({'text': 'my text'})
+</Script>
 ```  
 
-```gdscript   
-extends "res://addons/gmui/scripts/common/g_node_2d.gd"
+If you don't like this style, you can also put all UI code into a 'Template' tag, as shown in the following example:  
 
-var value
+```xml
+<Template>
+    // Your UI Code  
+    // Your UI Code  
+    // ......  
+</Template>
 
-@onready var data = vm.define_reactive({'value':10})
+<Script>
 
-func _mounted():
-	print('mounted')
+</Script>
+```
 
-func _updated():
-	print('updated')
+### Obtain & modify nodes
+If ref is declared on a regular node, a virtual node will be obtained. You can obtain the virtual node through `mv.refs['name']`:  
 
-func set_value(value):
-	data.rset('value', value)
+```xml
+<Control>
+    <Label text="my text" ref="label"></Label>
+</Control>
+
+<Script>
+    func _mounted():
+        print(vm.refs['label'].rnode.text)
+</Script>
+```  
+
+If you declare ref in a component, you will obtain a VM instance of that component:  
+
+```xml
+<Control>
+    <Text text="component text" ref="text1"></Text>
+</Control>
+```  
+
+```xml
+<Control>
+    <Widget path="res://components/username_input.gmui" ref="widget"></Widget>
+</Control>
+
+<Script>
+    func _mounted():
+    var widget = vm.refs['widget'].refs['text1']
+</Script>
 ```   
 
-4. Finally, regarding the usage of slots, the example is as follows    
+When you want to execute a method within a node, please use the exec_func method with the method name and parameter array as parameters:  
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
+<Control>
+    <Label text="my text" id="label"></Label>
+</Control>
 
-<Scene name="SubScene2" scene_xml_path="res://layouts/sub_scene2.xml">
-	<Template>
-		<Node2D name="node"></Node2D>
-	</Template>
-</Scene>
+<Script>
+    func _mounted():
+        vm.ids['label'].exec_func('set_text', ['new text'])
+</Script>
 ```  
+
+> Note: Although virtual nodes have real nodes, it is best not to directly modify the state of real nodes through them. Please call exec_func or bind responsive data!  
+
+### Page Jump and Component Replacement
+The jump to method can be used for page redirection, with the parameter being the path to the. gmui file in the page directory:  
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
+<Column align="center">
+    <Row align="center">
+        <Text text="my text"></Text>
+    </Row>
+    <Row align="center">
+        <Button text="jump" ref="btn"></Button>
+    </Row>
+</Column>
 
-<Node2D name="SubScene2">
-	<Slot></Slot>
-</Node2D>
+<Script>
+    func _mounted():
+        vm.refs['btn'].rnode.pressed.connect(
+            func():
+        self.jump_to('res://pages/page.gmui')
+    )
+</Script>
 ```  
 
-> After reading this, you might think GMUI is a lot like Vue, and that's exactly what it is
-
-## Roadmap
-1. [x] One-way Data Binding  
-2. [ ] Two-way Data Binding  
-3. [ ] C# Language Support  
-4. [ ] Declarative UI  
-5. [ ] ...  
+##Roadmap
+0. [x] Bidirectional data binding
+1. [ ] New UI component library
+2. [ ] More layout components
+3. [ ] C # language support
+4. [ ] Responsive UI programming
