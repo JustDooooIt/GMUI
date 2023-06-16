@@ -1,5 +1,2 @@
-extends "res://addons/gmui/dist/super_scripts/Control.gd"
+extends "res://addons/gmui/dist/super_scripts/Button.gd"
 
-@onready var data = vm.define_reactive({'text': 'my text'})
-func _updated():
-	print(data.rget('text'))

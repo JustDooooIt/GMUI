@@ -1,4 +1,4 @@
-<Control><LineEdit g-model="text"></LineEdit></Control>
+<LineEdit g-model="text"></LineEdit>
 
 <Script>
 </Script>

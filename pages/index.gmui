@@ -1,9 +1,5 @@
-<Control>
-	<Scene path="res://components/component.gmui" g-model="text"></Scene>
-	<Label g-bind:text="text"></Label>
-</Control>
+<Template>
+<Button text="text"></Button>
+</Template>
 <Script>
-	@onready var data = vm.define_reactive({'text': 'my text'})
-	func _updated():
-		print(data.rget('text'))
 </Script>

@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?><Control><Scene path="res://addons/gmui/dist/layouts/components/component.gmui" g-model="text"></Scene><Label g-bind:text="text"></Label></Control>
+<?xml version="1.0" encoding="UTF-8"?><Button text="text"></Button>

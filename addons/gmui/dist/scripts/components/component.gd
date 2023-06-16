@@ -1,2 +1,2 @@
-extends "res://addons/gmui/dist/super_scripts/Control.gd"
+extends "res://addons/gmui/dist/super_scripts/LineEdit.gd"
 
