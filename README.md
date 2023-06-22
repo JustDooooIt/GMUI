@@ -13,15 +13,17 @@ MVVM UI Framework for Godot Engine
 2. Open project settings and enable plugins(check box)  
 
 ### The simplest page  
-Create a new index.gmui file in the pages folder under the root directory, and then write it to :   
+Create a new index.gmui file in the pages folder under the root directory, and then write:   
 
 ```xml
+
+
 
 ```
 
 Run the project and you will see the blank page you have written. That's right, you don't need to write any code, a GMUI project will run! The starting point of GMUI is to be as simple as possible, without the need to write any extra code.  
 
->If prompted for the main scene, please select 'addons/gmui/dist/scenes/pages/index. tscn' or the scene file in the corresponding directory  
+Your page will be built as a scene in `addons/gmui/dist/scenes/pages/{page_name}.tscn`. As such, it can be set as the main scene or used within other scenes. This is the same for any other pages you create.
 
 ### Login interface
 In order to come up with a usable version as soon as possible, GMUI has reused Godot's built-in nodes as components. In the future, we will provide more beautiful default components, and we welcome friends from the community to contribute to the component library. Next, we will demonstrate through a registration and login interface without actual functionality : 
