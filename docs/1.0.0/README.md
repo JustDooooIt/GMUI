@@ -9,7 +9,7 @@ MVVM UI Framework for Godot Engine
 ### Pre-work  
 
 1. Install plugins in the godot asset store  
-> You can also download `gmui.zip` and manually import it  
+> You can also download `gmui.zip` and import it manually  
 2. Open project settings and enable plugins(check box)  
 
 ### The simplest page  
