@@ -9,7 +9,7 @@ MVVM UI Framework for Godot Engine
 ### Pre-work  
 
 1. Install plugins in the godot asset store  
-> You can also download the plugin package and manually import it  
+> You can also download the plugin `gmui.zip` and manually import it  
 2. Open project settings and enable plugins(check box)  
 
 ### The simplest page  
@@ -197,8 +197,7 @@ The jump to method can be used for page redirection, with the parameter being th
 
 ## Roadmap  
 
-0. [x] Bidirectional data binding
-1. [ ] New UI component library
-2. [ ] More layout components
-3. [ ] C # language support
-4. [ ] Responsive UI programming
+0. [x] Bidirectional data binding  
+1. [ ] New UI component library  
+2. [ ] More layout components  
+3. [ ] C # language support  

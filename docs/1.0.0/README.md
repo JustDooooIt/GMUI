@@ -2,29 +2,31 @@
 MVVM UI Framework for Godot Engine  
 
 > [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[中文文档](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)   
-> GMUI Version：1.0.0   &nbsp;&nbsp;&nbsp;&nbsp;Godot版本：4.x   
+> GMUI Version：1.0.0   &nbsp;&nbsp;&nbsp;&nbsp;Godot Version：4.x   
 
 ## Quick Start  
 
-### Pre work  
+### Pre-work  
 
 1. Install plugins in the godot asset store  
-> You can also download the plugin package and manually import it  
+> You can also download the plugin `gmui.zip` and manually import it  
 2. Open project settings and enable plugins(check box)  
 
 ### The simplest page  
-Create a new index.gmui file in the pages folder under the root directory, and then write it to:   
+Create a new index.gmui file in the pages folder under the root directory, and then write:   
 
 ```xml
+
+
 
 ```
 
 Run the project and you will see the blank page you have written. That's right, you don't need to write any code, a GMUI project will run! The starting point of GMUI is to be as simple as possible, without the need to write any extra code.  
 
->If prompted for the main scene, please select 'addons/gmui/dist/scenes/pages/index. tscn' or the scene file in the corresponding directory  
+Your page will be built as a scene in `addons/gmui/dist/scenes/pages/{page_name}.tscn`. As such, it can be set as the main scene or used within other scenes. This is the same for any other pages you create.
 
 ### Login interface
-In order to come up with a usable version as soon as possible, GMUI has reused Godot's built-in nodes as components. In the future, we will provide more beautiful default components, and we welcome friends from the community to contribute to the component library. Next, we will demonstrate through a registration and login interface without actual functionality: 
+In order to come up with a usable version as soon as possible, GMUI has reused Godot's built-in nodes as components. In the future, we will provide more beautiful default components, and we welcome friends from the community to contribute to the component library. Next, we will demonstrate through a registration and login interface without actual functionality : 
 
 ```xml
 <Row align="center">
@@ -45,8 +47,9 @@ In order to come up with a usable version as soon as possible, GMUI has reused G
 </Row>
 ```
 
-Running the project can see similar effects:  
-! [ShowPic](https://s1.ax1x.com/2023/06/14/pCnM956.png)  
+Running the project can see :  
+
+![ShowPic](https://s1.ax1x.com/2023/06/16/pCMwKX9.png)  
 
 ### Bidirectional data binding  
 Bidirectional data binding is also a piece of cake! To write logical code, add a 'Script' tag at the bottom of the. gmui file. In the case below, clicking the login button will print the user's input.  
@@ -89,7 +92,7 @@ Bidirectional data binding is also a piece of cake! To write logical code, add a
 ```  
 
 
-You can also use bidirectional binding for components:  
+You can also use bidirectional binding for components :  
 
 ```xml
 <LineEdit g-model="text"></LineEdit>
@@ -123,7 +126,7 @@ If you don't like this style, you can also put all UI code into a 'Template' tag
 ```
 
 ### Obtain & modify nodes
-If ref is declared on a regular node, a virtual node will be obtained. You can obtain the virtual node through `mv.refs['name']`:  
+If ref is declared on a regular node, a virtual node will be obtained. You can obtain the virtual node through `mv.refs['name']` :  
 
 ```xml
 <Control>
@@ -136,7 +139,7 @@ If ref is declared on a regular node, a virtual node will be obtained. You can o
 </Script>
 ```  
 
-If you declare ref in a component, you will obtain a VM instance of that component:  
+If you declare ref in a component, you will obtain a VM instance of that component :  
 
 ```xml
 <Control>
@@ -155,7 +158,7 @@ If you declare ref in a component, you will obtain a VM instance of that compone
 </Script>
 ```   
 
-When you want to execute a method within a node, please use the exec_func method with the method name and parameter array as parameters:  
+When you want to execute a method within a node, please use the exec_func method with the method name and parameter array as parameters :  
 
 ```xml
 <Control>
@@ -168,10 +171,10 @@ When you want to execute a method within a node, please use the exec_func method
 </Script>
 ```  
 
-> Note: Although virtual nodes have real nodes, it is best not to directly modify the state of real nodes through them. Please call exec_func or bind responsive data!  
+> Note: Although virtual nodes have real nodes, it is best not to directly modify the state of real nodes through them. Please call exec_func or bind responsive data !  
 
 ### Page Jump and Component Replacement
-The jump to method can be used for page redirection, with the parameter being the path to the. gmui file in the page directory:  
+The jump to method can be used for page redirection, with the parameter being the path to the. gmui file in the page directory :  
 
 ```xml
 <Column align="center">
@@ -192,9 +195,9 @@ The jump to method can be used for page redirection, with the parameter being th
 </Script>
 ```  
 
-##Roadmap
-0. [x] Bidirectional data binding
-1. [] New UI component library
-2. [] More layout components
-3. [] C # language support
-4. [] Responsive UI programming
+## Roadmap  
+
+0. [x] Bidirectional data binding  
+1. [ ] New UI component library  
+2. [ ] More layout components  
+3. [ ] C # language support  
