@@ -1,0 +1,12 @@
+<BoxContainer>
+	<Label text="scene 1"></Label>
+	<Button text="jump" ref="btn"></Button>
+</BoxContainer>
+
+<Script>
+func _mounted():
+	gmui.refs['btn'].rnode.pressed.connect(
+		func():
+			self.jump_to('res://pages/page2.gmui')
+	)
+</Script>

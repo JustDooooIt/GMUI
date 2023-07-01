@@ -1,0 +1,34 @@
+<Row align="center">
+	<Column align="center">
+		<Row>
+			<Label text="Username"></Label>
+			<LineEdit placeholder_text="Pls enter username" g-model="username"></LineEdit>
+		</Row>
+		<Row>
+			<Label text="Password"></Label>
+			<LineEdit placeholder_text="Pls enter password" g-model="password"></LineEdit>
+		</Row>
+		<Row>
+			<Button text="Login" ref="loginBtn"></Button>
+			<Button text="Reset" ref="resetBtn"></Button>
+		 </Row>
+	</Column>
+</Row>
+
+<Script>
+@onready var data = await reactive({'username': 'name', 'password': '123'})
+func _mounted():
+	gmui.refs['loginBtn'].rnode.pressed.connect(
+		func():
+			print('username:', data.rget('username'))
+			print('password:', data.rget('password'))
+	)
+	gmui.refs['resetBtn'].rnode.pressed.connect(
+		func():
+			data.rset('username', '')
+			data.rset('password', '')
+	)
+func _updated():
+	print('username:', data.rget('username'))
+	print('password:', data.rget('password'))
+</Script>
