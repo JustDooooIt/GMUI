@@ -1,7 +1,8 @@
-<Control>
-	<Widget path="res://components/component.gmui" g-model="text"></Widget>
-	<Text g-bind:text="text"></Text>
-</Control>
+<HBoxContainer>
+	<Component g-model:text="text"></Component>
+	<Label :text="text"></Label>
+</HBoxContainer>
 <Script>
-	@onready var data = vm.define_reactive({'text': 'my text'})
+@import('Component', 'res://components/component.gmui')
+@onready var data = await reactive({'text': 'text1'})
 </Script>

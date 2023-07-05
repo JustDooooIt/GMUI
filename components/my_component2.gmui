@@ -1,0 +1,7 @@
+<BoxContainer>
+	<Label></Label>
+</BoxContainer>
+
+<Script>
+@onready var data = await reactive({'textArr': ['text1', 'text2', 'text3']})
+</Script>

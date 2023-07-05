@@ -1,1 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?><Button text="text"></Button>
+<?xml version="1.0" encoding="UTF-8"?>
+<Row align="center">
+	<Label g-if="true"></Label>
+	<Label g-if="false"></Label>
+	<!--MyComponent #default="props">
+		<Label :text="props.text"></Label>
+	</MyComponent-->
+</Row>

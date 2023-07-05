@@ -1,161 +1,141 @@
-@tool
 extends Node
 
 var initDict = {}
 
-func run(oldVNode, newVNode):
-	if oldVNode is Node:
-		_create_rnode_tree(oldVNode, newVNode)
-	else:
-		if !_is_same_node(oldVNode, newVNode):
-			if oldVNode.rnode != Engine.get_main_loop().current_scene:
-				var newRoot = _create_rnode_tree_with_root(null, newVNode)
-	#			set_all_owner(PathUtils.get_owner(oldVNode.rnode), newRoot)
-				oldVNode.rnode.replace_by(newRoot)
-				newVNode.rnode = newRoot
-				return newVNode
-			else:
-				push_error('The root node cannot be replaced')
-		_patch_properties(oldVNode, newVNode)
-#		bind_model(oldVNode.rnode, newVNode)
-		if oldVNode.children.size() > 0 and newVNode.children.size() > 0:
-			_updateChildren(oldVNode.rnode, oldVNode.children, newVNode.children)
-		elif oldVNode.children.size() > 0:
-			_remove_all_child(oldVNode.rnode)
-#			__remove_all_child_vnode(oldVNode)
-		elif newVNode.children.size() > 0:
-			_create_rnode_tree(oldVNode.rnode, newVNode)
-#			_add_all_child_vnode(oldVNode, newVNode)
-		newVNode.rnode = oldVNode.rnode
+func patch_node(oldVNode:VNode, newVNode:VNode):
+	if !__is_same_node(oldVNode, newVNode):
+		if oldVNode.rnode != Engine.get_main_loop().current_scene:
+			var newRoot = __create_rnode_tree_with_root(null, newVNode)
+			oldVNode.rnode.replace_by(newRoot)
+			newVNode.rnode = __get_parent(newRoot.get_parent())
+			return newVNode
+		else:
+			push_error('The root node cannot be replaced')
+	__patch_properties(oldVNode, newVNode)
+	if oldVNode.children.size() > 0 and newVNode.children.size() > 0:
+		__updateChildren(oldVNode.rnode, oldVNode.children, newVNode.children)
+	elif oldVNode.children.size() > 0:
+		__remove_all_child(oldVNode.rnode)
+	elif newVNode.children.size() > 0:
+		__create_rnode_tree(oldVNode.rnode, newVNode)
+	newVNode.rnode = oldVNode.rnode
 	return newVNode
 		
-func _add_rnode_by_vnode(rnode, vnode, vmRoot = null, mode = Node.INTERNAL_MODE_DISABLED):
+func __add_rnode_by_vnode(rnode:Node, vnode:VNode, mode = Node.INTERNAL_MODE_DISABLED):
 	var newRNode = null
-	if vnode.isScene:
-		var scene = load(FileUtils.xml_to_scene_path(vnode.sceneXMLPath))
+	if vnode.vnodeType == VNode.VNodeType.MULTI_SCENE_ROOT:
+		for childVNode in vnode.children:
+			var scene = load(FileUtils.xml_to_scene_path(vnode.sceneXmlPath))
+			newRNode = scene.instantiate()
+			newRNode.name = childVNode.name
+			newRNode.oldVNode = childVNode
+			childVNode.rnode = newRNode
+			rnode.add_child(newRNode)
+			bind_model(newRNode, childVNode)
+		vnode.rnode = rnode
+	elif vnode.vnodeType == VNode.VNodeType.SINGAL_SCENE_ROOT:
+		var sceneNode:VNode = vnode.children[0]
+		var scene = load(FileUtils.xml_to_scene_path(vnode.sceneXmlPath))
 		newRNode = scene.instantiate()
-#		dont_init(newRNode)
+		newRNode.name = sceneNode.name
+		newRNode.oldVNode = sceneNode
+		bind_model(newRNode, sceneNode)
+		sceneNode.rnode = newRNode
 		rnode.add_child(newRNode)
-	elif vnode.isBuiltComponent:
-		var scene = load('res://addons/gmui/ui/%s/%s.tscn' % [vnode.type, vnode.type])
-		newRNode = scene.instantiate()
-		rnode.add_child(newRNode)
-		for command in vnode.commands:
-			var methodName = command['methodName']
-			var args = command['args']
-			rnode.commands.append(Callable(newRNode, methodName).bindv(args))
+	elif vnode.vnodeType != VNode.VNodeType.NORMAL:
 		for child in vnode.children:
-			_add_rnode_by_vnode(newRNode, child, rnode)
+			__add_rnode_by_vnode(rnode, child)
 	else:
-		newRNode = ClassDB.instantiate(vnode.type)
+		newRNode = ClassUtils.instantiate(vnode.type)
 		newRNode.name = vnode.name
+		vnode.rnode = newRNode
+		bind_model(newRNode, vnode)
 		rnode.add_child(newRNode)
-#		newRNode.owner = PathUtils.get_owner(rnode)
 		for child in vnode.children:
-			_add_rnode_by_vnode(newRNode, child)
-	bind_model(newRNode, vnode)
+			__add_rnode_by_vnode(newRNode, child)
 			
-func _create_rnode_tree(rnode, vnode, vmRoot = null, mode = Node.INTERNAL_MODE_DISABLED):
+func __create_rnode_tree(rnode, vnode, mode = Node.INTERNAL_MODE_DISABLED):
 	vnode.rnode = rnode
-	if rnode == Engine.get_main_loop().current_scene:
-		vmRoot = rnode
-		for command in vnode.commands:
-			var methodName = command['methodName']
-			var args = command['args']
-			rnode.commands.append(Callable(rnode, methodName).bindv(args))
 	for child in vnode.children:
 		var newRNode = null
-		if child.isScene:
-			var scene = load(FileUtils.xml_to_scene_path(child.sceneXMLPath))
+		if child.vnodeType == VNode.VNodeType.MULTI_SCENE_ROOT:
+			for childVNode in child.children:
+				var scene:PackedScene = load(FileUtils.xml_to_scene_path(childVNode.sceneXmlPath))
+				newRNode = scene.instantiate()
+				newRNode.name = childVNode.name
+				newRNode.oldVNode = childVNode
+				childVNode.rnode = newRNode
+				rnode.add_child(newRNode)
+				bind_model(newRNode, childVNode)
+#				__create_rnode_tree(newRNode, childVNode)
+#				__set_properties_tree(newRNode, childVNode)
+			child.rnode = rnode
+		elif child.vnodeType == VNode.VNodeType.SINGAL_SCENE_ROOT:
+			var sceneNode = child.children[0]
+			var scene = load(FileUtils.xml_to_scene_path(child.sceneXmlPath))
 			newRNode = scene.instantiate()
-#			dont_init(newRNode)
+			newRNode.name = sceneNode.name
+			newRNode.oldVNode = sceneNode
+			sceneNode.rnode = newRNode
+			rnode.add_child(newRNode)
+			__set_properties_tree(rnode, sceneNode)
+		elif child.vnodeType != VNode.VNodeType.NORMAL:
+			__create_rnode_tree(rnode, child)
+			bind_model(newRNode, child)
+		else:
+			newRNode = ClassUtils.instantiate(child.type)
 			newRNode.name = child.name
 			child.rnode = newRNode
 			rnode.add_child(newRNode)
-			_set_properties_tree(newRNode, child)
-		elif child.isBuiltComponent:
-			var scene = load('res://addons/gmui/ui/scenes/%s.tscn' % [child.type])
-			newRNode = scene.instantiate()
-			newRNode.name = child.name
-			rnode.add_child(newRNode)
-			_create_rnode_tree(newRNode, child, rnode)
-			_set_properties_tree(newRNode, child)
-			for command in child.commands:
-				var methodName = command['methodName']
-				var args = command['args']
-				vmRoot.commands.append(Callable(newRNode, methodName).bindv(args))
-		else:
-			newRNode = ClassDB.instantiate(child.type)
-			newRNode.name = child.name
-			rnode.add_child(newRNode)
-#		newRNode.owner = PathUtils.get_owner(rnode)
-			_create_rnode_tree(newRNode, child, rnode)
-			_set_properties(newRNode,child)
-		bind_model(newRNode, child)
-#func get_scene_child(rootNode, node = rootNode, map = {}):
-#	for child in node.get_children:
-#		if child.scene_file_path != '':
-#			map['./'.path_join(rootNode.get_path_to(node).lstrip('.'))] = child
-#		get_scene_child(rootNode, child, map)
-#	return map
+			__create_rnode_tree(newRNode, child)
+			__set_properties(newRNode,child)
+			bind_model(newRNode, child)
 
-#func set_ast_child(ast, rootMap = {}):
-#	if !ast.isScene and !ast.isTemplate and !ast.isSlot:
-#		if rootMap.has(ast.path):
-#			rootMap[ast.path].ast = ast
-#	for child in ast.children:
-#		set_ast_child(child, rootMap)
-
-#func dont_init(node):
-#	if !Engine.is_editor_hint():
-#		if node.scene_file_path != '':
-#			node.canInit = false
-#		for child in node.get_children():
-#			dont_init(child)
-
-func _create_rnode_tree_with_root(rnode, vnode, vmRoot = null):
+func __create_rnode_tree_with_root(rnode, vnode:VNode):
 	var newRNode = null
-	if vnode.isScene: 
-		var scene = load(FileUtils.xml_to_scene_path(vnode.sceneXMLPath))
+	if vnode.vnodeType == VNode.VNodeType.MULTI_SCENE_ROOT: 
+		for childVNode in vnode.children:
+			var scene = load(FileUtils.xml_to_scene_path(vnode.sceneXmlPath))
+			newRNode = scene.instantiate()
+			newRNode.name = childVNode.name
+			newRNode.oldVNode = childVNode
+			childVNode.rnode = newRNode
+#			__set_properties_tree(newRNode, childVNode)
+			bind_model(newRNode, childVNode)
+			if rnode != null:
+				rnode.add_child(newRNode)
+	elif vnode.vnodeType == VNode.VNodeType.SINGAL_SCENE_ROOT:
+		var sceneNode:VNode = vnode.children[0]
+		var scene = load(FileUtils.xml_to_scene_path(vnode.sceneXmlPath))
 		newRNode = scene.instantiate()
-		_set_properties_tree(newRNode, vnode)
-#		dont_init(newRNode)
-		vnode.rnode = rnode
+		newRNode.name = sceneNode.name
+		newRNode.oldVNode = sceneNode
+		__set_properties_tree(newRNode, sceneNode)
+		sceneNode.rnode = newRNode
+		bind_model(newRNode, sceneNode)
 		if rnode != null:
 			rnode.add_child(newRNode)
-	elif vnode.isBuiltComponent:
-		var scene = load('res://addons/gmui/ui/scenes/%s.tscn' % [vnode.type])
-		newRNode = scene.instantiate()
-		if rnode != null:
-			rnode.add_child(newRNode)
-		for command in vnode.commands:
-			var methodName = command['methodName']
-			var args = command['args']
-			vmRoot.commands.append(Callable(newRNode, methodName).bindv(args))
-		for child in vnode.children:
-			_create_rnode_tree_with_root(newRNode, child, rnode)
+	elif vnode.vnodeType != VNode.VNodeType.NORMAL:
+		__create_rnode_tree_with_root(rnode, vnode)
 	else:
-		newRNode = ClassDB.instantiate(vnode.type)
+		newRNode = ClassUtils.instantiate(vnode.type)
 		newRNode.name = vnode.name
-		_set_properties(newRNode, vnode)
+		bind_model(newRNode, vnode)
+		__set_properties(newRNode, vnode)
+		vnode.rnode = newRNode
 		if rnode != null:
 			rnode.add_child(newRNode)
 		for child in vnode.children:
-			_create_rnode_tree_with_root(newRNode, child, null)
-	bind_model(newRNode, vnode)
+			__create_rnode_tree_with_root(newRNode, child)
 	return newRNode
 
-func _patch_properties(oldVNode, newVNode):
-	if oldVNode.properties != newVNode.properties:
+func __patch_properties(oldVNode, newVNode):
+	if oldVNode.properties != newVNode.properties and oldVNode.rnode != null:
 		for key in newVNode.properties:
 			oldVNode.rnode.set(key, newVNode.properties[key])
-#		for key in oldVNode.properties.keys():
-#			oldVNode.rnode.set(key, null)
 		oldVNode.properties = newVNode.properties.duplicate(true)
-#		for key in oldVNode.properties.keys():
-#			oldVNode.rnode.set(key, oldVNode.properties[key])
 
-func _updateChildren(rnode, oldVNodes, newVNodes):
+func __updateChildren(rnode, oldVNodes, newVNodes):
 	var oldStart = 0
 	var oldEnd = oldVNodes.size() - 1
 	var newStart = 0
@@ -175,24 +155,24 @@ func _updateChildren(rnode, oldVNodes, newVNodes):
 		elif oldEndNode == null:
 			oldEnd -= 1
 			oldEndNode = oldVNodes[oldEnd]
-		elif _is_same_node(oldVNodes[oldStart], newVNodes[newStart]):
-			run(oldVNodes[oldStart], newVNodes[newStart])
+		elif __is_same_node(oldVNodes[oldStart], newVNodes[newStart]):
+			patch_node(oldVNodes[oldStart], newVNodes[newStart])
 			oldStart += 1
 			newStart += 1
 			if oldStart < oldVNodes.size():
 				oldStartNode = oldVNodes[oldStart]
 			if newStart < newVNodes.size():
 				newStartNode = newVNodes[newStart]
-		elif _is_same_node(oldVNodes[oldEnd], newVNodes[newEnd]):
-			run(oldVNodes[oldEnd], newVNodes[newEnd])
+		elif __is_same_node(oldVNodes[oldEnd], newVNodes[newEnd]):
+			patch_node(oldVNodes[oldEnd], newVNodes[newEnd])
 			oldEnd -= 1
 			newEnd -= 1
 			if oldEnd >= 0:
 				oldEndNode = oldVNodes[oldEnd]
 			if newEnd >= 0:
 				newEndNode = newVNodes[newEnd]
-		elif _is_same_node(oldVNodes[oldEnd], newVNodes[newStart]):
-			run(oldVNodes[oldEnd], newVNodes[newStart])
+		elif __is_same_node(oldVNodes[oldEnd], newVNodes[newStart]):
+			patch_node(oldVNodes[oldEnd], newVNodes[newStart])
 			rnode.move_child(oldVNodes[oldEnd].rnode, rnode.get_children().find(oldVNodes[oldStart].rnode))
 			newStart += 1
 			oldEnd -= 1
@@ -200,8 +180,8 @@ func _updateChildren(rnode, oldVNodes, newVNodes):
 				oldEndNode = oldVNodes[oldEnd]
 			if newStart < newVNodes.size():
 				newStartNode = newVNodes[newStart]
-		elif _is_same_node(oldVNodes[oldStart], newVNodes[newEnd]):
-			run(oldVNodes[oldStart], newVNodes[newEnd])
+		elif __is_same_node(oldVNodes[oldStart], newVNodes[newEnd]):
+			patch_node(oldVNodes[oldStart], newVNodes[newEnd])
 			rnode.move_child(oldVNodes[oldStart].rnode, rnode.get_children().find(oldVNodes[oldEnd].rnode))
 			oldStart += 1
 			newEnd -= 1
@@ -215,9 +195,9 @@ func _updateChildren(rnode, oldVNodes, newVNodes):
 				var tempVNode = oldVNodes[index]
 				rnode.move_child(tempVNode.rnode, rnode.get_children().find(oldStartNode.rnode))
 				oldVNodes[index] = null
-				run(tempVNode, newStartNode)
+				patch_node(tempVNode, newStartNode)
 			else:
-				var newRoot = _create_rnode_tree_with_root(null, newStartNode)
+				var newRoot = __create_rnode_tree_with_root(null, newStartNode)
 				rnode.add_child(newRoot)
 #				set_all_owner(PathUtils.get_owner(rnode), newRoot)
 				rnode.move_child(newRoot, rnode.get_children().find(oldVNodes[oldStart].rnode))
@@ -232,25 +212,22 @@ func _updateChildren(rnode, oldVNodes, newVNodes):
 	elif newStart <= newEnd:
 		if newEnd < newVNodes.size():
 			for i in range(newStart, newEnd + 1):
-				_add_rnode_by_vnode(rnode, newVNodes[i], null)
+				__add_rnode_by_vnode(rnode, newVNodes[i])
 		else:
 			for i in range(newStart, newEnd + 1):
-				_add_rnode_by_vnode(rnode, newVNodes[i], null, Node.INTERNAL_MODE_FRONT)
+				__add_rnode_by_vnode(rnode, newVNodes[i], Node.INTERNAL_MODE_FRONT)
 
-func _remove_all_child(node):
+func __remove_all_child(node):
 	for child in node.get_children():
-		_remove_all_child(child)
+		__remove_all_child(child)
 		node.remove_child(child)
 		child.free()
 
 func __remove_all_child_vnode(node):
 	node.children.clear()
 
-func _add_all_child_vnode(oldVNode, newVNode):
-	oldVNode.children = newVNode.children
-
-func _is_same_node(oldNode, newNode):
-	return oldNode.name == newNode.name and oldNode.model == newNode.model
+func __is_same_node(oldNode, newNode):
+	return oldNode.name == newNode.name
 	
 func _get_dict(children):
 	var dict = {}
@@ -258,34 +235,23 @@ func _get_dict(children):
 		dict[children[i].name] = i
 	return dict
 
-func _set_properties(rnode, vnode):
+func __set_properties(rnode, vnode):
 	var vProperties = vnode.properties
 	if rnode != null:
 		for key in vProperties.keys():
 			rnode.set(key, vProperties[key])
 
-func _set_properties_tree(rnode, vnode):
-	_set_properties(rnode, vnode)
+func __set_properties_tree(rnode, vnode):
+	__set_properties(rnode, vnode)
 	for i in rnode.get_children().size():
 		if i < vnode.children.size():
-			_set_properties_tree(rnode.get_children()[i], vnode.children[i])
+			__set_properties_tree(rnode.get_children()[i], vnode.children[i])
 
+func __get_parent(node:Node):
+	if 'isGMUI' in node:
+		return node
+	return __get_parent(node.get_parent())
+	
 func bind_model(newRNode, vnode):
 	if newRNode is LineEdit:
 		LineEditModelStrategy.new(newRNode, vnode).operate()
-	elif newRNode is TabBar:
-		TabBarModelStrategy.new(newRNode, vnode).operate()
-	elif newRNode is TabContainer:
-		TabContainerModelStrategy.new(newRNode, vnode).operate()
-	elif newRNode is ColorPicker:
-		ColorPickerModelStrategy.new(newRNode, vnode).operate()
-	elif newRNode is CheckButton:
-		CheckButtonModelStrategy.new(newRNode, vnode).operate()
-	elif newRNode is CheckBox:
-		CheckBoxModelStrategy.new(newRNode, vnode).operate()
-	elif newRNode is TextEdit:
-		TextEditModelStrategy.new(newRNode, vnode).operate()
-	elif newRNode is CodeEdit:
-		CodeEditModelStrategy.new(newRNode, vnode).operate()
-	elif newRNode is OptionButton:
-		OptionButtonModelStrategy.new(newRNode, vnode).operate()

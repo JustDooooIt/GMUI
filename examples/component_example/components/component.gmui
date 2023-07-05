@@ -1,6 +1,8 @@
 <Control>
-	<Text text="component text" ref="text1"></Text>
-	<Text text="component text" ref="text2"></Text>
+	<BoxContainer>
+		<Label text="component text" ref="text1"></Label>
+		<Label text="component text" ref="text2"></Label>
+	</BoxContainer>
 </Control>
 
 <Script>

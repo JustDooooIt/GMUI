@@ -1,6 +1,0 @@
-<Control>
-	<Text text="component text" ref="text1"></Text>
-</Control>
-
-<Script>
-</Script>

@@ -6,16 +6,16 @@ var obj = Object()
 var depIds = {}
 
 func _init(getter):
-	var watId = _values.watId
-	_values.watId += 1
+	var watId = Values.watId
+	Values.watId += 1
 	self.depIds = {}
 	self.getter = getter
 	self._get_()
 
 func _get_():
-	_values.curWatcher = self
+	Values.curWatcher = self
 	self.getter.call()
-	_values.curWatcher = null
+	Values.curWatcher = null
 
 func addDep(dep):
 	if !depIds.has(dep.id):

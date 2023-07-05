@@ -3,8 +3,8 @@
 	"description": "a wonderful project",
 	"version": "1.0.0",
 	"icon": "/addons/gmui/gmui.png",
-	"gmui_dir": "/pages",
-	"main_page": "index.gmui",
+	"gmui_index": "/pages/index.gmui",
 	"screen": "1080x720",
-	"environment": "gmui_1.0.0"
+	"environment": "gmui_1.0.0",
+	"if_generate": "false"
 }

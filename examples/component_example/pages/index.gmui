@@ -1,9 +1,9 @@
 <Control>
-	<Widget path="res://components/component.gmui" ref="widget"></Widget>
+	<Component ref="component"></Component>
 </Control>
 
 <Script>
-	var data = vm.define_reactive({'test': 'test'})
-	func _mounted():
-		var widget = vm.refs['widget'].refs['text1']
+@import('Component', 'res://components/component.gmui')
+func _mounted():
+	var component = gmui.refs['component'].refs['text1']
 </Script>
