@@ -40,6 +40,8 @@ func _edit(object):
 func _save_external_data():
 	if editObj is Resource and editObj.resource_path.get_file() == 'gmui.json':
 		set_main_scene()
+		configJson = load_json()
+		
 
 func gen()->void:
 	var filePaths:Array[String] = FileUtils.get_all_gmui_file('res://', ['res://addons'])

@@ -1,0 +1,7 @@
+<Row>
+	<Component g-for="(item, index) in arr" :text="item"></Component>
+</Row>
+<Script>
+@import('Component', 'res://components/component.gmui')
+@onready var data = await reactive({'arr': [1,2,3,4]})
+</Script>

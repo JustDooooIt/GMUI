@@ -10,6 +10,8 @@ func _init(rnode, vnode):
 func operate():
 	if vnode.model != null:
 		var gmui:GMUI = vnode.gmui
+		var model:Model = vnode.model
+		rnode.set('button_pressed', gmui.data.rget(model.name))
 		rnode.toggled.connect(
 			func(value):
 				gmui.data.rset(vnode.model.name, value, true, true)

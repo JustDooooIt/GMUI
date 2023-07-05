@@ -12,15 +12,13 @@ var props:ReactiveDictionary = ReactiveDictionary.new()
 
 #signal send_props()
 
-func reactive(data:Dictionary)->ReactiveDictionary:
-	self.data.data.merge(data, true)
-	for key in data.keys():
-		self.data.rset(key, data[key], false, false)
+func reactive(data:Dictionary, override = false)->ReactiveDictionary:
+	self.data.data.merge(data, override)
 	self.data.observe()
 	return self.data
 
-func merge_props(data:Dictionary):
-	self.props.data.merge(data, true)
+func merge_props(data:Dictionary, override = false):
+	self.props.data.merge(data, override)
 	for key in data.keys():
 		self.props.rset(key, data[key], false, false)
 	self.props.observe()

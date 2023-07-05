@@ -10,6 +10,8 @@ func _init(rnode, vnode):
 func operate():
 	if vnode.model.has('rName'):
 		var gmui:GMUI = vnode.gmui
+		var model:Model = vnode.model
+		rnode.set('selected', gmui.data.rget(model.name))
 		rnode.item_selected.connect(
 			func(id):
 				gmui.data.rset(vnode.model.name, id, true, true)

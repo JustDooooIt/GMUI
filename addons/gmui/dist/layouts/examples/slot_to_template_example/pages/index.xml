@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<HBoxContainer>
+	<Scene eBE2i="res://addons/gmui/dist/layouts/components/component.xml" #default="props">
+		<Label :text="props.text"></Label>
+	</Scene>
+</HBoxContainer>

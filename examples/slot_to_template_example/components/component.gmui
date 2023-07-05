@@ -1,0 +1,7 @@
+<Row>
+	<Slot text="my text"></Slot>
+</Row>
+
+<Script>
+@onready var data = await reactive({'text': 'text2'})
+</Script>

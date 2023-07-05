@@ -55,16 +55,12 @@ func __root_init_render():
 	oldVNode = vnode
 
 func __other_init_render():
-#	ast = oldVNode.sceneAst
 	ast = oldVNode.astNode
 	gmui = ast.rgmui
 	gmui.reactive(reactiveData.data)
 	emit_signal('init_gmui')
-#	oldVNode = __init_other_vnode()
 	var tempSceneNode = null
 	vnode = VnodeHelper.create(ast, get_index(), oldVNode)
-#	var sceneRoot:VNode = vnode.children[0]
-#	oldVNode.name = sceneRoot.name
 	emit_signal('befor_mount')
 	Patch.patch_node(oldVNode, vnode)
 	oldVNode = vnode

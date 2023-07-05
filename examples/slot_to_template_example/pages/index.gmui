@@ -1,0 +1,8 @@
+<Row>
+	<Component #default="props">
+		<Label :text="props.text"></Label>
+	</Component>
+</Row>
+<Script>
+@import('Component', 'res://components/component.gmui')
+</Script>

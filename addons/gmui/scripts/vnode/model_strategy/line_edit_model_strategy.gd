@@ -10,6 +10,8 @@ func _init(rnode, vnode):
 func operate():
 	if vnode.model != null:
 		var gmui:GMUI = vnode.gmui
+		var model:Model = vnode.model
+		rnode.set('text', gmui.data.rget(model.name))
 		rnode.text_changed.connect(
 			func(text):
 				gmui.data.rset(vnode.model.name, text, true, true)

@@ -1,8 +1,0 @@
-<BoxContainer>
-	<Slot text="text"></Slot>
-</BoxContainer>
-
-<Script>
-@import('MyComponent', 'res://components/my_component2.gmui')
-@onready var data = await reactive({'textArr': ['slot1', 'slot2', 'slot3']})
-</Script>

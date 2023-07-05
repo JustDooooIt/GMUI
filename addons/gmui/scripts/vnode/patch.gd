@@ -255,3 +255,19 @@ func __get_parent(node:Node):
 func bind_model(newRNode, vnode):
 	if newRNode is LineEdit:
 		LineEditModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is TabBar:
+		TabBarModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is TabContainer:
+		TabContainerModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is ColorPicker:
+		ColorPickerModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is CheckButton:
+		CheckButtonModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is CheckBox:
+		CheckBoxModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is TextEdit:
+		TextEditModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is CodeEdit:
+		CodeEditModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is OptionButton:
+		OptionButtonModelStrategy.new(newRNode, vnode).operate()

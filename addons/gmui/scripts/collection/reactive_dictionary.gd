@@ -12,7 +12,7 @@ func _init(data = {}):
 	observe()
 
 func merge(data= {}):
-	self.data = data
+	self.data.merge(data)
 	self.rdata = data.duplicate(true)
 	observe()
 	

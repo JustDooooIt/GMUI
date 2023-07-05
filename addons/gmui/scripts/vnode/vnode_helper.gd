@@ -30,6 +30,8 @@ func vnode(
 	vnode.slotName = ast.slotName
 	vnode.props = ast.props
 	vnode.__gmui = ast.gmui
+	vnode.refName = ast.refName
+	vnode.models = ast.models
 	if ast.templateInfo != null:
 		vnode.slotParam = ast.templateInfo.params
 	vnode.properties = ast.properties.duplicate()
@@ -60,7 +62,9 @@ func vnode_with_name(
 	vnode.astNode = ast
 	vnode.__gmui = ast.gmui
 	vnode.slotName = ast.slotName
+	vnode.refName = ast.refName
 	vnode.props = ast.props
+	vnode.models = ast.models
 	if ast.templateInfo != null:
 		vnode.slotParam = ast.templateInfo.params
 	vnode.properties = ast.properties.duplicate()
@@ -73,11 +77,58 @@ func create(ast:ASTNode, index:int = -1, sceneRoot:VNode = null)->VNode:
 	var vnode = create_vnodes(ast, sceneRoot.name, null, index, sceneRoot.parent)
 	create_template(ast.sceneRoot, vnode.parent, 0)
 	move_template()
+	set_if(vnode)
+	set_for_gmui(vnode)
+	set_model(vnode)
 	bind_slot_props(vnode)
 	bind_scene_props(vnode)
 	bind_vnode_value(vnode)
-	set_if(vnode)
+	set_refs(vnode)
 	return vnode
+
+func set_for_gmui(node:VNode, need:Dictionary = {}):
+	if node.vnodeType == VNode.VNodeType.MULTI_SCENE_ROOT:
+		var nodes:Array[VNode] = [node]
+		while !nodes.is_empty():
+			var _node:VNode = nodes.pop_front()
+			var gmui = copy_gmui(node.__gmui)
+			var rgmui = copy_gmui(node.gmui)
+			_node.gmui = rgmui
+			_node.__gmui = gmui
+			need[_node.name] = true
+			for child in _node.children:
+				nodes.push_front(child)
+	for child in node.children:
+		if !need.has(child.name):
+			set_for_gmui(child)
+
+func set_model(vnode:VNode):
+	if vnode.model != null:
+		var model:Model = vnode.model
+		var gmui:GMUI = vnode.gmui
+		gmui.data.rget(model.name)
+	if vnode.models.size() > 0:
+		for model in vnode.models:
+			var gmui:GMUI = vnode.__gmui
+			var rgmui:GMUI = vnode.gmui
+			var value = gmui.data.rget(model.pName)
+			rgmui.data.rset(model.cName, value, true, false)
+	for child in vnode.children:
+		set_model(child)
+		
+func set_refs(node:VNode):
+	if node.refName != '':
+		if !node.__gmui.refs.has(node.refName):
+			node.__gmui.refs[node.refName] = node
+		else:
+			var ref = node.__gmui.refs[node.refName]
+			if ref is Array:
+				ref.append(node)
+			else:
+				node.__gmui.refs[node.refName] = [ref, node]
+			
+	for child in node.children:
+		set_refs(child)
 
 func set_if(vnode:VNode):
 	var vnodes:Array[VNode] = vnode.children
@@ -106,24 +157,25 @@ func bind_slot_props(node:VNode):
 			var param:String = template.slotParam
 			var props:Dictionary = get_props(slot)
 			props = {param: props}
-			template.__gmui.merge_props(props)
+			template.__gmui.merge_props(props, true)
 	for child in node.children:
 		bind_slot_props(child)
 
 func bind_scene_props(node:VNode):
-	if node.vnodeType == VNode.VNodeType.SINGAL_SCENE_ROOT:
-		var gmui:GMUI = node.__gmui
-		var props:Array[Prop] = node.props
-		var rgmui:GMUI = node.gmui
-		var dict:Dictionary = {}
-		for prop in props:
-			var value
-			if prop.type == Prop.Type.DYNAMIC:
-				value = gmui.data.rget(prop.value)
-			else:
-				value = prop.value
-			dict[prop.name] = value
-		rgmui.merge_props(dict)
+	if node.parent != null:
+		if node.parent.vnodeType == VNode.VNodeType.SINGAL_SCENE_ROOT or node.parent.vnodeType == VNode.VNodeType.MULTI_SCENE_ROOT:
+			var gmui:GMUI = node.parent.__gmui
+			var rgmui:GMUI = node.parent.gmui
+			var props:Array[Prop] = node.parent.props
+			var dict:Dictionary = {}
+			for prop in props:
+				var value
+				if prop.type == Prop.Type.DYNAMIC:
+					value = get_var(gmui, node, prop.value)
+				else:
+					value = prop.value
+				dict[prop.name] = value
+			node.gmui.merge_props(dict, true)
 	for child in node.children:
 		bind_scene_props(child)
 
@@ -500,9 +552,6 @@ func create_for_scene(ast:ASTNode, parent:VNode = null)->Array[VNode]:
 		set_for_index(gmui, indexName, name)
 		set_for_var(gmui, varName, indexName, arr)
 		var vnode = vnode_with_name(node, name, VNode.VNodeType.NORMAL, i, parent, [])
-		vnode.__gmui = copy_gmui(gmui)
-		vnode.gmui = copy_gmui(ast.rgmui)
-		set_scene_gmui(ast, vnode, i)
 		vnodes.append(vnode)
 	return vnodes
 
@@ -692,31 +741,31 @@ func get_props(slot:VNode):
 #		dict[prop.name] = value
 #	rgmui.merge_props(dict)
 #
-#func set_ref(ast:ASTNode, vnode:VNode):
-#	if ast.refName == '': return
-#	var ref
-#	if ast.type == TinyXmlParser.scene:
-#		ref = ast.gmui.refs.get(ast.refName, null)
-#		if ref != null and ref is Array:
-#			var names = ref.map(func(ref): return ref.name)
-#			if names.find(vnode.name) == -1:
-#				ref.append(vnode.gmui)
-#		elif ref != null:
-#			if ref.name == vnode.name:
-#				ast.gmui.refs[ast.refName] = vnode.gmui
-#		else:
-#			ast.gmui.refs[ast.refName] = vnode.gmui
-#	else:
-#		ref = ast.gmui.refs.get(ast.refName, null)
-#		if ref != null and ref is Array:
-#			var names = ref.map(func(ref): return ref.name)
-#			if names.find(vnode.name) == -1:
-#				ref.append(vnode)
-#		elif ref != null:
-#			if ref.name == vnode.name:
-#				ast.gmui.refs[ast.refName] = vnode
-#		else:
-#			ast.gmui.refs[ast.refName] = vnode
+func set_ref(ast:ASTNode, vnode:VNode):
+	if ast.refName == '': return
+	var ref
+	if ast.type == TinyXmlParser.scene:
+		ref = ast.gmui.refs.get(ast.refName, null)
+		if ref != null and ref is Array:
+			var names = ref.map(func(ref): return ref.name)
+			if names.find(vnode.name) == -1:
+				ref.append(vnode.gmui)
+		elif ref != null:
+			if ref.name == vnode.name:
+				ast.gmui.refs[ast.refName] = vnode.gmui
+		else:
+			ast.gmui.refs[ast.refName] = vnode.gmui
+	else:
+		ref = ast.gmui.refs.get(ast.refName, null)
+		if ref != null and ref is Array:
+			var names = ref.map(func(ref): return ref.name)
+			if names.find(vnode.name) == -1:
+				ref.append(vnode)
+		elif ref != null:
+			if ref.name == vnode.name:
+				ast.gmui.refs[ast.refName] = vnode
+		else:
+			ast.gmui.refs[ast.refName] = vnode
 #
 func set_vnode_if(vnodes:Array[VNode]):
 	var ifDict:Dictionary = {}

@@ -1,21 +1,19 @@
-# GMUI - Godot MVgmui UI  
-Godot游戏引擎的 MVgmui UI框架   
+# GMUI - Godot MVVM UI  
+Godot游戏引擎的 MVVM UI框架   
 > [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[中文文档](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)   
 > GMUI版本：1.0.0   &nbsp;&nbsp;&nbsp;&nbsp;Godot版本：4.x  
 
 ## 快速入门  
 
 ### 前置工作  
-1. 在Godot资源商店搜索GMUI，点击下载并导入插件  
-> 也可以下载插件包`gmui.zip`手动导入  
+1. 在Godot资源商店安装插件  
+> 也可以下载插件包手动导入  
 2. 进入项目设置，启用插件(勾选)  
 
 ### 最简单的页面  
 在根目录下的pages文件夹里新建index.gmui文件，然后写入：  
 
 ```xml
-
-
 
 ```  
 
@@ -29,23 +27,22 @@ Godot游戏引擎的 MVgmui UI框架
 <Row align="center">
     <Column align="center">
         <Row>
-            <Text text="用户名"></Text>
-            <LineEdit placeholder_text="请输入用户名"></LineEdit>
-        </Row>
-        <Row>
-            <Text text="密码"></Text>
-            <LineEdit placeholder_text="请输入密码"></LineEdit>
-        </Row>
-        <Row>
-            <Button text="登录"></Button>
-            <Button text="重置"></Button>
-         </Row>
+	    	<Text text="用户名"></Text>
+	    	<LineEdit placeholder_text="请输入用户名"></LineEdit>
+	    </Row>
+	    <Row>
+			<Text text="密码"></Text>
+			<LineEdit placeholder_text="请输入密码"></LineEdit>
+	    </Row>
+	    <Row>
+			<Button text="登录"></Button>
+			<Button text="重置"></Button>
+	 	</Row>
     </Column>
 </Row>
 ```
 
 运行项目可以看到类似的效果：  
-
 ![ShowPic](https://s1.ax1x.com/2023/06/14/pCnM956.png)
 
 ### 双向数据绑定  
@@ -55,32 +52,32 @@ Godot游戏引擎的 MVgmui UI框架
 <Row align="center">
     <Column align="center">
         <Row>
-            <Text text="用户名"></Text>
-            <LineEdit placeholder_text="请输入用户名" g-model="username"></LineEdit>
-        </Row>
-        <Row>
-            <Text text="密码"></Text>
-            <LineEdit placeholder_text="请输入密码" g-model="password"></LineEdit>
-        </Row>
-        <Row>
-            <Button text="登录" ref="loginBtn"></Button>
-            <Button text="重置" ref="resetBtn"></Button>
-         </Row>
+	    	<Text text="用户名"></Text>
+	    	<LineEdit placeholder_text="请输入用户名" g-model="username"></LineEdit>
+	    </Row>
+	    <Row>
+			<Text text="密码"></Text>
+			<LineEdit placeholder_text="请输入密码" g-model="password"></LineEdit>
+	    </Row>
+	    <Row>
+			<Button text="登录" ref="loginBtn"></Button>
+			<Button text="重置" ref="resetBtn"></Button>
+	 	</Row>
     </Column>
 </Row>
 
 <Script>
-    @onready var data = gmui.define_reactive({'username': 'name', 'password': '123'})
+    @onready var data = vm.define_reactive({'username': 'name', 'password': '123'})
     func _mounted():
-        gmui.refs['loginBtn'].rnode.pressed.connect(
-            func():
-            print('username:', data.rget('username'))
-            print('password:', data.rget('password'))
+        vm.refs['loginBtn'].rnode.pressed.connect(
+    	    func():
+	        print('username:', data.rget('username'))
+	        print('password:', data.rget('password'))
         )
-        gmui.refs['resetBtn'].rnode.pressed.connect(
-        func():
-            data.rset('username', '')
-            data.rset('password', '')
+        vm.refs['resetBtn'].rnode.pressed.connect(
+	    func():
+	        data.rset('username', '')
+	        data.rset('password', '')
         )
     func _updated():
         print('username:', data.rget('username'))
@@ -94,18 +91,16 @@ Godot游戏引擎的 MVgmui UI框架
 <LineEdit g-model="text"></LineEdit>
 
 <Script>
-@onready var data = gmui.reactive({'text': 'new text'})
 </Script>
 ```
 
 ```xml
 <Control>
-    <Component g-model:text="text"></Component>
-    <Text :text="text"></Text>
+    <Widget path="res://components/component.gmui" g-model="text"></Widget>
+    <Text g-bind:text="text"></Text>
 </Control>
 <Script>
-@import('Component', 'res://components/component.gmui')
-@onready var data = gmui.reactive({'text': 'my text'})
+	@onready var data = vm.define_reactive({'text': 'my text'})
 </Script>
 ```
 
@@ -113,9 +108,9 @@ Godot游戏引擎的 MVgmui UI框架
 
 ```xml
 <Template>
-    // 您的UI代码  
-    // 您的UI代码  
-    // ......  
+	// 您的UI代码  
+	// 您的UI代码  
+	// ......  
 </Template>
 
 <Script>
@@ -132,28 +127,27 @@ Godot游戏引擎的 MVgmui UI框架
 </Control>
 
 <Script>
-func _mounted():
-	print(gmui.refs['label'].rnode.text)
+    func _mounted():
+        print(vm.refs['label'].rnode.text)
 </Script>
 ```
 
-如果在组件声明ref，将会获得一个该组件的gmui实例：
+如果在组件声明ref，将会获得一个该组件的vm实例：
 
 ```xml
 <Control>
-    <Label text="component text" ref="text1"></Label>
+    <Text text="component text" ref="text1"></Text>
 </Control>
 ```  
 
 ```xml
 <Control>
-    <Widget path="res://components/username_input.gmui" ref="component"></Widget>
+    <Widget path="res://components/username_input.gmui" ref="widget"></Widget>
 </Control>
 
 <Script>
-@import('UsernameInput', 'res://components/username_input.gmui')
-func _mounted():
-    var component = gmui.refs['component'].refs['text1']
+    func _mounted():
+	var widget = vm.refs['widget'].refs['text1']
 </Script>
 ```  
 
@@ -165,14 +159,14 @@ func _mounted():
 </Control>
 
 <Script>
-func _mounted():
-	gmui.refs['label'].exec_func('set_text', ['new text'])
+    func _mounted():
+        vm.ids['label'].exec_func('set_text', ['new text'])
 </Script>
 ```
 
 > 注意：虚拟节点虽然有真实节点，但最好不要直接通过它修改真实节点的状态，请调用exec_func或者绑定响应式数据！  
 
-### 页面跳转
+### 页面跳转和组件替换  
 
 页面跳转可以使用jump_to方法，参数为page目录下的.gmui文件路径：
 
@@ -182,40 +176,22 @@ func _mounted():
         <Text text="my text"></Text>
     </Row>
     <Row align="center">
-        <Button text="jump" ref="btn"></Button>
+		<Button text="jump" ref="btn"></Button>
     </Row>
 </Column>
 
 <Script>
-func _mounted():
-	gmui.refs['btn'].rnode.pressed.connect(
-		func():
-			self.jump_to('res://pages/page2.gmui')
+    func _mounted():
+        vm.refs['btn'].rnode.pressed.connect(
+            func():
+		self.jump_to('res://pages/page.gmui')
 	)
 </Script>
 ```
 
-### 列表渲染
-当您想要通过数组来渲染一个列表时，可以在标签上使用g-for指令
-```xml
-<Row align="center">
-	<Column align="center" g-for="text in textArr">
-		<Label :text="text"></Label>
-	</Column>
-</Row>
-
-<Script>
-@onready var data = await reactive({'textArr': ['text1', 'text2', 'text3']})
-</Script>
-```
-同时，你也能在组件上使用g-for指令
-```xml
-
-```
-
 ## 路线图  
-
 0. [x] 双向数据绑定  
 1. [ ] 全新的UI组件库  
 2. [ ] 更多的布局组件  
 3. [ ] C# 语言支持  
+4. [ ] 响应式UI编程  
