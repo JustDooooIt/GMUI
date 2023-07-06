@@ -25,7 +25,11 @@ func _enter_tree()->void:
 	ProjectSettings.set_setting('display/window/size/viewport_height', configJson['screen'].split('x')[1])
 	ifGenerate = configJson.get('if_generate')
 	editorSetting.set('docks/filesystem/textfile_extensions', 'txt,md,cfg,ini,log,json,yml,yaml,toml,xml,gmui')
-
+	add_autoload_singleton('Values',"res://addons/gmui/scripts/observer/values.gd")
+	add_autoload_singleton('VnodeHelper',"res://addons/gmui/scripts/vnode/vnode_helper.gd")
+	add_autoload_singleton('TinyXmlParser', "res://addons/gmui/scripts/complie/tiny_xml_parser.gd")
+	add_autoload_singleton('Patch', "res://addons/gmui/scripts/vnode/patch.gd")
+	
 func _build():
 	if str_to_var(configJson['if_generate']):
 		gen()
@@ -268,3 +272,7 @@ func set_main_scene():
 	
 func _exit_tree()->void:
 	remove_control_from_docks(dock)
+	remove_autoload_singleton('Values')
+	remove_autoload_singleton('VnodeHelper')
+	remove_autoload_singleton('TinyXmlParser')
+	remove_autoload_singleton('Patch')

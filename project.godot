@@ -19,10 +19,8 @@ config/icon="res://addons/gmui/gmui.png"
 [autoload]
 
 Values="*res://addons/gmui/scripts/observer/values.gd"
-GmuiManager="*res://addons/gmui/scripts/core/gmui_manager.gd"
 VnodeHelper="*res://addons/gmui/scripts/vnode/vnode_helper.gd"
 TinyXmlParser="*res://addons/gmui/scripts/complie/tiny_xml_parser.gd"
-BoxUtils="*res://addons/gmui/scripts/base/box_utils.gd"
 Patch="*res://addons/gmui/scripts/vnode/patch.gd"
 
 [display]
