@@ -27,7 +27,7 @@ func _enter_tree()->void:
 	editorSetting.set('docks/filesystem/textfile_extensions', 'txt,md,cfg,ini,log,json,yml,yaml,toml,xml,gmui')
 
 func _build():
-	if str_to_var(ifGenerate):
+	if str_to_var(configJson['if_generate']):
 		gen()
 	return true
 
@@ -42,7 +42,6 @@ func _save_external_data():
 		set_main_scene()
 		configJson = load_json()
 		
-
 func gen()->void:
 	var filePaths:Array[String] = FileUtils.get_all_gmui_file('res://', ['res://addons'])
 	gen_dist(filePaths, 'user')

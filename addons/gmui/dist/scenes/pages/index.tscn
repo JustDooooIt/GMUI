@@ -1,14 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://binumhldtsend"]
+[gd_scene load_steps=2 format=3 uid="uid://bm01tjcpd8jtl"]
 
-[sub_resource type="GDScript" id="GDScript_0ojk2"]
-script/source = "extends \"res://addons/gmui/dist/super_scripts/pages/index.gd\"
-
-
-@onready var data = await reactive({'textArr': ['text1', 'text2', 'text3']})
-
-func _mounted():
-	print(1)
-"
+[ext_resource type="Script" path="res://addons/gmui/dist/scripts/pages/index.gd" id="1_ull5q"]
 
 [node name="Root" type="HBoxContainer"]
-script = SubResource("GDScript_0ojk2")
+script = ExtResource("1_ull5q")

@@ -1,0 +1,7 @@
+<Row align="center">
+	<Label :text="item" g-for="(item, index) in textArr"></Label>
+</Row>
+
+<Script>
+@onready var data = await reactive({'textArr': ['text1', 'text2', 'text3']})
+</Script>
