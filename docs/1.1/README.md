@@ -1,70 +1,73 @@
-# GMUI - Godot MVgmui UI  
-Godot游戏引擎的 MVgmui UI框架   
+# GMUI - Godot MVVM UI
+MVVM UI Framework for Godot Engine  
+
 > [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[中文文档](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)   
-> GMUI版本：1.0.0   &nbsp;&nbsp;&nbsp;&nbsp;Godot版本：4.x  
+> GMUI Version：1.1.0   &nbsp;&nbsp;&nbsp;&nbsp;Godot Version：4.x   
 
-## 快速入门  
+## Quick Start  
 
-### 前置工作  
-1. 在Godot资源商店搜索GMUI，点击下载并导入插件  
-> 也可以下载插件包`gmui.zip`手动导入  
-2. 进入项目设置，启用插件(勾选)  
+### Pre-work  
 
-### 最简单的页面  
-在根目录下的pages文件夹里新建index.gmui文件，然后写入：  
+1. Install plugins in the godot asset store  
+> You can also download `gmui.zip` and import it manually  
+2. Open project settings and enable plugins(check box)  
+
+### The Simplest Page  
+Create a new index.gmui file in the pages folder under the root directory, and then write:   
 
 ```xml
 
 
 
-```  
+```
 
-运行项目，即可看到你写的空白页面。没错，你什么代码都不需要写，一个GMUI项目就运行起来啦！GMUI的出发点是尽可能的简单，不需要书写任何多余的代码。  
-> 如果提示需要主场景，请选择`addons/gmui/dist/scenes/pages/index.tscn`或相应目录的场景文件   
+Run the project and you will see the blank page you have written. That's right, you don't need to write any code, a GMUI project will run! The starting point of GMUI is to be as simple as possible, without the need to write any extra code.  
 
-### 注册登录界面  
-为了尽快拿出一个可供使用的版本，目前GMUI复用了Godot的内置节点作为组件。后期会提供更加好看的默认组件，也欢迎社区的朋友贡献组件库。接下来通过一个没有实际功能的注册登陆界面进行演示：
+Your page will be built as a scene in `addons/gmui/dist/scenes/pages/{page_name}.tscn`. As such, it can be set as the main scene or used within other scenes. This is the same for any other pages you create.
+
+### Login Interface
+In order to come up with a usable version as soon as possible, GMUI has reused Godot's built-in nodes as components. In the future, we will provide more beautiful default components, and we welcome friends from the community to contribute to the component library. Next, we will demonstrate through a registration and login interface without actual functionality : 
 
 ```xml
 <Row align="center">
     <Column align="center">
         <Row>
-            <Label text="用户名"></Label>
-            <LineEdit placeholder_text="请输入用户名"></LineEdit>
+            <Text text="Username"></Text>
+            <LineEdit placeholder_text="Pls enter username"></LineEdit>
         </Row>
         <Row>
-            <Label text="密码"></Label>
-            <LineEdit placeholder_text="请输入密码"></LineEdit>
+            <Text text="Password"></Text>
+            <LineEdit placeholder_text="Pls enter password"></LineEdit>
         </Row>
         <Row>
-            <Button text="登录"></Button>
-            <Button text="重置"></Button>
+            <Button text="login"></Button>
+            <Button text="reset"></Button>
          </Row>
     </Column>
 </Row>
 ```
 
-运行项目可以看到类似的效果：  
+Running the project can see :  
 
-![ShowPic](https://s1.ax1x.com/2023/06/14/pCnM956.png)
+![ShowPic](https://s1.ax1x.com/2023/06/16/pCMwKX9.png)  
 
-### 双向数据绑定  
-双向数据绑定也是小菜一碟！若要书写逻辑代码，请在.gmui文件最下方的位置添加一个`Script`标签。下方的案例中，点击登录按钮就会打印用户输入的内容。
+### Bidirectional Data Binding  
+Bidirectional data binding is also a piece of cake! To write logical code, add a 'Script' tag at the bottom of the. gmui file. In the case below, clicking the login button will print the user's input.  
 
 ```xml
 <Row align="center">
     <Column align="center">
         <Row>
-            <Label text="用户名"></Label>
-            <LineEdit placeholder_text="请输入用户名" g-model="username"></LineEdit>
+            <Text text="Username"></Text>
+            <LineEdit placeholder_text="Pls enter username" g-model="username"></LineEdit>
         </Row>
         <Row>
-            <Label text="密码"></Label>
-            <LineEdit placeholder_text="请输入密码" g-model="password"></LineEdit>
+            <Text text="Password"></Text>
+            <LineEdit placeholder_text="Pls enter password" g-model="password"></LineEdit>
         </Row>
         <Row>
-            <Button text="登录" ref="loginBtn"></Button>
-            <Button text="重置" ref="resetBtn"></Button>
+            <Button text="Login" ref="loginBtn"></Button>
+            <Button text="Reset" ref="resetBtn"></Button>
          </Row>
     </Column>
 </Row>
@@ -86,9 +89,10 @@ func _updated():
 	print('username:', data.rget('username'))
 	print('password:', data.rget('password'))
 </Script>
-```
+```  
 
-您还可以对组件使用双向绑定：
+
+You can also use bidirectional binding for components:  
 
 ```xml
 <LineEdit g-model="text"></LineEdit>
@@ -103,13 +107,16 @@ func _updated():
     <Component g-model:text="text"></Component>
     <Label :text="text"></Label>
 </Control>
+
 <Script>
 @import('Component', 'res://components/component.gmui')
 @onready var data = gmui.reactive({'text': 'my text'})
 </Script>
+```  
 
-### 获取、修改节点  
-如果在普通节点声明ref，将会获得一个虚拟节点。您可以通过`mv.refs['name']`来获取虚拟节点
+### Get and Modify Nodes
+
+If you declare `ref` on a normal node, you get a virtual node. You can get virtual nodes by `mv.refs['name']` :
 
 ```xml
 <Control>
@@ -120,9 +127,9 @@ func _updated():
 func _mounted():
 	print(gmui.refs['label'].rnode.text)
 </Script>
-```
+```  
 
-如果在组件声明ref，将会获得一个该组件的gmui实例：
+If you declare `ref` on a component, you will get a gmui instance of that component:  
 
 ```xml
 <Control>
@@ -142,7 +149,7 @@ func _mounted():
 </Script>
 ```  
 
-当您想执行节点内的方法时，请使用exec_func方法，参数为方法名以及参数数组：
+When you want to execute a method inside a node, use the `exec_func` method with the method name and an array of arguments:  
 
 ```xml
 <Control>
@@ -153,13 +160,13 @@ func _mounted():
 func _mounted():
 	gmui.refs['label'].exec_func('set_text', ['new text'])
 </Script>
-```
+```  
 
-> 注意：虚拟节点虽然有真实节点，但最好不要直接通过它修改真实节点的状态，请调用exec_func或者绑定响应式数据！  
+> Note: Although the virtual node has a real node, it is best not to modify the state of the real node directly through it, please call `exec_func` or bind responsive data!  
 
-### 页面跳转
+### Page Jump
 
-页面跳转可以使用jump_to方法，参数为page目录下的.gmui文件路径：
+Use `jump_to` method to jump, the parameter is `.gmui` file path in the page directory:  
 
 ```xml
 <Column align="center">
@@ -178,11 +185,12 @@ func _mounted():
 			self.jump_to('res://pages/page2.gmui')
 	)
 </Script>
-```
+```  
 
-### 列表渲染
-当您想要通过数组来渲染一个列表时，可以在标签上使用g-for指令
-```xml
+### List Rendering
+When you want to render a list from an array, you can use the `g-for` directive on the tag:  
+
+```xml   
 <Row align="center">
 	<Column align="center" g-for="text in textArr">
 		<Label :text="text"></Label>
@@ -192,17 +200,21 @@ func _mounted():
 <Script>
 @onready var data = await reactive({'textArr': ['text1', 'text2', 'text3']})
 </Script>
-```
-同时，你也能在组件上使用g-for指令
+```   
+
+At the same time, you can also use the `g-for` directive on the component:  
+
 ```xml
 <Row>
 	<Component g-for="(item, index) in arr" :text="item"></Component>
 </Row>
+
 <Script>
 @import('Component', 'res://components/component.gmui')
 @onready var data = await reactive({'arr': [1,2,3,4]})
 </Script>
-```
+```  
+
 ```xml
 <Row>
 	<Label :text="text"></Label>
@@ -210,10 +222,11 @@ func _mounted():
 
 <Script>
 </Script>
-```
+```  
 
-### 条件渲染
-您可以使用g-if来显示您想显示的内容
+### Conditional Rendering
+You can use `g-if` to display what you want to display:  
+
 ```xml
 <Control>
 	<Label text="1" g-if="flag"></Label>
@@ -225,22 +238,24 @@ func _mounted():
 <Script>
 @onready var data = await reactive({'flag': false})
 </Script>
-```
+```  
 
-###插槽
+### Slot
 
-默认插槽
-您只要在定义组件时使用slot标签，就可以在使用组件时直接写入内容替换调slot
+#### Default Slot
+As long as you use the `slot` tag when defining the component, you can replace the slot by writing the content directly when using the component:  
+
 ```xml
 <Row>
 	<Component>
 		<Label text="my text"></Label>
 	</Component>
 </Row>
+
 <Script>
 @import('Component', 'res://components/component.gmui')
 </Script>
-```
+```   
 
 ```xml
 <Row>
@@ -249,18 +264,22 @@ func _mounted():
 
 <Script>
 </Script>
-```
-效果等于
+```  
+
+The effect equals:  
+
 ```xml
 <Row>
 	<Row>
 	    <Label text="my text"></Label>
     </Row>
 </Row>
-```
+```   
 
-具名插槽
-如果您希望使用多个插槽，则需要使用具名插槽，在slot和template指定名称即可
+#### Named Slot
+
+If you want to use more than one slot, you need to use a named slot, specifying names in `slot` and `template`:  
+
 ```xml
 <Row>
 	<Component>
@@ -272,10 +291,11 @@ func _mounted():
         </Template>
 	</Component>
 </Row>
+
 <Script>
 @import('Component', 'res://components/component.gmui')
 </Script>
-```
+```  
 
 ```xml
 <Row>
@@ -285,20 +305,23 @@ func _mounted():
 
 <Script>
 </Script>
-```
+```  
 
-插槽传参
-您可以在插槽声明一个变量，然后在组件声明一个变量来存储所有在插槽的变量
+#### Slot parameter passing
+
+You can declare a variable in the slot and then declare a variable in the component to store all the variables in the slot:  
+
 ```xml
 <Row>
 	<Component #default="props">
 		<Label :text="props.text"></Label>
 	</Component>
 </Row>
+
 <Script>
 @import('Component', 'res://components/component.gmui')
 </Script>
-```
+```   
 
 ```xml
 <Row>
@@ -307,11 +330,11 @@ func _mounted():
 
 <Script>
 </Script>
-```
+```  
 
-## 路线图  
+## Roadmap  
 
-0. [x] 双向数据绑定  
-1. [ ] 全新的UI组件库  
-2. [ ] 更多的布局组件  
-3. [ ] C# 语言支持  
+0. [x] Bidirectional data binding  
+1. [ ] New UI component library  
+2. [ ] More layout components  
+3. [ ] C # language support  
