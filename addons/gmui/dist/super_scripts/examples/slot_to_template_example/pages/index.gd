@@ -1,4 +1,4 @@
-extends HBoxContainer
+extends Row
 
 
 var isGMUI:int = 0
@@ -50,7 +50,7 @@ func __root_init_render():
 	gmui = ast.gmui
 	gmui.reactive(reactiveData.data)
 	emit_signal('init_gmui')
-	vnode = VnodeHelper.create(ast, 0, oldVNode)
+	vnode = VnodeHelper.create(ast, 0, oldVNode, true)
 	emit_signal('befor_mount')
 	Patch.patch_node(oldVNode, vnode)
 	oldVNode = vnode
@@ -61,14 +61,14 @@ func __other_init_render():
 	gmui.reactive(reactiveData.data)
 	emit_signal('init_gmui')
 	var tempSceneNode = null
-	vnode = VnodeHelper.create(ast, get_index(), oldVNode)
+	vnode = VnodeHelper.create(ast, get_index(), oldVNode, true)
 	emit_signal('befor_mount')
 	Patch.patch_node(oldVNode, vnode)
 	oldVNode = vnode
 
 func __update_render():
 	emit_signal('before_update')
-	vnode = VnodeHelper.create(ast, get_index(), oldVNode)
+	vnode = VnodeHelper.create(ast, get_index(), oldVNode, false)
 	emit_signal('befor_mount')
 	Patch.patch_node(oldVNode, vnode)
 	oldVNode = vnode

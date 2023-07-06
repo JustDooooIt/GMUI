@@ -72,13 +72,13 @@ func vnode_with_name(
 		vnode.sceneXmlPath = ast.sceneRoot.sceneXmlPath
 	return vnode
 	
-func create(ast:ASTNode, index:int = -1, sceneRoot:VNode = null)->VNode:
+func create(ast:ASTNode, index:int = -1, sceneRoot:VNode = null, isInit:bool = true)->VNode:
 	self.isInit = isInit
 	var vnode = create_vnodes(ast, sceneRoot.name, null, index, sceneRoot.parent)
 	create_template(ast.sceneRoot, vnode.parent, 0)
 	move_template()
 	set_if(vnode)
-	set_for_gmui(vnode)
+	set_for_gmui(vnode, isInit)
 	set_model(vnode)
 	bind_slot_props(vnode)
 	bind_scene_props(vnode)
@@ -86,21 +86,22 @@ func create(ast:ASTNode, index:int = -1, sceneRoot:VNode = null)->VNode:
 	set_refs(vnode)
 	return vnode
 
-func set_for_gmui(node:VNode, need:Dictionary = {}):
-	if node.vnodeType == VNode.VNodeType.MULTI_SCENE_ROOT:
-		var nodes:Array[VNode] = [node]
-		while !nodes.is_empty():
-			var _node:VNode = nodes.pop_front()
-			var gmui = copy_gmui(node.__gmui)
-			var rgmui = copy_gmui(node.gmui)
-			_node.gmui = rgmui
-			_node.__gmui = gmui
-			need[_node.name] = true
-			for child in _node.children:
-				nodes.push_front(child)
-	for child in node.children:
-		if !need.has(child.name):
-			set_for_gmui(child)
+func set_for_gmui(node:VNode, isInit:bool, need:Dictionary = {}):
+	if isInit:
+		if node.vnodeType == VNode.VNodeType.MULTI_SCENE_ROOT:
+			var nodes:Array[VNode] = [node]
+			while !nodes.is_empty():
+				var _node:VNode = nodes.pop_front()
+				var gmui = copy_gmui(node.__gmui)
+				var rgmui = copy_gmui(node.gmui)
+				_node.gmui = rgmui
+				_node.__gmui = gmui
+				need[_node.name] = true
+				for child in _node.children:
+					nodes.push_front(child)
+		for child in node.children:
+			if !need.has(child.name):
+				set_for_gmui(child, isInit)
 
 func set_model(vnode:VNode):
 	if vnode.model != null:
@@ -126,7 +127,6 @@ func set_refs(node:VNode):
 				ref.append(node)
 			else:
 				node.__gmui.refs[node.refName] = [ref, node]
-			
 	for child in node.children:
 		set_refs(child)
 

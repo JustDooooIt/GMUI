@@ -1,7 +1,5 @@
 <Row align="center">
-	<Column align="center" g-for="(item, index) in textArr">
-		<Label :text="text"></Label>
-	</Column>
+	<Label :text="item" g-for="(item, index) in textArr"></Label>
 </Row>
 
 <Script>
