@@ -26,7 +26,7 @@ Run the project and you will see the blank page you have written. That's right, 
 Your page will be built as a scene in `addons/gmui/dist/scenes/pages/{page_name}.tscn`. As such, it can be set as the main scene or used within other scenes. This is the same for any other pages you create.
 
 ### Login Interface
-In order to come up with a usable version as soon as possible, GMUI has reused Godot's built-in nodes as components. In the future, we will provide more beautiful default components, and we welcome friends from the community to contribute to the component library. Next, we will demonstrate through a registration and login interface without actual functionality : 
+In order to come up with a usable version as soon as possible, GMUI has reused Godot's built-in nodes as components. In the future, we will provide more beautiful default components, and we welcome friends from the community to contribute to the component library. Next, we will demonstrate through a registration and login interface without actual functionality:  
 
 ```xml
 <Row align="center">
@@ -114,7 +114,7 @@ You can also use bidirectional binding for components:
 </Script>
 ```  
 
-### Get and Modify Nodes
+### Get & Modify Nodes  
 
 If you declare `ref` on a normal node, you get a virtual node. You can get virtual nodes by `mv.refs['name']` :
 
