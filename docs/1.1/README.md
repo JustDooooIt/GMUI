@@ -307,7 +307,7 @@ If you want to use more than one slot, you need to use a named slot, specifying 
 </Script>
 ```  
 
-#### Slot parameter passing
+#### Slot Parameter Passing
 
 You can declare a variable in the slot and then declare a variable in the component to store all the variables in the slot:  
 
