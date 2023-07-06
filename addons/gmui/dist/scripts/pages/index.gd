@@ -1,4 +1,8 @@
 extends "res://addons/gmui/dist/super_scripts/pages/index.gd"
 
 
-@onready var data = await reactive({'textArr': ['text1', 'text2', 'text3']})
+func _mounted():
+	gmui.refs['my_button'].rnode.pressed.connect(
+		func():
+		print(gmui.refs['my_button'].rnode.text)
+	)
