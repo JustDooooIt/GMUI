@@ -1,7 +1,7 @@
 # GMUI - Godot MVVM UI  
 Godot游戏引擎的 MVVM UI框架   
 > [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[中文文档](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)   
-> GMUI版本：1.0.0   &nbsp;&nbsp;&nbsp;&nbsp;Godot版本：4.x  
+> GMUI版本：1.1.0   &nbsp;&nbsp;&nbsp;&nbsp;Godot版本：4.x  
 
 ## 快速入门  
 
@@ -16,7 +16,6 @@ Godot游戏引擎的 MVVM UI框架
 ```xml
 
 
-
 ```  
 
 运行项目，即可看到你写的空白页面。没错，你什么代码都不需要写，一个GMUI项目就运行起来啦！GMUI的出发点是尽可能的简单，不需要书写任何多余的代码。  
@@ -29,11 +28,11 @@ Godot游戏引擎的 MVVM UI框架
 <Row align="center">
     <Column align="center">
         <Row>
-            <Text text="用户名"></Text>
+            <Label text="用户名"></Label>
             <LineEdit placeholder_text="请输入用户名"></LineEdit>
         </Row>
         <Row>
-            <Text text="密码"></Text>
+            <Label text="密码"></Label>
             <LineEdit placeholder_text="请输入密码"></LineEdit>
         </Row>
         <Row>
@@ -49,17 +48,17 @@ Godot游戏引擎的 MVVM UI框架
 ![ShowPic](https://s1.ax1x.com/2023/06/14/pCnM956.png)
 
 ### 双向数据绑定  
-双向数据绑定也是小菜一碟！若要书写逻辑代码，请在.gmui文件最下方的位置添加一个`Script`标签。下方的案例中，点击登录按钮就会打印用户输入的内容。
+双向数据绑定也是小菜一碟！若要书写逻辑代码，请在.gmui文件最下方的位置添加一个`Script`标签。下方的案例中，点击登录按钮就会打印用户输入的内容。  
 
 ```xml
 <Row align="center">
     <Column align="center">
         <Row>
-            <Text text="用户名"></Text>
+            <Label text="用户名"></Label>
             <LineEdit placeholder_text="请输入用户名" g-model="username"></LineEdit>
         </Row>
         <Row>
-            <Text text="密码"></Text>
+            <Label text="密码"></Label>
             <LineEdit placeholder_text="请输入密码" g-model="password"></LineEdit>
         </Row>
         <Row>
@@ -70,21 +69,21 @@ Godot游戏引擎的 MVVM UI框架
 </Row>
 
 <Script>
-    @onready var data = vm.define_reactive({'username': 'name', 'password': '123'})
-    func _mounted():
-        vm.refs['loginBtn'].rnode.pressed.connect(
-            func():
-            print('username:', data.rget('username'))
-            print('password:', data.rget('password'))
-        )
-        vm.refs['resetBtn'].rnode.pressed.connect(
+@onready var data = await reactive({'username': 'name', 'password': '123'})
+func _mounted():
+    gmui.refs['loginBtn'].rnode.pressed.connect(
         func():
-            data.rset('username', '')
-            data.rset('password', '')
-        )
-    func _updated():
         print('username:', data.rget('username'))
         print('password:', data.rget('password'))
+    )
+    gmui.refs['resetBtn'].rnode.pressed.connect(
+    func():
+        data.rset('username', '')
+        data.rset('password', '')
+    )
+func _updated():
+    print('username:', data.rget('username'))
+    print('password:', data.rget('password'))
 </Script>
 ```
 
@@ -94,35 +93,25 @@ Godot游戏引擎的 MVVM UI框架
 <LineEdit g-model="text"></LineEdit>
 
 <Script>
+@onready var data = await reactive({'text': 'new text'})
 </Script>
 ```
 
 ```xml
 <Control>
-    <Widget path="res://components/component.gmui" g-model="text"></Widget>
-    <Text g-bind:text="text"></Text>
+    <Component g-model:text="text"></Component>
+    <Label :text="text"></Label>
 </Control>
-<Script>
-    @onready var data = vm.define_reactive({'text': 'my text'})
-</Script>
-```
-
-如果您不喜欢这种样式，也可以将所有UI代码放入一个`Template`标签中，示例如下：
-
-```xml
-<Template>
-    // 您的UI代码  
-    // 您的UI代码  
-    // ......  
-</Template>
 
 <Script>
-
+@import('Component', 'res://components/component.gmui')
+@onready var data = await reactive({'text': 'my text'})
 </Script>
-```
+```  
 
 ### 获取、修改节点  
-如果在普通节点声明ref，将会获得一个虚拟节点。您可以通过`mv.refs['name']`来获取虚拟节点
+
+如果在普通节点声明`ref`，将会获得一个虚拟节点。您可以通过`mv.refs['name']`来获取虚拟节点：  
 
 ```xml
 <Control>
@@ -130,31 +119,32 @@ Godot游戏引擎的 MVVM UI框架
 </Control>
 
 <Script>
-    func _mounted():
-        print(vm.refs['label'].rnode.text)
+func _mounted():
+    print(gmui.refs['label'].rnode.text)
 </Script>
-```
+```  
 
-如果在组件声明ref，将会获得一个该组件的vm实例：
+如果在组件声明`ref`，将会获得一个该组件的gmui实例：
 
 ```xml
 <Control>
-    <Text text="component text" ref="text1"></Text>
+    <Label text="component text" ref="text1"></Label>
 </Control>
 ```  
 
 ```xml
 <Control>
-    <Widget path="res://components/username_input.gmui" ref="widget"></Widget>
+    <UsernameInput ref="component"></UsernameInput>
 </Control>
 
 <Script>
-    func _mounted():
-    var widget = vm.refs['widget'].refs['text1']
+@import('UsernameInput', 'res://components/username_input.gmui')
+func _mounted():
+    var component = gmui.refs['component'].refs['text1']
 </Script>
 ```  
 
-当您想执行节点内的方法时，请使用exec_func方法，参数为方法名以及参数数组：
+当您想执行节点内的方法时，请使用`exec_func`方法，参数为方法名以及参数数组：  
 
 ```xml
 <Control>
@@ -162,16 +152,16 @@ Godot游戏引擎的 MVVM UI框架
 </Control>
 
 <Script>
-    func _mounted():
-        vm.ids['label'].exec_func('set_text', ['new text'])
+func _mounted():
+    gmui.refs['label'].exec_func('set_text', ['new text'])
 </Script>
-```
+```  
 
-> 注意：虚拟节点虽然有真实节点，但最好不要直接通过它修改真实节点的状态，请调用exec_func或者绑定响应式数据！  
+> 注意：虚拟节点虽然有真实节点，但最好不要直接通过它修改真实节点的状态，请调用`exec_func`或者绑定响应式数据！  
 
-### 页面跳转和组件替换  
+### 页面跳转
 
-页面跳转可以使用jump_to方法，参数为page目录下的.gmui文件路径：
+页面跳转可以使用`jump_to`方法，参数为page目录下的`.gmui`文件路径：
 
 ```xml
 <Column align="center">
@@ -184,13 +174,159 @@ Godot游戏引擎的 MVVM UI框架
 </Column>
 
 <Script>
-    func _mounted():
-        vm.refs['btn'].rnode.pressed.connect(
-            func():
-        self.jump_to('res://pages/page.gmui')
+func _mounted():
+    gmui.refs['btn'].rnode.pressed.connect(
+        func():
+            self.jump_to('res://pages/page2.gmui')
     )
 </Script>
-```
+```  
+
+### 列表渲染
+当您想要通过数组来渲染一个列表时，可以在标签上使用`g-for`指令：  
+
+```xml   
+<Row align="center">
+    <Column align="center" g-for="text in textArr">
+        <Label :text="text"></Label>
+    </Column>
+</Row>
+
+<Script>
+@onready var data = await reactive({'textArr': ['text1', 'text2', 'text3']})
+</Script>
+```   
+
+同时，你也能在组件上使用`g-for`指令：  
+
+```xml
+<Row>
+    <Component g-for="(item, index) in arr" :text="item"></Component>
+</Row>
+
+<Script>
+@import('Component', 'res://components/component.gmui')
+@onready var data = await reactive({'arr': [1,2,3,4]})
+</Script>
+```  
+
+```xml
+<Row>
+    <Label :text="text"></Label>
+</Row>
+
+<Script>
+</Script>
+```  
+
+
+### 条件渲染  
+您可以使用`g-if`来显示您想显示的内容：  
+
+```xml
+<Control>
+    <Label text="1" g-if="flag"></Label>
+    <Label text="2" g-else-if="true"></Label>
+    <Label text="3" g-else-if="true"></Label>
+    <Label text="4" g-else="true"></Label>
+</Control>
+
+<Script>
+@onready var data = await reactive({'flag': false})
+</Script>
+```  
+
+### 插槽
+
+#### 默认插槽  
+您只要在定义组件时使用`slot`标签，就可以在使用组件时直接写入内容替换掉slot：  
+
+```xml
+<Row>
+    <Component>
+        <Label text="my text"></Label>
+    </Component>
+</Row>
+
+<Script>
+@import('Component', 'res://components/component.gmui')
+</Script>
+```   
+
+```xml
+<Row>
+    <Slot></Slot>
+</Row>
+
+<Script>
+</Script>
+```  
+
+效果等于：  
+
+```xml
+<Row>
+    <Row>
+        <Label text="my text"></Label>
+    </Row>
+</Row>
+```   
+
+#### 具名插槽  
+
+如果您希望使用多个插槽，则需要使用具名插槽，在`slot`和`template`指定名称即可：  
+
+```xml
+<Row>
+    <Component>
+        <Template #slot1="NULL">
+            <Label text="my text1"></Label>
+        </Template>
+        <Template #slot2="NULL">
+            <Label text="my text2"></Label>
+        </Template>
+    </Component>
+</Row>
+
+<Script>
+@import('Component', 'res://components/component.gmui')
+</Script>
+```  
+
+```xml
+<Row>
+    <Slot name="slot1"></Slot>
+    <Slot name="slot2"></Slot>
+</Row>
+
+<Script>
+</Script>
+```  
+
+#### 插槽传参  
+
+您可以在插槽声明一个变量，然后在组件声明一个变量来存储所有在插槽的变量：  
+
+```xml
+<Row>
+    <Component #default="props">
+        <Label :text="props.text"></Label>
+    </Component>
+</Row>
+
+<Script>
+@import('Component', 'res://components/component.gmui')
+</Script>
+```   
+
+```xml
+<Row>
+    <Slot text="my text"></Slot>
+</Row>
+
+<Script>
+</Script>
+```   
 
 ## 路线图  
 
