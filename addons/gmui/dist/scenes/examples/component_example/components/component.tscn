@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=3 uid="uid://ckdvblkkd2vxs"]
 
-[ext_resource type="Script" path="res://addons/gmui/dist/scripts/examples/component_example/components/component.gd" id="1_4u60o"]
+[ext_resource type="Script" path="res://addons/gmui/dist/scripts/examples/component_example/components/component.gd" id="1_tyg8n"]
 
 [node name="Root" type="Control"]
 layout_mode = 3
 anchors_preset = 0
-script = ExtResource("1_4u60o")
+script = ExtResource("1_tyg8n")
