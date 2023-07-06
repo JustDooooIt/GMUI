@@ -75,19 +75,19 @@ Bidirectional data binding is also a piece of cake! To write logical code, add a
 <Script>
 @onready var data = await reactive({'username': 'name', 'password': '123'})
 func _mounted():
-	gmui.refs['loginBtn'].rnode.pressed.connect(
-		func():
-		print('username:', data.rget('username'))
-		print('password:', data.rget('password'))
-	)
-	gmui.refs['resetBtn'].rnode.pressed.connect(
-	func():
-		data.rset('username', '')
-		data.rset('password', '')
-	)
+    gmui.refs['loginBtn'].rnode.pressed.connect(
+        func():
+        print('username:', data.rget('username'))
+        print('password:', data.rget('password'))
+    )
+    gmui.refs['resetBtn'].rnode.pressed.connect(
+    func():
+        data.rset('username', '')
+        data.rset('password', '')
+    )
 func _updated():
-	print('username:', data.rget('username'))
-	print('password:', data.rget('password'))
+    print('username:', data.rget('username'))
+    print('password:', data.rget('password'))
 </Script>
 ```  
 
@@ -125,7 +125,7 @@ If you declare `ref` on a normal node, you get a virtual node. You can get virtu
 
 <Script>
 func _mounted():
-	print(gmui.refs['label'].rnode.text)
+    print(gmui.refs['label'].rnode.text)
 </Script>
 ```  
 
@@ -158,7 +158,7 @@ When you want to execute a method inside a node, use the `exec_func` method with
 
 <Script>
 func _mounted():
-	gmui.refs['label'].exec_func('set_text', ['new text'])
+    gmui.refs['label'].exec_func('set_text', ['new text'])
 </Script>
 ```  
 
@@ -180,10 +180,10 @@ Use `jump_to` method to jump, the parameter is `.gmui` file path in the page dir
 
 <Script>
 func _mounted():
-	gmui.refs['btn'].rnode.pressed.connect(
-		func():
-			self.jump_to('res://pages/page2.gmui')
-	)
+    gmui.refs['btn'].rnode.pressed.connect(
+        func():
+            self.jump_to('res://pages/page2.gmui')
+    )
 </Script>
 ```  
 
@@ -192,9 +192,9 @@ When you want to render a list from an array, you can use the `g-for` directive 
 
 ```xml   
 <Row align="center">
-	<Column align="center" g-for="text in textArr">
-		<Label :text="text"></Label>
-	</Column>
+    <Column align="center" g-for="text in textArr">
+        <Label :text="text"></Label>
+    </Column>
 </Row>
 
 <Script>
@@ -206,7 +206,7 @@ At the same time, you can also use the `g-for` directive on the component:
 
 ```xml
 <Row>
-	<Component g-for="(item, index) in arr" :text="item"></Component>
+    <Component g-for="(item, index) in arr" :text="item"></Component>
 </Row>
 
 <Script>
@@ -217,7 +217,7 @@ At the same time, you can also use the `g-for` directive on the component:
 
 ```xml
 <Row>
-	<Label :text="text"></Label>
+    <Label :text="text"></Label>
 </Row>
 
 <Script>
@@ -229,10 +229,10 @@ You can use `g-if` to display what you want to display:
 
 ```xml
 <Control>
-	<Label text="1" g-if="flag"></Label>
-	<Label text="2" g-else-if="true"></Label>
-	<Label text="3" g-else-if="true"></Label>
-	<Label text="4" g-else="true"></Label>
+    <Label text="1" g-if="flag"></Label>
+    <Label text="2" g-else-if="true"></Label>
+    <Label text="3" g-else-if="true"></Label>
+    <Label text="4" g-else="true"></Label>
 </Control>
 
 <Script>
@@ -247,9 +247,9 @@ As long as you use the `slot` tag when defining the component, you can replace t
 
 ```xml
 <Row>
-	<Component>
-		<Label text="my text"></Label>
-	</Component>
+    <Component>
+        <Label text="my text"></Label>
+    </Component>
 </Row>
 
 <Script>
@@ -259,7 +259,7 @@ As long as you use the `slot` tag when defining the component, you can replace t
 
 ```xml
 <Row>
-	<Slot></Slot>
+    <Slot></Slot>
 </Row>
 
 <Script>
@@ -270,8 +270,8 @@ The effect equals:
 
 ```xml
 <Row>
-	<Row>
-	    <Label text="my text"></Label>
+    <Row>
+        <Label text="my text"></Label>
     </Row>
 </Row>
 ```   
@@ -282,14 +282,14 @@ If you want to use more than one slot, you need to use a named slot, specifying 
 
 ```xml
 <Row>
-	<Component>
+    <Component>
         <Template #slot1="NULL">
-		    <Label text="my text1"></Label>
+            <Label text="my text1"></Label>
         </Template>
         <Template #slot2="NULL">
-		    <Label text="my text2"></Label>
+            <Label text="my text2"></Label>
         </Template>
-	</Component>
+    </Component>
 </Row>
 
 <Script>
@@ -299,8 +299,8 @@ If you want to use more than one slot, you need to use a named slot, specifying 
 
 ```xml
 <Row>
-	<Slot name="slot1"></Slot>
-	<Slot name="slot2"></Slot>
+    <Slot name="slot1"></Slot>
+    <Slot name="slot2"></Slot>
 </Row>
 
 <Script>
@@ -313,9 +313,9 @@ You can declare a variable in the slot and then declare a variable in the compon
 
 ```xml
 <Row>
-	<Component #default="props">
-		<Label :text="props.text"></Label>
-	</Component>
+    <Component #default="props">
+        <Label :text="props.text"></Label>
+    </Component>
 </Row>
 
 <Script>
@@ -325,7 +325,7 @@ You can declare a variable in the slot and then declare a variable in the compon
 
 ```xml
 <Row>
-	<Slot text="my text"></Slot>
+    <Slot text="my text"></Slot>
 </Row>
 
 <Script>
