@@ -105,7 +105,7 @@ func _updated():
 
 <Script>
 @import('Component', 'res://components/component.gmui')
-@onready var data = gmui.reactive({'text': 'my text'})
+@onready var data = await reactive({'text': 'my text'})
 </Script>
 ```  
 
@@ -239,7 +239,7 @@ func _mounted():
 ### 插槽
 
 #### 默认插槽  
-您只要在定义组件时使用`slot`标签，就可以在使用组件时直接写入内容替换调slot：  
+您只要在定义组件时使用`slot`标签，就可以在使用组件时直接写入内容替换掉slot：  
 
 ```xml
 <Row>
