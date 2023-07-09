@@ -15,6 +15,7 @@ signal init_finish
 signal init_start
 signal before_update
 signal init_gmui
+signal init_gmui_finish
 signal befor_mount
 
 func _init():
@@ -127,7 +128,16 @@ func __run_node_init(node):
 func reactive(data:Dictionary):
 	reactiveData.merge(data)
 	await init_gmui
+	emit_signal('init_gmui')
 	return gmui.data
+
+func watch(key:String, callback:Callable):
+	await init_gmui
+	print('test')
+	var data:ReactiveDictionary = reactiveData
+	var function = func(_key):
+		if key == _key: callback.call()
+	data.watch.connect(function)
 
 func jump_to(path:String):
 	path = path.replace('res://', distPath + '/scenes/').replace('.gmui', '.tscn')

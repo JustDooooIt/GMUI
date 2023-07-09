@@ -3,7 +3,8 @@ class_name ReactiveDictionary extends RefCounted
 var data:Dictionary = {}
 var rdata:Dictionary = {}
 var dep = Dep.new()
-signal setted(key, value)
+signal setted(key, newValue, oldValue)
+signal watch(key, newValue, oldValue)
 
 #暂时无法处理props和data命名冲突问题
 func _init(data = {}):
@@ -78,8 +79,10 @@ func rget(key):
 			return d
 
 func rset(key, value, canNotify = true, isEmit = true):
+	var oldValue
 	var keys = key.split('.')
 	if keys.size() < 2:
+		oldValue = self.data[key]
 		self.data[key] = value
 		self.rdata[key] = value
 	else:
@@ -89,14 +92,14 @@ func rset(key, value, canNotify = true, isEmit = true):
 			if d is Dictionary:
 				d = d[keys[i]]
 				rd = rd.rget(key[i])
+		oldValue = d[keys[keys.size() - 1]]
 		d[keys[keys.size() - 1]] = value
 		rd.rset(keys[keys.size() - 1], value)
-#	if value is Dictionary:
-#		self.rdata[key] = ReactiveDictionary.new(data[key])
 	if canNotify:
 		dep.notify()
 	if isEmit:
-		emit_signal('setted', key, value)
+		emit_signal('setted', key, value, oldValue)
+	emit_signal('watch', key, value, oldValue)
 
 func copy():
 	var reactiveDict = ReactiveDictionary.new()

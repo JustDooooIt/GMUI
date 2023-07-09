@@ -17,7 +17,8 @@ func operate():
 				gmui.data.rset(vnode.model.name, id, true, true)
 		)
 		gmui.data.setted.connect(
-			func(key, value):
+			func(key, value, oldValue):
 				if key == vnode.model.name:
+					gmui.data.emit_signal('watch', key, value, oldValue)
 					rnode.button_pressed = value
 		)
