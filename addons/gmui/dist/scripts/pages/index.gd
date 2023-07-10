@@ -1,8 +1,10 @@
 extends "res://addons/gmui/dist/super_scripts/pages/index.gd"
 
 
-func _mounted():
-	gmui.refs['my_button'].rnode.pressed.connect(
-		func():
-		print(gmui.refs['my_button'].rnode.text)
-	)
+var data = await reactive({'text': 'text'})
+
+func _ready():
+	watch('text', change_text)
+
+func change_text(newValue, oldValue):
+	print(newValue, ',', oldValue)

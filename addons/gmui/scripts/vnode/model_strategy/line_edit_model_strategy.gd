@@ -17,8 +17,9 @@ func operate():
 				gmui.data.rset(vnode.model.name, text, true, true)
 		)
 		gmui.data.setted.connect(
-			func(key, value):
+			func(key, value, oldValue):
 				if key == vnode.model.name:
+#					gmui.data.emit_signal('watch', key, value, oldValue)
 					rnode.text = value
 					if value.length() > 0: 
 						rnode.caret_column = value.length()
