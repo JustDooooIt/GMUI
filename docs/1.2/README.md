@@ -2,7 +2,7 @@
 MVVM UI Framework for Godot Engine  
 
 > [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[中文文档](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)   
-> GMUI Version：1.1.0   &nbsp;&nbsp;&nbsp;&nbsp;Godot Version：4.x   
+> GMUI Version：1.2.x   &nbsp;&nbsp;&nbsp;&nbsp;Godot Version：4.x   
 
 ## Quick Start  
 
@@ -16,7 +16,6 @@ MVVM UI Framework for Godot Engine
 Create a new index.gmui file in the pages folder under the root directory, and then write:   
 
 ```xml
-
 
 
 ```
@@ -329,6 +328,27 @@ You can declare a variable in the slot and then declare a variable in the compon
 </Row>
 
 <Script>
+</Script>
+```  
+
+### Listening Properties  
+You can use `watch`` to monitor responsive data:   
+
+```xml
+<Row align="center">
+	<Column align="center">
+		<LineEdit g-model="text"></LineEdit>
+	</Column>
+</Row>
+
+<Script>
+var data = await reactive({'text': 'text'})
+
+func _ready():
+	watch('text', change_text)
+
+func change_text(newValue, oldValue):
+	print(newValue, ',', oldValue)
 </Script>
 ```  
 

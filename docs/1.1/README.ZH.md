@@ -1,7 +1,7 @@
 # GMUI - Godot MVVM UI  
 Godot游戏引擎的 MVVM UI框架   
 > [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[中文文档](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)   
-> GMUI版本：1.1.0   &nbsp;&nbsp;&nbsp;&nbsp;Godot版本：4.x  
+> GMUI版本：1.1.x   &nbsp;&nbsp;&nbsp;&nbsp;Godot版本：4.x  
 
 ## 快速入门  
 
