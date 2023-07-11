@@ -19,6 +19,7 @@ signal init_gmui_finish
 signal befor_mount
 
 func _init():
+	_created()
 	ready.connect(__init_watcher)
 	init_finish.connect(_mounted)
 	update.connect(_updated)
@@ -46,10 +47,10 @@ func __root_init_render():
 	scenePath = scenePath.replace('%s/scenes' % [TinyXmlParser.distPath], '%s/layouts' % [TinyXmlParser.distPath])
 	scenePath = scenePath.replace(scenePath.get_extension(), 'xml')
 	ast = TinyXmlParser.parse_xml(scenePath)
-	self.name = ast.name
+	self.set_name.call_deferred(ast.name)
 	oldVNode = __init_root_vnode()
 	gmui = ast.gmui
-	gmui.reactive(reactiveData.data)
+	gmui.data = reactiveData
 	emit_signal('init_gmui')
 	vnode = VnodeHelper.create(ast, 0, oldVNode, true)
 	emit_signal('befor_mount')
@@ -59,7 +60,8 @@ func __root_init_render():
 func __other_init_render():
 	ast = oldVNode.astNode
 	gmui = ast.rgmui
-	gmui.reactive(reactiveData.data)
+#	gmui.reactive(reactiveData.data)
+	gmui.data = reactiveData
 	emit_signal('init_gmui')
 	var tempSceneNode = null
 	vnode = VnodeHelper.create(ast, get_index(), oldVNode, true)
@@ -106,6 +108,9 @@ func __set_scene_parent(node = self):
 			sceneParent = node
 			return
 
+func _created():
+	pass
+
 func _before_mount():
 	pass
 
@@ -128,15 +133,15 @@ func __run_node_init(node):
 func reactive(data:Dictionary):
 	reactiveData.merge(data)
 	await init_gmui
-	emit_signal('init_gmui')
+	emit_signal('init_gmui_finish')
 	return gmui.data
 
 func watch(key:String, callback:Callable):
-	await init_gmui
-	print('test')
+	await init_gmui_finish
 	var data:ReactiveDictionary = reactiveData
-	var function = func(_key):
-		if key == _key: callback.call()
+	var function = func(_key, newValue, oldValue):
+		if key == _key: 
+			callback.call(newValue, oldValue)
 	data.watch.connect(function)
 
 func jump_to(path:String):

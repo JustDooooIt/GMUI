@@ -1,10 +1,11 @@
 <Row align="center">
 	<Column align="center">
-		<LineEdit g-model="text"></LineEdit>
+		<Button text="Hello World" ref="my_button"></Button>
 	</Column>
 </Row>
 
 <Script>
+<<<<<<< HEAD
 var data = await reactive({'text': 'text'})
 
 func _ready():
@@ -12,4 +13,11 @@ func _ready():
 
 func change_text(newValue, oldValue):
 	print(newValue, ',', oldValue)
+=======
+func _mounted():
+	gmui.refs['my_button'].rnode.pressed.connect(
+		func():
+		print(gmui.refs['my_button'].rnode.text)
+	)
+>>>>>>> c06486e6cbc0ed5d16eedaade2a62f39e14ae8da
 </Script>

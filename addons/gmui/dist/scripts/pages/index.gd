@@ -3,7 +3,7 @@ extends "res://addons/gmui/dist/super_scripts/pages/index.gd"
 
 var data = await reactive({'text': 'text'})
 
-func _enter_tree():
+func _ready():
 	watch('text', change_text)
 
 func change_text(newValue, oldValue):
