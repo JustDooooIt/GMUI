@@ -1,11 +1,7 @@
 # GMUI - Godot MVVM UI  
 Godot游戏引擎的 MVVM UI框架   
 > [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[中文文档](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)   
-<<<<<<< HEAD
-> GMUI版本：1.1.0   &nbsp;&nbsp;&nbsp;&nbsp;Godot版本：4.x  
-=======
 > GMUI版本：1.2.x   &nbsp;&nbsp;&nbsp;&nbsp;Godot版本：4.x  
->>>>>>> c06486e6cbc0ed5d16eedaade2a62f39e14ae8da
 
 ## 快速入门  
 
@@ -332,8 +328,6 @@ func _mounted():
 </Script>
 ```   
 
-<<<<<<< HEAD
-=======
 ### 监听属性  
 您可以使用`watch`监听响应式数据：  
 
@@ -355,7 +349,6 @@ func change_text(newValue, oldValue):
 </Script>
 ```  
 
->>>>>>> c06486e6cbc0ed5d16eedaade2a62f39e14ae8da
 ## 路线图  
 
 0. [x] 双向数据绑定  

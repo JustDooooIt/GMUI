@@ -1,6 +1,11 @@
-extends "res://addons/gmui/dist/super_scripts/pages/index.gd"
+<Row align="center">
+	<Column align="center">
+		<Label :text="fullName"></Label>
+		<Button ref="btn" text="改名"></Button>
+	</Column>
+</Row>
 
-
+<Script>
 var data = await reactive({'firstName': '张', 'lastName': '四'})
 
 func fullName():
@@ -14,3 +19,4 @@ func _mounted():
 		func():
 			data.rset('firstName', '李')
 	)
+</Script>

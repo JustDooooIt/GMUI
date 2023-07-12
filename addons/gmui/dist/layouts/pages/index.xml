@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Row align="center">
-	<Label :text="fullName"></Label>
+	<Column align="center">
+		<Label :text="fullName"></Label>
+		<Button ref="btn" text="改名"></Button>
+	</Column>
 </Row>
