@@ -1,17 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://dw5mlflpstbnr"]
+[gd_scene load_steps=2 format=3 uid="uid://ickv6ac4k8bb"]
 
-[sub_resource type="GDScript" id="GDScript_jmuxk"]
-script/source = "extends \"res://addons/gmui/dist/super_scripts/pages/index.gd\"
-
-
-var data = await reactive({'text': 'text'})
-
-func _ready():
-	watch('text', change_text)
-
-func change_text(newValue, oldValue):
-	print(newValue, ',', oldValue)
-"
+[ext_resource type="Script" path="res://addons/gmui/dist/scripts/pages/index.gd" id="1_cciv8"]
 
 [node name="Root" type="HBoxContainer"]
-script = SubResource("GDScript_jmuxk")
+script = ExtResource("1_cciv8")

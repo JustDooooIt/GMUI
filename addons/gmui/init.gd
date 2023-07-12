@@ -61,8 +61,7 @@ func gen_dist(filePaths:Array[String], mode)->void:
 		var rootType:String = get_root_type(uiCode)
 		var scenePath:String = gen_scene(filePath, rootType, mode)
 		var superScriptPath:String = gen_super_script(filePath, rootType, mode)
-		var outterCode:String = get_outter_script(content)
-		var scriptPath:String = gen_script(filePath, superScriptPath, scriptCode, outterCode, mode)
+		var scriptPath:String = gen_script(filePath, superScriptPath, scriptCode, mode)
 		mount_script(scenePath, scriptPath)
 		
 func gen_layout(gmuiPath:String, uiCode:String, mode:String):
@@ -86,8 +85,8 @@ func mount_script(scenePath:String, scriptPath:String):
 	scene.pack(root)
 	ResourceSaver.save(scene, scenePath)
 
-func gen_script(filePath:String, superScriptPath:String, scriptCode:String, outterCode:String, mode:String):
-	var code:String = 'extends "%s"\n' % superScriptPath + outterCode + '\n' + scriptCode
+func gen_script(filePath:String, superScriptPath:String, scriptCode:String, mode:String):
+	var code:String = 'extends "%s"\n' % superScriptPath + '\n' + scriptCode
 	var script:GDScript = GDScript.new()
 	script.source_code = code
 	var scriptPath
@@ -180,6 +179,7 @@ func get_ui_script_code(content:String)->String:
 	var regexMatchs = regex.search_all(scriptCode)
 	for regexMatch in regexMatchs:
 		scriptCode = scriptCode.replace(regexMatch.strings[0], '')
+	scriptCode = conditional_compilation(scriptCode)
 	return scriptCode
 
 func get_outter_script(content:String)->String:
@@ -212,6 +212,7 @@ func get_ui_tag_code(content:String, scriptCodes:Array[String] = [])->String:
 		content = content.replace('<%s' % com, '<Scene %s="%s"' % [sceneTag, path])
 		content = content.replace('</%s>' % com, '</Scene>')
 #	content = content.replace('<Template>', '').replace('</Template>', '')
+	content = conditional_compilation(content)
 	return content
 
 func get_import(content:String)->Dictionary:
@@ -245,7 +246,28 @@ func get_script_codes(content:String)->Array[String]:
 		codes.append(regexMatch.strings[0])
 	return codes
 
-func gen_json():
+func conditional_compilation(code:String = '')->String:
+	var curOsName:String = OS.get_name()
+	var regexIf:RegEx = RegEx.create_from_string("(?<ifdefStr>(?<type>((#ifdef)|(#ifndef)))\\s+\\[(?<name>\\w+)\\])\\n*(.|\\n)*?\\n*#endif")
+	var regexMatchIfs:Array[RegExMatch] = regexIf.search_all(code)
+	var ifdefs:Array[String] = []
+	for ifdef in regexMatchIfs:
+		var osName = ifdef.get_string('name')
+		var type = ifdef.get_string('type')
+		var ifdefStr = ifdef.get_string('ifdefStr')
+		if type == '#ifdef':
+			if osName != curOsName:
+				code = code.replace(ifdef.strings[0], '')
+		else:
+			if osName == curOsName:
+				code = code.replace(ifdef.strings[0], '')
+		ifdefs.append(ifdefStr)
+	for str in ifdefs:
+		code = code.replace(str, '')
+	code = code.replace('#endif', '')
+	return code
+
+func gen_json()->void:
 	var json:Dictionary = {
 		"name": "demo",
 		"description": "a wonderful project",
@@ -253,7 +275,8 @@ func gen_json():
 		"icon": "/addons/gmui/gmui.png",
 		"gmui_index": "/pages/index.gmui",
 		"screen": "1080x720",
-		"environment": "gmui_1.0.0"
+		"environment": "gmui_1.0.0",
+		"if_generate": "true"
 	}
 	if !FileAccess.file_exists('res://gmui.json'):
 		var jsonStr = JSON.stringify(json)
@@ -261,11 +284,11 @@ func gen_json():
 		file.store_string(jsonStr)
 		file.close()
 
-func load_json():
+func load_json()->Dictionary:
 	var jsonStr = FileAccess.get_file_as_string('res://gmui.json')
 	return JSON.parse_string(jsonStr)
 	
-func set_main_scene():
+func set_main_scene()->void:
 	var mainScenePath = configJson['gmui_index']
 	mainScenePath = distPath + '/scenes' + mainScenePath.replace('.gmui', '.tscn')
 	ProjectSettings.set('application/run/main_scene', mainScenePath)

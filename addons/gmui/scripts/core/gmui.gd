@@ -9,8 +9,7 @@ var data:ReactiveDictionary = ReactiveDictionary.new()
 var refs:Dictionary = {}
 var ids:Dictionary = {}
 var props:ReactiveDictionary = ReactiveDictionary.new()
-
-#signal send_props()
+var computedWatchers:Dictionary = {}
 
 func reactive(data:Dictionary, override = false)->ReactiveDictionary:
 	self.data.data.merge(data, override)

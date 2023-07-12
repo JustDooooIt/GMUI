@@ -2,21 +2,27 @@ class_name ReactiveDictionary extends RefCounted
 
 var data:Dictionary = {}
 var rdata:Dictionary = {}
-var dep = Dep.new()
+var depMap:Dictionary = {}
 signal setted(key, newValue, oldValue)
 signal watch(key, newValue, oldValue)
 
-#暂时无法处理props和data命名冲突问题
 func _init(data = {}):
 	self.data = data
 	self.rdata = data.duplicate(true)
+	create_dep(data)
 	observe()
 
-func merge(data= {}):
+func merge(data = {}):
 	self.data.merge(data)
 	self.rdata = data.duplicate(true)
+	create_dep(data)
 	observe()
-	
+
+func create_dep(data):
+	for key in data.keys():
+		var dep:Dep = Dep.new()
+		depMap[key] = dep
+
 func observe():
 	if data == null or data.is_empty(): return
 	if data is Dictionary:
@@ -43,7 +49,7 @@ func has(key):
 
 func __rget(key):
 	if Values.curWatcher != null:
-		dep.depend()
+		depMap[key].depend()
 	var keys = key.split('.')
 	if keys.size() < 2:
 		return rdata[key]
@@ -56,13 +62,15 @@ func __rget(key):
 
 func rget(key):
 	if Values.curWatcher != null:
-		dep.depend()
+		depMap[key].depend()
 	var keys = key.split('.')
 	if keys.size() < 2:
 		if !data.has(key): return null
 		if data[key] is Array:
 			return rdata[key]
 		else:
+			if data[key] is Callable:
+				return data[key].call()
 			return data[key]
 	else:
 		var d = data.get(keys[0])
@@ -76,13 +84,16 @@ func rget(key):
 		if d is Array:
 			return rd
 		else:
+			if d is Callable:
+				return d.call()
 			return d
 
 func rset(key, value, canNotify = true, isEmit = true):
 	var oldValue
 	var keys = key.split('.')
 	if keys.size() < 2:
-		oldValue = self.data[key]
+		if self.data.has(key):
+			oldValue = self.data[key]
 		self.data[key] = value
 		self.rdata[key] = value
 	else:
@@ -96,7 +107,7 @@ func rset(key, value, canNotify = true, isEmit = true):
 		d[keys[keys.size() - 1]] = value
 		rd.rset(keys[keys.size() - 1], value)
 	if canNotify:
-		dep.notify()
+		depMap[key].notify()
 	if isEmit:
 		emit_signal('setted', key, value, oldValue)
 	emit_signal('watch', key, value, oldValue)

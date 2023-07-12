@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Row align="center">
-	<Column align="center">
-		<LineEdit g-model="text"></LineEdit>
-	</Column>
+	<Label :text="fullName"></Label>
 </Row>

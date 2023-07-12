@@ -19,9 +19,10 @@ func observe():
 			rarr.append(value)
 
 func gen_ids(rootName):
-	ids[rootName] = []
-	for value in arr:
-		ids[rootName].append(str(randi()))
+	if !ids.has(rootName):
+		ids[rootName] = []
+		for value in arr:
+			ids[rootName].append(str(randi()))
 
 func rappend(value):
 	if value is Dictionary:
@@ -29,7 +30,7 @@ func rappend(value):
 	else:
 		rarr.append(value)
 	for key in ids:
-		ids[key].append(randi())
+		ids[key].append(str(randi()))
 	arr.append(value)
 	dep.notify()
 
@@ -40,14 +41,14 @@ func rinsert(index, value):
 		rarr.insert(index, value)
 	arr.insert(index, value)
 	for key in ids:
-		ids[key].insert(index, randi())
+		ids[key].insert(index, str(randi()))
 	dep.notify()
 
-func rmove(index):
+func remove(index):
 	rarr.remove_at(index)
 	arr.remove_at(index)
 	for key in ids:
-		ids[key].remove(index)
+		ids[key].remove_at(index)
 	dep.notify()
 	
 func rsize():

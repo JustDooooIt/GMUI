@@ -281,32 +281,6 @@ func get_slots(vnode:VNode, slots:Dictionary = {})->Dictionary:
 		get_slots(child, slots)
 	return slots
 
-#func create_template(astNode:ASTNode):
-	
-	
-#func create_slot(ast:ASTNode, parent:VNode, index = 0, slots:Dictionary = {}):
-#	if ast.hasFor:
-#		var root = create_for_slot(ast, ast.sceneRoot, parent)
-#		parent.children.append(root)
-#		for child in root.children:
-#			slots[child.slotName] = child
-#		return root
-#	else:
-#		var rootVNode:VNode = vnode(ast, VNode.VNodeType.STATIC, 0, parent, [])
-#		for i in range(ast.children.size()):
-#			var astNode:ASTNode = ast.children[i]
-#			var root = create_vnodes(astNode, astNode.name, astNode.sceneRoot, i)
-#			rootVNode.children.append(root)
-#		var slotName = ast.slotName
-#		var templateNames:Array = ast.sceneRoot.children.map(func(value:ASTNode): return value.templateInfo.name)
-#		for i in range(templateNames.size()):
-#			var templateName:String = get_template_name(ast.sceneRoot.gmui, parent, templateNames[i])
-#			if templateName != '' and slotName == templateName:
-#				var template:VNode = create_template(rootVNode, ast.sceneRoot.children[i])
-#				rootVNode.children = [template]
-#				break
-#		return rootVNode
-
 func get_template_name(gmui:GMUI, vnode:VNode, templateName:String)->String:
 	var regex:RegEx = RegEx.create_from_string('\\[\\w*\\]')
 	var regexMatch:RegExMatch = regex.search(templateName)
@@ -319,14 +293,6 @@ func get_template_name(gmui:GMUI, vnode:VNode, templateName:String)->String:
 			return templateName
 	return templateName
 		
-#func create_template(slotVNode:VNode, templateNode:ASTNode)->VNode:
-#	var vnodes:Array[VNode] = []
-#	var rootVNode:VNode = vnode(templateNode, VNode.VNodeType.STATIC, 0, slotVNode, vnodes)
-#	for i in range(templateNode.children.size()):
-#		var child:ASTNode = templateNode.children[i]
-#		vnodes.append(create_vnodes(child, child.name, child.sceneRoot, i, rootVNode))
-#	return rootVNode
-
 func create_normal_nodes(ast:ASTNode, sceneAst:ASTNode, name:String, parent:VNode, index:int):
 	var vnodes:Array[VNode] = []
 	var rootVNode:VNode = null
@@ -342,14 +308,6 @@ func create_normal_nodes(ast:ASTNode, sceneAst:ASTNode, name:String, parent:VNod
 				vnodes.append(vnode)
 #		set_bind_value(ast.gmui, rootVNode, ast.bindDict)
 	return rootVNode
-
-#func create_scene_nodes(vnode:VNode, astNode:ASTNode, index:int):
-#	if vnode.vnodeType == VNode.VNodeType.SINGAL_SCENE_ROOT:
-#		for i in range(astNode.children.size()):
-#
-#	else:
-#		for i in range(astNode.children.size()):
-#			var scene:ASTNode = vnode(ast)
 
 func get_scene_nodes(parentVNode:VNode = null, astNode:ASTNode = null, index:int = 0)->Array[VNode]:
 	var vnodeType
@@ -394,134 +352,7 @@ func get_vnode_type(astNode:ASTNode):
 		else:
 			vnodeType = VNode.VNodeType.NORMAL
 	return vnodeType
-			
-#func create_scene_nodes(rootVNode:VNode, astNode:ASTNode, index:int = 0):
-#	var astNodes:Array[ASTNode] = [astNode]
-#	var normalNode:VNode = null
-#	var preVNode:VNode = null
-#	while !astNodes.is_empty():
-#		var curAstNode:ASTNode = astNodes.pop_front()
-#		var vnodeType:VNode.VNodeType
-#		if curAstNode.type in [TinyXmlParser.slot, TinyXmlParser.template]:
-#			if curAstNode.hasFor:
-#				vnodeType = VNode.VNodeType.LIST_ROOT
-#			else:
-#				vnodeType = VNode.VNodeType.STATIC
-#		elif curAstNode.type != TinyXmlParser.scene:
-#			if curAstNode.hasFor:
-#				vnodeType = VNode.VNodeType.LIST_ROOT
-#			else:
-#				vnodeType = VNode.VNodeType.NORMAL
-#		var curVNode:VNode = vnode(curAstNode.name, curAstNode.type, rootVNode.sceneAst, vnodeType, curAstNode.bindDict, curAstNode.rgmui, curAstNode.ifValue, index)
-##		if preVNode != null:
-##			preVNode.children.append()
-#		preVNode = curVNode
-#		if curAstNode.parent.type == TinyXmlParser.scene:
-#			return curAstNode
-			
-#func create_vnodes(
-#	ast:ASTNode, 
-#	name:String, 
-#	sceneAst:ASTNode, 
-#	isOtherInit:bool = false, 
-#	index:int = -1, 
-#	parent:VNode = null
-#)->VNode:
-#	var vnodes:Array[VNode] = []
-#	var rootVNode:VNode = null
-#	if ast.type == TinyXmlParser.scene:
-#		var props:Array[Prop] = ast.props
-##		set_props(ast)
-#		rootVNode = vnode(ast.name, ast.type, ast, VNode.VNodeType.SCENE_ROOT, ast.bindDict, ast.sceneNode.rgmui, ast.ifValue, index, null, ast.properties, ast.model, vnodes)
-#		rootVNode.parent = parent
-#		if ast.hasFor and !isOtherInit:
-#			var sceneRoots:Array[VNode] = create_for_scene(ast, isOtherInit, rootVNode)
-#			vnodes.append_array(sceneRoots)
-#			set_vnode_if(vnodes)
-#		elif ast.hasFor and isOtherInit:
-#			rootVNode.children = set_for_template(ast, rootVNode)
-#			set_vnode_if(rootVNode.children)
-#		else:
-#			var sceneNode:VNode = set_template(ast, isOtherInit, rootVNode, -1, null)
-#			rootVNode.children = [sceneNode]
-#			set_vnode_if(rootVNode.children)
-#	elif ast.type == TinyXmlParser.slot:
-#		if ast.hasFor:
-#			rootVNode = vnode(name, '', null, VNode.VNodeType.LIST_ROOT, {}, null, null, index, parent, {}, null, vnodes)
-#			vnodes.append_array(create_for_slot(ast, sceneAst, false, parent))
-#		else:
-#			rootVNode = vnode(ast.name, ast.type, sceneAst, VNode.VNodeType.STATIC, {}, null, null, index, parent, {}, null, vnodes)
-#			var props = ast.props
-#			var i = 0
-#			for child in ast.children:
-#				vnodes.append(create_vnodes(child, child.name, sceneAst, isOtherInit, i, rootVNode))
-#				i += 1
-#			rootVNode.slotName = ast.slotName
-#			rootVNode.props = props
-#	elif ast.type == TinyXmlParser.template:
-#		if ast.hasFor:
-#			rootVNode = vnode(name, '', null, VNode.VNodeType.LIST_ROOT, {}, null, null, index, parent, {}, null, vnodes)
-#			vnodes.append_array(create_for_template(ast, sceneAst, isOtherInit, parent))
-#		else:
-#			rootVNode = vnode(ast.name, ast.type, sceneAst, VNode.VNodeType.STATIC, {}, null, null, index, parent, {}, null, vnodes)
-#			var i = 0
-#			for child in ast.children:
-#				if child.type == TinyXmlParser.scene:
-#					if child.hasFor:
-#						vnodes.append_array(create_for_scene(child, false, rootVNode))
-#					else:
-#						vnodes.append(vnode(child.name, child.type, child, VNode.VNodeType.NORMAL, child.bindDict, child.rgmui, child.ifValue, index, parent, child.properties, child.model))
-#				else:
-#					vnodes.append(create_vnodes(child, child.name, sceneAst, isOtherInit, i, rootVNode))
-#				i += 1
-#			var templateName = get_template_name(ast.gmui, rootVNode, ast.templateInfo)
-#			rootVNode.templateName = templateName
-#			set_vnode_if(vnodes)
-#	else:
-#		if ast.hasFor:
-#			rootVNode = vnode(name, '', null, VNode.VNodeType.LIST_ROOT, {}, null, null, index, parent, {}, null, vnodes)
-#			vnodes.append_array(create_for_node(ast, sceneAst, isOtherInit, rootVNode))
-#		else:
-#			rootVNode = vnode(name, ast.type, sceneAst, VNode.VNodeType.NORMAL, ast.bindDict, ast.rgmui, ast.ifValue, index, parent, ast.properties, ast.model, vnodes)
-#			set_ref(ast, rootVNode)
-#			var i = 0
-#			for child in ast.children:
-#				var vnode = create_vnodes(child, child.name, sceneAst, isOtherInit, i, rootVNode)
-#				if vnode != null:
-#					vnodes.append(vnode)
-#				i += 1
-#			if rootVNode.sceneAst != null and rootVNode.sceneAst.forFlag:
-#				var sceneNode:ASTNode = rootVNode.sceneAst
-#				set_bind_value(sceneNode.childRgmuis[index], rootVNode, ast.bindDict)
-#			else:
-#				set_bind_value(ast.gmui, rootVNode, ast.bindDict)
-#			set_vnode_if(vnodes)
-#			if ast.model!= null and ast.rgmui.data.has(ast.model.name):
-#				var value = ast.rgmui.data.rget(ast.model.name)
-#				rootVNode.properties[ast.model.name] = value
-#	rootVNode.isRoot = ast.isRoot
-#	return rootVNode
-#
-#func collect_slot(vnode, slots:Dictionary = {}):
-#	if vnode.type == TinyXmlParser.slot:
-#		slots[vnode.slotName] = vnode
-#	for child in vnode.children:
-#		collect_slot(child, slots)
-#	return slots
-#
-#func set_scene_props(sceneNode:ASTNode, rgmui:GMUI, vnode:VNode, index:int):
-#	var props:Array[Prop] = sceneNode.props
-#	var gmui = sceneNode.gmui
-#	var dict:Dictionary = {}
-#	for prop in props:
-#		var value
-#		if prop.type == Prop.Type.DYNAMIC:
-#			value = get_var(gmui, vnode, prop.name)
-#		else:
-#			value = prop.value
-#		dict[prop.name] = value
-#	gmui.merge_props(dict)
-
+	
 func set_for_index(gmui:GMUI, indexName:String, nodeName:String):
 	if gmui.forIndexName.has(indexName):
 		gmui.forIndexName[indexName][nodeName] = true
@@ -615,13 +446,6 @@ func create_for_slot(ast:ASTNode, parent:VNode = null):
 	ast.hasFor = true
 	return vnodes
 
-#func get_template_name(gmui:GMUI, vnode:VNode, templateInfo:TemplateInfo)->String:
-#	var regex:RegEx = RegEx.create_from_string('(?<=\\[)\\w*')
-#	var regexMatch = regex.search(templateInfo.name)
-#	if regexMatch != null:
-#		return get_var(gmui, vnode, regexMatch.strings[0])
-#	return templateInfo.name
-
 func get_var(gmui:GMUI, vnode:VNode, key:String)->Variant:
 	var data:ReactiveDictionary = gmui.data
 	var props:ReactiveDictionary = gmui.props
@@ -651,8 +475,24 @@ func __get_parent(nameDict:Dictionary, vnode:VNode):
 func set_bind_value(gmui:GMUI, vnode:VNode, bindDict:Dictionary):
 	var dict:Dictionary = {}
 	for key in bindDict:
-		var varName = bindDict[key]
-		dict[key] = get_var(gmui, vnode, varName)
+		var prop:Prop = bindDict[key]
+		var value
+		if prop.type == Prop.Type.STATIC:
+			value = prop.value
+		else:
+			var regex = RegEx.create_from_string('[A-Za-z][\\w]+')
+			var regexMatchs = regex.search_all(prop.value)
+			var e = prop.value
+			for regexMatch in regexMatchs:
+				var varName:String = regexMatch.strings[0]
+				var v = get_var(gmui, vnode, varName)
+				if v is String:
+					v = "'%s'" % v
+				e = e.replace(varName, str(v))
+			var exp:Expression = Expression.new()
+			exp.parse(e)
+			value = exp.execute()
+		dict[key] = value
 	vnode.properties.merge(dict, true)
 
 func get_props(slot:VNode):
@@ -668,79 +508,7 @@ func get_props(slot:VNode):
 				value = gmui.data.rget(prop.value)
 			propDict[prop.name] = value
 	return propDict
-#
-#func set_template_props(vnode:VNode, index:int):
-#	if vnode.vnodeType == VNode.VNodeType.NORMAL:
-#		set_bind_value(vnode.sceneAst.gmui, vnode, vnode.bindDict)
-#	for child in vnode.children:
-#		set_template_props(child, index)
-#
-#func set_for_template(ast:ASTNode, parent:VNode):
-#	var arrName:String = ast.forValue.arrName
-#	var varName:String = ast.forValue.varName
-#	var indexName:String = ast.forValue.indexName
-#	var gmui:GMUI = ast.gmui
-#	var arr:ReactiveArray = gmui.data.__rget(arrName)
-#	var slotDict:Dictionary = {}
-#	var sceneRoots:Array[VNode] = []
-#	ast.hasFor = false
-#	for i in range(arr.rsize()):
-#		sceneRoots.append(set_template(ast, false, parent, i, arr))
-#	ast.hasFor = true
-#	return sceneRoots
-#
-#func set_template(ast:ASTNode, isOtherInit:bool, parent:VNode, index:int, arr:ReactiveArray)->VNode:
-#	var i = 0
-#	var templates:Array[VNode] = []
-#	var sceneNode:VNode = create_vnodes(ast.sceneNode, ast.sceneNode.name, ast, i, parent)
-#	set_ref(ast, sceneNode)
-#	var slots:Dictionary = collect_slot(sceneNode)
-#	var tempArr:Array[VNode] = []
-#	var gmui:GMUI
-#	if arr != null:
-#		gmui = ast.childRgmuis[index]
-#	if ast.children.size() > 0:
-#		for astNode in ast.children:
-#			if arr != null:
-#				astNode.gmui = gmui
-#			if astNode.forValue != null:
-#				set_for_index(astNode.gmui, astNode.forValue.indexName, astNode.name)
-#				set_for_var(astNode.gmui, astNode.forValue.varName, astNode.forValue.indexName, astNode.gmui.data.__rget(astNode.forValue.arrName))
-#			var template:VNode = create_vnodes(astNode, astNode.name, ast, i, parent)
-#			if astNode.hasFor:
-#				for temp in template.children:
-#					template_props(astNode, slots, temp, tempArr)
-#			else:
-#				template_props(astNode, slots, template, tempArr)
-#			i += 1
-#		sceneNode.children.clear()
-#		sceneNode.children.append_array(tempArr)
-#	return sceneNode
-#
-#func template_props(astNode:ASTNode, slots:Dictionary, template:VNode, arr:Array[VNode]):
-#	var templateName = template.templateName
-#	var slot:VNode = slots[templateName]
-#	var props = get_props(slot)
-#	var param = astNode.templateInfo.params.replace('"', '')
-#	astNode.gmui.merge_props({param: props})
-#	slot.children = [template]
-#	template.parent = slot
-#	arr.append(slot)
-#
-#func set_props(sceneNode:ASTNode):
-#	var props:Array[Prop] = sceneNode.props
-#	var gmui = sceneNode.gmui
-#	var rgmui = sceneNode.rgmui
-#	var dict:Dictionary = {}
-#	for prop in props:
-#		var value
-#		if prop.type == Prop.Type.DYNAMIC:
-#			value = gmui.data.rget(prop.value)
-#		else:
-#			value = prop.value
-#		dict[prop.name] = value
-#	rgmui.merge_props(dict)
-#
+	
 func set_ref(ast:ASTNode, vnode:VNode):
 	if ast.refName == '': return
 	var ref

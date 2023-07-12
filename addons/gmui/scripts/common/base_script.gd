@@ -15,14 +15,14 @@ signal init_start
 signal before_update
 signal init_gmui
 signal init_gmui_finish
-signal befor_mount
+signal before_mount
 
 func _init():
 	_created()
 	ready.connect(__init_watcher)
 	init_finish.connect(_mounted)
 	update.connect(_updated)
-	befor_mount.connect(_before_mount)
+	before_mount.connect(_before_mount)
 	before_update.connect(_before_update)
 	init_finish.connect(__run_node_init.bind(self))
 
@@ -52,7 +52,7 @@ func __root_init_render():
 	gmui.data = reactiveData
 	emit_signal('init_gmui')
 	vnode = VnodeHelper.create(ast, 0, oldVNode, true)
-	emit_signal('befor_mount')
+	emit_signal('before_mount')
 	Patch.patch_node(oldVNode, vnode)
 	oldVNode = vnode
 
@@ -64,14 +64,14 @@ func __other_init_render():
 	emit_signal('init_gmui')
 	var tempSceneNode = null
 	vnode = VnodeHelper.create(ast, get_index(), oldVNode, true)
-	emit_signal('befor_mount')
+	emit_signal('before_mount')
 	Patch.patch_node(oldVNode, vnode)
 	oldVNode = vnode
 
 func __update_render():
 	emit_signal('before_update')
 	vnode = VnodeHelper.create(ast, get_index(), oldVNode, false)
-	emit_signal('befor_mount')
+	emit_signal('before_mount')
 	Patch.patch_node(oldVNode, vnode)
 	oldVNode = vnode
 	emit_signal('update')
@@ -142,6 +142,27 @@ func watch(key:String, callback:Callable):
 		if key == _key: 
 			callback.call(newValue, oldValue)
 	data.watch.connect(function)
+
+func computed(getset):
+	await init_gmui_finish
+	if getset is Dictionary:
+		pass
+	elif getset is Callable:
+		var getter = getset
+		var watcher:Watcher = Watcher.new(getter, true)
+		reactiveData.depMap[getter.get_method()] = Dep.new()
+		reactiveData.rset(
+			getter.get_method(),
+			func():
+				if watcher.dirty:
+					watcher.eval()
+				if Values.curWatcher != null:
+					watcher.depend()
+				return watcher.value,
+			false, false
+		)
+	else:
+		push_error('computed error')
 
 func jump_to(path:String):
 	path = path.replace('res://', distPath + '/scenes/').replace('.gmui', '.tscn')

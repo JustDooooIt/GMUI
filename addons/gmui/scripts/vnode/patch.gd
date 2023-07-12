@@ -49,6 +49,7 @@ func __add_rnode_by_vnode(rnode:Node, vnode:VNode, mode = Node.INTERNAL_MODE_DIS
 		newRNode = ClassUtils.instantiate(vnode.type)
 		newRNode.name = vnode.name
 		vnode.rnode = newRNode
+		__set_properties(newRNode, vnode)
 		bind_model(newRNode, vnode)
 		rnode.add_child(newRNode)
 		for child in vnode.children:

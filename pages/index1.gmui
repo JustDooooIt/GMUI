@@ -1,0 +1,13 @@
+<Row align="center">
+	<Column align="center">
+		<Button text="Hello World" ref="my_button"></Button>
+	</Column>
+</Row>
+
+<Script>
+func _mounted():
+	gmui.refs['my_button'].rnode.pressed.connect(
+		func():
+			print(gmui.refs['my_button'].rnode.text)
+	)
+</Script>
