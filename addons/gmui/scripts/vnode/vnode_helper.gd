@@ -119,14 +119,24 @@ func set_model(vnode:VNode):
 		
 func set_refs(node:VNode):
 	if node.refName != '':
-		if !node.__gmui.refs.has(node.refName):
-			node.__gmui.refs[node.refName] = node
-		else:
-			var ref = node.__gmui.refs[node.refName]
-			if ref is Array:
-				ref.append(node)
+		if node.type == TinyXmlParser.scene:
+			if !node.__gmui.refs.has(node.refName):
+				node.__gmui.refs[node.refName] = node.gmui
 			else:
-				node.__gmui.refs[node.refName] = [ref, node]
+				var ref = node.__gmui.refs[node.refName]
+				if ref is Array:
+					ref.append(node.gmui)
+				else:
+					node.__gmui.refs[node.refName] = [ref, node.gmui]
+		else:
+			if !node.__gmui.refs.has(node.refName):
+				node.__gmui.refs[node.refName] = node
+			else:
+				var ref = node.__gmui.refs[node.refName]
+				if ref is Array:
+					ref.append(node)
+				else:
+					node.__gmui.refs[node.refName] = [ref, node]
 	for child in node.children:
 		set_refs(child)
 

@@ -1,9 +1,13 @@
 <Row align="center">
 	<Column align="center">
-		<Component text="my text"></Component>
+		<Component text="my text" ref="component"></Component>
 	</Column>
 </Row>
 
 <Script>
 @import('Component', res://components/component.gmui)
+
+func _mounted():
+	var ref = gmui.refs['component']
+	print()
 </Script>

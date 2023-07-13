@@ -59,7 +59,6 @@ func __root_init_render():
 func __other_init_render():
 	ast = oldVNode.astNode
 	gmui = ast.rgmui
-#	gmui.reactive(reactiveData.data)
 	gmui.data = reactiveData
 	emit_signal('init_gmui')
 	var tempSceneNode = null
@@ -89,12 +88,6 @@ func __get_parent(node = self.get_parent())->Node:
 func __init_root_vnode():
 	oldVNode = VNode.new()
 	oldVNode.type = ast.type
-	oldVNode.name = ast.name
-	oldVNode.rnode = self
-	return oldVNode
-
-func __init_other_vnode():
-	oldVNode = VNode.new()
 	oldVNode.name = ast.name
 	oldVNode.rnode = self
 	return oldVNode
