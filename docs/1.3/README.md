@@ -2,7 +2,7 @@
 MVVM UI Framework for Godot Engine  
 
 > [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[中文文档](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)   
-> GMUI Version：1.2.x   &nbsp;&nbsp;&nbsp;&nbsp;Godot Version：4.x   
+> GMUI Version：1.3.x   &nbsp;&nbsp;&nbsp;&nbsp;Godot Version：4.x   
 
 ## Quick Start  
 
@@ -331,8 +331,8 @@ You can declare a variable in the slot and then declare a variable in the compon
 </Script>
 ```  
 
-### Listening Properties  
-You can use `watch`` to monitor responsive data:   
+### Listening Properties   
+You can use `watch` to monitor responsive data:   
 
 ```xml
 <Row align="center">
@@ -349,6 +349,35 @@ func _ready():
 
 func change_text(newValue, oldValue):
 	print(newValue, ',', oldValue)
+</Script>
+```  
+
+### Computing Properties  
+
+You can use `computed` when you need to perform a computation on an property:   
+
+```xml  
+<Row align="center">
+	<Column align="center">
+		<Label :text="fullName"></Label>
+		<Button ref="btn" text="Rename"></Button>
+	</Column>
+</Row>
+
+<Script>
+var data = await reactive({'firstName': 'White', 'lastName': 'Red'})
+
+func fullName():
+	return data.rget('firstName') + data.rget('lastName')
+
+func _ready():
+	computed(fullName)
+
+func _mounted():
+	gmui.refs['btn'].rnode.pressed.connect(
+		func():
+			data.rset('firstName', 'Green')
+	)
 </Script>
 ```  
 

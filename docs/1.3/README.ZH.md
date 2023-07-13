@@ -1,7 +1,7 @@
 # GMUI - Godot MVVM UI  
 Godot游戏引擎的 MVVM UI框架   
 > [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[中文文档](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)   
-> GMUI版本：1.2.x   &nbsp;&nbsp;&nbsp;&nbsp;Godot版本：4.x  
+> GMUI版本：1.3.x   &nbsp;&nbsp;&nbsp;&nbsp;Godot版本：4.x  
 
 ## 快速入门  
 
@@ -349,9 +349,11 @@ func change_text(newValue, oldValue):
 </Script>
 ```
 
-### 计算属性
-当您需要对属性进行计算时，可以使用`computed`：
-```xml
+### 计算属性  
+
+当您需要对属性进行计算时，可以使用`computed`：  
+
+```xml  
 <Row align="center">
 	<Column align="center">
 		<Label :text="fullName"></Label>
@@ -374,7 +376,7 @@ func _mounted():
 			data.rset('firstName', '李')
 	)
 </Script>
-```
+```  
 
 ## 路线图  
 

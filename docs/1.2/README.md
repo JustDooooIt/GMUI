@@ -332,7 +332,7 @@ You can declare a variable in the slot and then declare a variable in the compon
 ```  
 
 ### Listening Properties  
-You can use `watch`` to monitor responsive data:   
+You can use `watch` to monitor responsive data:   
 
 ```xml
 <Row align="center">
