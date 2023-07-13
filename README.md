@@ -4,6 +4,12 @@ MVVM UI Framework for Godot Engine
 > [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[简体中文](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)&nbsp;&nbsp;&nbsp;[繁体中文](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH-TW.md)   
 > GMUI Version：1.3.x   &nbsp;&nbsp;&nbsp;&nbsp;Godot Version：4.x   
 
+> News  
+> v1.3 Update:    
+>> 1. Add listening properties   
+>> 2. Add computing properties   
+>> 3. Fix known bugs   
+
 ## Quick Start  
 
 ### Pre-work  

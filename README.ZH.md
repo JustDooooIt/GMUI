@@ -3,6 +3,12 @@ Godot游戏引擎的 MVVM UI框架
 > [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[简体中文](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)&nbsp;&nbsp;&nbsp;[繁体中文](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH-TW.md)   
 > GMUI版本：1.3.x   &nbsp;&nbsp;&nbsp;&nbsp;Godot版本：4.x  
 
+> 最新情报  
+> 1.3版本更新内容:    
+>> 1. 新增监听属性   
+>> 2. 新增计算属性   
+>> 3. 修复了已知bugs   
+
 ## 快速入门  
 
 ### 前置工作  
