@@ -1,12 +1,13 @@
 <Row align="center">
 	<Column align="center">
-		<Component text="my text" ref="component"></Component>
+		<Button text="Hello World" ref="my_button"></Button>
 	</Column>
 </Row>
 
 <Script>
-@import('Component', res://components/component.gmui)
-
 func _mounted():
-	var ref = gmui.refs['component']
+	gmui.refs['my_button'].rnode.pressed.connect(
+		func():
+			print(gmui.refs['my_button'].rnode.text)
+	)
 </Script>

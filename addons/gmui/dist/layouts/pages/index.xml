@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Row align="center">
 	<Column align="center">
-		<Scene eBE2i="res://addons/gmui/dist/layouts/components/component.xml" text="my text" ref="component"></Scene>
+		<Button text="Hello World" ref="my_button"></Button>
 	</Column>
 </Row>
