@@ -9,5 +9,4 @@
 
 func _mounted():
 	var ref = gmui.refs['component']
-	print()
 </Script>

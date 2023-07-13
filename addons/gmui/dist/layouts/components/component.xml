@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Control>
 	<BoxContainer>
-		<Label :text="text" ref="label"></Label>
+		<Label :text="self.text" ref="label"></Label>
 	</BoxContainer>
 </Control>

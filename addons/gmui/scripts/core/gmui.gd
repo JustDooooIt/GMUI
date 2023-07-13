@@ -2,6 +2,7 @@ class_name GMUI extends RefCounted
 
 var name:String = ''
 var parent:GMUI = null
+var children:Array[GMUI] = []
 var forTempVar:Dictionary = {}
 var forIndexName:Dictionary = {}
 var forIndexDict:Dictionary = {}

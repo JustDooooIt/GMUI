@@ -5,7 +5,10 @@ var ast:ASTNode = null
 var vnode:VNode = null
 var oldVNode:VNode = null
 var gmui:GMUI = null
-var sceneParent:Node = null
+var __parent:Node = null
+var __children:Array[Node] = []
+var parent:GMUI = null
+var children:Array[GMUI] = []
 var reactiveData:ReactiveDictionary = ReactiveDictionary.new()
 var distPath:String = 'res://addons/gmui/dist'
 
@@ -16,23 +19,26 @@ signal before_update
 signal init_gmui
 signal init_gmui_finish
 signal before_mount
+signal unmounted
 
 func _init():
-	_created()
 	ready.connect(__init_watcher)
 	init_finish.connect(_mounted)
 	update.connect(_updated)
 	before_mount.connect(_before_mount)
 	before_update.connect(_before_update)
 	init_finish.connect(__run_node_init.bind(self))
+	tree_exiting.connect(_unmounted)
+	tree_exited.connect(__clear_setting)
+	_created()
 
 func __init_watcher():
 	emit_signal('init_start')
 	__set_scene_parent()
 	var watcher = Watcher.new(__init_render)
 	watcher.getter = __update_render
-	if sceneParent != null:
-		await sceneParent.init_finish
+	if __parent != null:
+		await __parent.init_finish
 	emit_signal('init_finish')
 	
 func __init_render():
@@ -54,6 +60,8 @@ func __root_init_render():
 	vnode = VnodeHelper.create(ast, 0, oldVNode, true)
 	emit_signal('before_mount')
 	Patch.patch_node(oldVNode, vnode)
+	__set_scene_parent()
+	__set_scene_children()
 	oldVNode = vnode
 
 func __other_init_render():
@@ -65,6 +73,7 @@ func __other_init_render():
 	vnode = VnodeHelper.create(ast, get_index(), oldVNode, true)
 	emit_signal('before_mount')
 	Patch.patch_node(oldVNode, vnode)
+	__set_scene_parent()
 	oldVNode = vnode
 
 func __update_render():
@@ -72,6 +81,8 @@ func __update_render():
 	vnode = VnodeHelper.create(ast, get_index(), oldVNode, false)
 	Patch.patch_node(oldVNode, vnode)
 	oldVNode = vnode
+	__set_scene_parent()
+	__set_scene_children(self, self.parent)
 	emit_signal('update')
 
 func __get_current_vnode(scene:VNode)->VNode:
@@ -80,11 +91,6 @@ func __get_current_vnode(scene:VNode)->VNode:
 			return child
 	return null
 
-func __get_parent(node = self.get_parent())->Node:
-	if 'isGMUI' in node:
-		return node
-	return __get_parent(node.get_parent())
-	
 func __init_root_vnode():
 	oldVNode = VNode.new()
 	oldVNode.type = ast.type
@@ -96,8 +102,20 @@ func __set_scene_parent(node = self):
 	while node != Engine.get_main_loop().current_scene:
 		node = node.get_parent()
 		if 'isGMUI' in node:
-			sceneParent = node
+			self.__parent = node
+			self.parent = node.gmui
 			return
+
+func __set_scene_children(node = Engine.get_main_loop().current_scene, parent = null):
+	if 'isGMUI' in node:
+		parent = node
+		parent.__children.clear()
+		parent.children.clear()
+	for child in node.get_children():
+		if 'isGMUI' in child:
+			parent.__children.append(child)
+			parent.children.append(child.gmui)
+		__set_scene_children(child, parent)
 
 func _created():
 	pass
@@ -112,6 +130,9 @@ func _before_update():
 	pass
 
 func _updated():
+	pass
+	
+func _unmounted():
 	pass
 
 func __run_node_init(node):
@@ -159,3 +180,6 @@ func computed(getset):
 func jump_to(path:String):
 	path = path.replace('res://', distPath + '/scenes/').replace('.gmui', '.tscn')
 	get_tree().change_scene_to_file(path)
+
+func __clear_setting():
+	pass

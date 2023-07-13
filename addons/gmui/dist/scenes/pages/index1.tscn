@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dmvmbadvy0yp8"]
 
-[ext_resource type="Script" path="res://addons/gmui/dist/scripts/pages/index1.gd" id="1_3tnga"]
+[ext_resource type="Script" path="res://addons/gmui/dist/scripts/pages/index1.gd" id="1_06dln"]
 
 [node name="Root" type="HBoxContainer"]
-script = ExtResource("1_3tnga")
+script = ExtResource("1_06dln")

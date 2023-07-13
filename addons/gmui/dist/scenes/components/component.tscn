@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=3 uid="uid://byvhaqseoji16"]
 
-[ext_resource type="Script" path="res://addons/gmui/dist/scripts/components/component.gd" id="1_lytb3"]
+[ext_resource type="Script" path="res://addons/gmui/dist/scripts/components/component.gd" id="1_ctgvw"]
 
 [node name="Root" type="Control"]
 layout_mode = 3
 anchors_preset = 0
-script = ExtResource("1_lytb3")
+script = ExtResource("1_ctgvw")

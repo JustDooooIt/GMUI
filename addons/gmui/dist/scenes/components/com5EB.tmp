@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://byvhaqseoji16"]
+
+[node name="Root" type="Control"]
+layout_mode = 3
+anchors_preset = 0

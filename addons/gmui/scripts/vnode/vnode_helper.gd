@@ -490,7 +490,7 @@ func set_bind_value(gmui:GMUI, vnode:VNode, bindDict:Dictionary):
 		if prop.type == Prop.Type.STATIC:
 			value = prop.value
 		else:
-			var regex = RegEx.create_from_string('[A-Za-z][\\w]+')
+			var regex = RegEx.create_from_string('[A-Za-z][\\w.]+')
 			var regexMatchs = regex.search_all(prop.value)
 			var e = prop.value
 			for regexMatch in regexMatchs:
