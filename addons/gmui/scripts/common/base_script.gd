@@ -71,7 +71,6 @@ func __other_init_render():
 func __update_render():
 	emit_signal('before_update')
 	vnode = VnodeHelper.create(ast, get_index(), oldVNode, false)
-	emit_signal('before_mount')
 	Patch.patch_node(oldVNode, vnode)
 	oldVNode = vnode
 	emit_signal('update')
