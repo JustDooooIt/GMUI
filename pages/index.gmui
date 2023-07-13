@@ -1,22 +1,9 @@
 <Row align="center">
 	<Column align="center">
-		<Label :text="fullName"></Label>
-		<Button ref="btn" text="改名"></Button>
+		<Component text="my text"></Component>
 	</Column>
 </Row>
 
 <Script>
-var data = await reactive({'firstName': '张', 'lastName': '四'})
-
-func fullName():
-	return data.rget('firstName') + data.rget('lastName')
-
-func _ready():
-	computed(fullName)
-
-func _mounted():
-	gmui.refs['btn'].rnode.pressed.connect(
-		func():
-			data.rset('firstName', '李')
-	)
+@import('Component', res://components/component.gmui)
 </Script>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Row align="center">
 	<Column align="center">
-		<Label :text="fullName"></Label>
-		<Button ref="btn" text="改名"></Button>
+		<Scene eBE2i="res://addons/gmui/dist/layouts/components/component.xml" text="my text"></Scene>
 	</Column>
 </Row>
