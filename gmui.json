@@ -5,6 +5,6 @@
 	"icon": "/addons/gmui/gmui.png",
 	"gmui_index": "/pages/index.gmui",
 	"screen": "1080x720",
-	"environment": "gmui_1.0.0",
+	"environment": "gmui_1.3.1",
 	"if_generate": "false"
 }
