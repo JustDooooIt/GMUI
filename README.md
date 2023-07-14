@@ -19,6 +19,7 @@ MVVM UI Framework for Godot Engine
 2. Open project settings and enable plugins(check box)  
 
 ### The Simplest Page  
+
 Create a new index.gmui file in the pages folder under the root directory, and then write:   
 
 ```xml
@@ -29,18 +30,6 @@ Create a new index.gmui file in the pages folder under the root directory, and t
 Run the project and you will see the blank page you have written. That's right, you don't need to write any code, a GMUI project will run! The starting point of GMUI is to be as simple as possible, without the need to write any extra code.  
 
 Your page will be built as a scene in `addons/gmui/dist/scenes/pages/{page_name}.tscn`. As such, it can be set as the main scene or used within other scenes. This is the same for any other pages you create.
-
-### Modify Project Information
-
-You can find the `gmui.json` config-file in the root directory of your project and configure the basic information of the project within that file. For example:
-
-1. set the name of the project in the `name` attribute   
-2. set the version number in the `version` attribute   
-3. set the icon in the `icon` attribute   
-4. set the project's entry file with the `gmui_index` attribute   
-5. set the default screen resolution with the `screen` attribute   
-
-After these attributes are modified, Godot's project settings will be overwritten automatically to complete the modification of related information.  
 
 ### Login Interface  
 
@@ -400,6 +389,18 @@ func _mounted():
 	)
 </Script>
 ```  
+
+### Modify Project Information
+
+You can find the `gmui.json` config-file in the root directory of your project and configure the basic information of the project within that file. For example:
+
+1. set the name of the project in the `name` attribute   
+2. set the version number in the `version` attribute   
+3. set the icon in the `icon` attribute   
+4. set the project's entry file with the `gmui_index` attribute   
+5. set the default screen resolution with the `screen` attribute   
+
+After these attributes are modified, Godot's project settings will be overwritten automatically to complete the modification of related information.  
 
 ## Roadmap  
 
