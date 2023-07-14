@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<HBoxContainer>
-	<Scene eBE2i="res://addons/gmui/dist/layouts/components/component.xml" g-model:text="text"></Scene>
-	<Label :text="text"></Label>
-</HBoxContainer>
