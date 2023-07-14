@@ -1,8 +1,14 @@
 # GMUI - Godot MVVM UI
 MVVM UI Framework for Godot Engine  
 
-> [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[中文文档](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)   
-> GMUI Version：1.2.x   &nbsp;&nbsp;&nbsp;&nbsp;Godot Version：4.x   
+> [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[简体中文](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)&nbsp;&nbsp;&nbsp;[繁体中文](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH-TW.md)   
+> GMUI Version：1.3.x   &nbsp;&nbsp;&nbsp;&nbsp;Godot Version：4.x   
+
+> News  
+> v1.3 Update:    
+>> 1. Add listening properties   
+>> 2. Add computing properties   
+>> 3. Fix known bugs   
 
 ## Quick Start  
 
@@ -24,7 +30,20 @@ Run the project and you will see the blank page you have written. That's right, 
 
 Your page will be built as a scene in `addons/gmui/dist/scenes/pages/{page_name}.tscn`. As such, it can be set as the main scene or used within other scenes. This is the same for any other pages you create.
 
-### Login Interface
+### Modify Project Information
+
+You can find the `gmui.json` config-file in the root directory of your project and configure the basic information of the project within that file. For example:
+
+1. set the name of the project in the `name` attribute   
+2. set the version number in the `version` attribute   
+3. set the icon in the `icon` attribute   
+4. set the project's entry file with the `gmui_index` attribute   
+5. set the default screen resolution with the `screen` attribute   
+
+After these attributes are modified, Godot's project settings will be overwritten automatically to complete the modification of related information.  
+
+### Login Interface  
+
 In order to come up with a usable version as soon as possible, GMUI has reused Godot's built-in nodes as components. In the future, we will provide more beautiful default components, and we welcome friends from the community to contribute to the component library. Next, we will demonstrate through a registration and login interface without actual functionality:  
 
 ```xml
@@ -51,6 +70,7 @@ Running the project can see :
 ![ShowPic](https://s1.ax1x.com/2023/06/16/pCMwKX9.png)  
 
 ### Bidirectional Data Binding  
+
 Bidirectional data binding is also a piece of cake! To write logical code, add a 'Script' tag at the bottom of the. gmui file. In the case below, clicking the login button will print the user's input.  
 
 ```xml
@@ -331,8 +351,8 @@ You can declare a variable in the slot and then declare a variable in the compon
 </Script>
 ```  
 
-### Listening Properties  
-You can use `watch`` to monitor responsive data:   
+### Listening Properties   
+You can use `watch` to monitor responsive data:   
 
 ```xml
 <Row align="center">
@@ -349,6 +369,35 @@ func _ready():
 
 func change_text(newValue, oldValue):
 	print(newValue, ',', oldValue)
+</Script>
+```  
+
+### Computing Properties  
+
+You can use `computed` when you need to perform a computation on an property:   
+
+```xml  
+<Row align="center">
+	<Column align="center">
+		<Label :text="fullName"></Label>
+		<Button ref="btn" text="Rename"></Button>
+	</Column>
+</Row>
+
+<Script>
+var data = await reactive({'firstName': 'White', 'lastName': 'Red'})
+
+func fullName():
+	return data.rget('firstName') + data.rget('lastName')
+
+func _ready():
+	computed(fullName)
+
+func _mounted():
+	gmui.refs['btn'].rnode.pressed.connect(
+		func():
+			data.rset('firstName', 'Green')
+	)
 </Script>
 ```  
 

@@ -1,7 +1,13 @@
 # GMUI - Godot MVVM UI  
 Godot游戏引擎的 MVVM UI框架   
-> [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[中文文档](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)   
-> GMUI版本：1.2.x   &nbsp;&nbsp;&nbsp;&nbsp;Godot版本：4.x  
+> [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[简体中文](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)&nbsp;&nbsp;&nbsp;[繁体中文](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH-TW.md)   
+> GMUI版本：1.3.x   &nbsp;&nbsp;&nbsp;&nbsp;Godot版本：4.x  
+
+> 最新情报  
+> 1.3版本更新内容:    
+>> 1. 新增监听属性   
+>> 2. 新增计算属性   
+>> 3. 修复了已知bugs   
 
 ## 快速入门  
 
@@ -18,10 +24,23 @@ Godot游戏引擎的 MVVM UI框架
 
 ```  
 
-运行项目，即可看到你写的空白页面。没错，你什么代码都不需要写，一个GMUI项目就运行起来啦！GMUI的出发点是尽可能的简单，不需要书写任何多余的代码。  
+运行项目，即可看到您写的空白页面。没错，什么代码都不需要写，一个GMUI项目就运行起来啦！GMUI的出发点是尽可能的简单，不需要书写任何多余的代码。  
 > 如果提示需要主场景，请选择`addons/gmui/dist/scenes/pages/index.tscn`或相应目录的场景文件   
 
+### 修改项目信息
+
+您可以在项目根目录下找到`gmui.json`配置文件，并在该文件内配置项目的基本信息。比如：
+
+1. 在`name`属性中设置项目的名称  
+2. 在`version`属性中设置版本号  
+3. 在`icon`属性中设置项目图标  
+4. 通过`gmui_index`属性设置项目的入口文件  
+5. 通过`screen`属性设置默认的屏幕分辨率  
+
+这些属性修改完成后，会自动覆盖Godot的项目设置，完成相关信息的修改。  
+
 ### 注册登录界面  
+
 为了尽快拿出一个可供使用的版本，目前GMUI复用了Godot的内置节点作为组件。后期会提供更加好看的默认组件，也欢迎社区的朋友贡献组件库。接下来通过一个没有实际功能的注册登陆界面进行演示：
 
 ```xml
@@ -48,6 +67,7 @@ Godot游戏引擎的 MVVM UI框架
 ![ShowPic](https://s1.ax1x.com/2023/06/14/pCnM956.png)
 
 ### 双向数据绑定  
+
 双向数据绑定也是小菜一碟！若要书写逻辑代码，请在.gmui文件最下方的位置添加一个`Script`标签。下方的案例中，点击登录按钮就会打印用户输入的内容。  
 
 ```xml
@@ -349,9 +369,11 @@ func change_text(newValue, oldValue):
 </Script>
 ```
 
-### 计算属性
-当您需要对属性进行计算时，可以使用`computed`：
-```xml
+### 计算属性  
+
+当您需要对属性进行计算时，可以使用`computed`：  
+
+```xml  
 <Row align="center">
 	<Column align="center">
 		<Label :text="fullName"></Label>
@@ -374,7 +396,7 @@ func _mounted():
 			data.rset('firstName', '李')
 	)
 </Script>
-```
+```  
 
 ## 路线图  
 
