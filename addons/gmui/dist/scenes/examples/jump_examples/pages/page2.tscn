@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://bkookmcspu8dq"]
+[gd_scene load_steps=2 format=3 uid="uid://dfk8n71l3ky25"]
 
-[ext_resource type="Script" path="res://addons/gmui/dist/scripts/examples/jump_examples/pages/page2.gd" id="1_ebgis"]
+[ext_resource type="Script" path="res://addons/gmui/dist/scripts/examples/jump_examples/pages/page2.gd" id="1_gtoh2"]
 
 [node name="Root" type="BoxContainer"]
-script = ExtResource("1_ebgis")
+script = ExtResource("1_gtoh2")

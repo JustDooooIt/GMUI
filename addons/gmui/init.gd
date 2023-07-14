@@ -142,13 +142,13 @@ func get_user_scene_path(gmuiPath:String):
 	return gmuiPath.replace('res://', distPath + '/scenes/').replace('.gmui', '.tscn')
 
 func get_sys_scene_path(gmuiPath:String):
-	return gmuiPath.replace('res://addons/gmui/ui', distPath + '/scenes/ui').replace('.gmui', '.tscn')
+	return gmuiPath.replace('res://addons/gmui/ui/', distPath + '/scenes/ui/').replace('.gmui', '.tscn')
 
 func get_user_super_script_path(gmuiPath:String):
 	return gmuiPath.replace('res://', distPath + '/super_scripts/').replace('.gmui', '.gd')
 
 func get_sys_super_script_path(gmuiPath:String):
-	return gmuiPath.replace('res://addons/gmui/ui/', distPath + '/super_scripts/ui').replace('.gmui', '.gd')
+	return gmuiPath.replace('res://addons/gmui/ui/', distPath + '/super_scripts/ui/').replace('.gmui', '.gd')
 
 func get_user_script_path(gmuiPath:String):
 	return gmuiPath.replace('res://', distPath + '/scripts/').replace('.gmui', '.gd')
@@ -236,6 +236,9 @@ func get_import(content:String)->Dictionary:
 				path = value
 				comName = path.get_file().split('.')[0]
 			dict[comName] = path
+	var uiGMUIFilesPath = FileUtils.get_all_gmui_file('res://addons/gmui/ui')
+	for path in uiGMUIFilesPath:
+		dict[path.get_file().split('.')[0].to_pascal_case()] = path
 	return dict
 
 func get_script_codes(content:String)->Array[String]:

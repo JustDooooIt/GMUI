@@ -58,8 +58,8 @@ func __root_init_render():
 	gmui = ast.gmui
 	gmui.data = reactiveData
 	emit_signal('init_gmui')
-	vnode = VnodeHelper.create(ast, 0, oldVNode, true)
 	emit_signal('before_mount')
+	vnode = VnodeHelper.create(ast, 0, oldVNode, true)
 	Patch.patch_node(oldVNode, vnode)
 	__set_scene_parent()
 	__set_scene_children()
@@ -71,8 +71,8 @@ func __other_init_render():
 	gmui.data = reactiveData
 	emit_signal('init_gmui')
 	var tempSceneNode = null
-	vnode = VnodeHelper.create(ast, get_index(), oldVNode, true)
 	emit_signal('before_mount')
+	vnode = VnodeHelper.create(ast, get_index(), oldVNode, true)
 	Patch.patch_node(oldVNode, vnode)
 	__set_scene_parent()
 	oldVNode = vnode

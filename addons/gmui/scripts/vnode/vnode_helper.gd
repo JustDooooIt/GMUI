@@ -490,7 +490,7 @@ func set_bind_value(gmui:GMUI, vnode:VNode, bindDict:Dictionary):
 		if prop.type == Prop.Type.STATIC:
 			value = prop.value
 		else:
-			var regex = RegEx.create_from_string('[A-Za-z][\\w.]+')
+			var regex = RegEx.create_from_string('[A-Za-z][\\w.]+(\\(.*\\))?')
 			var regexMatchs = regex.search_all(prop.value)
 			var e = prop.value
 			for regexMatch in regexMatchs:
@@ -498,7 +498,7 @@ func set_bind_value(gmui:GMUI, vnode:VNode, bindDict:Dictionary):
 				var v = get_var(gmui, vnode, varName)
 				if v is String:
 					v = "'%s'" % v
-				e = e.replace(varName, str(v))
+				e = e.replace(varName, get_str_value(v))
 			var exp:Expression = Expression.new()
 			exp.parse(e)
 			value = exp.execute()
@@ -596,3 +596,11 @@ func set_vnode_if(vnodes:Array[VNode]):
 				eraseArr.append(ifs[i][key])
 	for item in eraseArr:
 		vnodes.erase(item)
+
+func get_str_value(value:Variant):
+	if value is Vector2:
+		return 'Vector2%s' % str(value)
+	elif value is Vector2i:
+		return 'Vector2i%s' % str(value)
+	else:
+		return str(value)

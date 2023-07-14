@@ -19,13 +19,11 @@ func operate():
 			newNode.forValue = ForValue.new(attrValue)
 		elif attrName.contains('g-bind:') or bindMatch != null:
 			var dict = TinyXmlParser.get_value(attrValue)
-			var prop:Prop = Prop.new()
-			prop.name = attrName.split(':')[1]
 			if dict.isSuccess:
-				prop.type = Prop.Type.STATIC
-				prop.value = dict.value
-				newNode.properties[attrName.split(':')[1]] = prop
+				newNode.properties[attrName.split(':')[1]] = dict.value
 			else:
+				var prop:Prop = Prop.new()
+				prop.name = attrName.split(':')[1]
 				prop.type = Prop.Type.DYNAMIC
 				prop.value = attrValue
 				newNode.bindDict[attrName.split(':')[1]] = prop
@@ -33,7 +31,8 @@ func operate():
 			newNode.type in \
 				['LineEdit', 'TextEdit', 'CodeEdit', 
 				'TabBar', 'TabContainer','ColorPicker',
-				'CheckButton', 'CheckBox', 'SpinBox', 'OptionButton']:
+				'CheckButton', 'CheckBox', 'SpinBox', 
+				'OptionButton', 'GButtonBox']:
 			newNode.model = Model.new(attrValue, TinyXmlParser.input)
 		elif attrName == 'ref':
 			newNode.refName = attrValue
