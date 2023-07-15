@@ -386,7 +386,34 @@ func _mounted():
 			data.rset('firstName', '李')
 	)
 </Script>
-```  
+```
+
+### 条件编译
+您可以在gmui中使用条件编译来指定当前代码要使用在哪些平台：
+```xml
+#ifdef [Windows]
+<Label text="Windows"></Label>
+#endif
+#ifdef [Android]
+<Label text="Android"></Label>
+#endif
+
+<Script>
+#ifdef [Windows]
+var platform = 'Windows'
+#endif
+<Script>
+```
+```xml
+#ifndef [Windows]
+<Label text="Not Windows"></Label>
+#endif
+<Script>
+#ifdef [Windows]
+var platform = 'Not Windows'
+#endif
+</Script>
+```
 
 ### 修改项目信息
 
