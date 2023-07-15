@@ -373,7 +373,7 @@ var platform = 'Windows'
 #ifdef [Windows]
 var platform = 'Not Windows'
 #endif
-<Script>
+</Script>
 ```
 
 ## 路线图  

@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://yc1xj7i1vlmj"]
-
-[ext_resource type="Script" path="res://addons/gmui/dist/scripts/components/check_button_component.gd" id="1_quub4"]
-
-[node name="Root" type="HBoxContainer"]
-script = ExtResource("1_quub4")
