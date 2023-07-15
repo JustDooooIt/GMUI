@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Control>
-	<Label text="1" g-if="flag"></Label>
-	<Label text="2" g-else-if="true"></Label>
-	<Label text="3" g-else-if="true"></Label>
-	<Label text="4" g-else="true"></Label>
-</Control>

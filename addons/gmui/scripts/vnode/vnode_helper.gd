@@ -6,6 +6,7 @@ var isInit:bool = false
 var templateNames:Dictionary = {}
 var slots:Dictionary = {}
 var templates:Dictionary = {}
+var callables:Dictionary = {}
 
 func vnode(
 	ast:ASTNode = null,
@@ -79,12 +80,39 @@ func create(ast:ASTNode, index:int = -1, sceneRoot:VNode = null, isInit:bool = t
 	move_template()
 	set_if(vnode)
 	set_for_gmui(vnode, isInit)
+	bind_scene_model(vnode)
 	set_model(vnode)
 	bind_slot_props(vnode)
 	bind_scene_props(vnode)
 	bind_vnode_value(vnode)
 	set_refs(vnode)
 	return vnode
+
+func bind_scene_model(node:VNode):
+	if node.vnodeType == VNode.VNodeType.SINGAL_SCENE_ROOT:
+		for model in node.models:
+			var key1:String = str(node.__gmui.get_instance_id()) + str(node.gmui.get_instance_id())
+			if !callables.has(key1):
+				callables[key1] = \
+					func(key, value, oldValue):
+						if key == model.pName: 
+							node.gmui.data.rset(model.cName, value, true, false)
+			if !node.__gmui.data.setted.is_connected(callables[key1]):
+				node.__gmui.data.setted.connect(callables[key1])
+#			else:
+#				callables.erase(key1)
+			var key2:String = str(node.gmui.get_instance_id()) + str(node.__gmui.get_instance_id())
+			if !callables.has(key2):
+				callables[key2] = \
+					func(key, value, oldValue): 
+						if key == model.cName: 
+							node.__gmui.data.rset(model.pName, value, true, false)
+			if !node.gmui.data.setted.is_connected(callables[key2]):
+				node.gmui.data.setted.connect(callables[key2])
+#			else:
+#				callables.erase(key2)
+	for child in node.children:
+		bind_scene_model(child)
 
 func set_for_gmui(node:VNode, isInit:bool, need:Dictionary = {}):
 	if isInit:
@@ -113,7 +141,7 @@ func set_model(vnode:VNode):
 			var gmui:GMUI = vnode.__gmui
 			var rgmui:GMUI = vnode.gmui
 			var value = gmui.data.rget(model.pName)
-			rgmui.data.rset(model.cName, value, true, false)
+			rgmui.data.rset(model.cName, value, false, false)
 	for child in vnode.children:
 		set_model(child)
 		
@@ -496,8 +524,6 @@ func set_bind_value(gmui:GMUI, vnode:VNode, bindDict:Dictionary):
 			for regexMatch in regexMatchs:
 				var varName:String = regexMatch.strings[0]
 				var v = get_var(gmui, vnode, varName)
-				if v is String:
-					v = "'%s'" % v
 				e = e.replace(varName, get_str_value(v))
 			var exp:Expression = Expression.new()
 			exp.parse(e)
@@ -598,9 +624,77 @@ func set_vnode_if(vnodes:Array[VNode]):
 		vnodes.erase(item)
 
 func get_str_value(value:Variant):
-	if value is Vector2:
-		return 'Vector2%s' % str(value)
-	elif value is Vector2i:
-		return 'Vector2i%s' % str(value)
-	else:
-		return str(value)
+	match typeof(value):
+		TYPE_NIL:
+			return "'<null>'"
+		TYPE_BOOL:
+			return "'%s'" % value
+		TYPE_RECT2:
+			return 'Rect2%s' % str(value)
+		TYPE_RECT2I:
+			return 'Rect2i%s' % str(value)
+		TYPE_VECTOR2:
+			return 'Vector2%s' % str(value)
+		TYPE_VECTOR2I:
+			return 'Vector2i%s' % str(value)
+		TYPE_VECTOR3:
+			return 'Vector3%s' % str(value)
+		TYPE_VECTOR3I:
+			return 'Vector3i%s' % str(value)
+		TYPE_TRANSFORM2D:
+			return 'Transform2D%s' % str(value)
+		TYPE_TRANSFORM2D:
+			return 'Transform2D%s' % str(value)
+		TYPE_VECTOR4:
+			return 'Vector4%s' % str(value)
+		TYPE_VECTOR4I:
+			return 'Vector4i%s' % str(value)
+		TYPE_PLANE:
+			return 'Plane%s' % str(value)
+		TYPE_QUATERNION:
+			return 'Quaternion%s' % str(value)
+		TYPE_AABB:
+			return 'AABB%s' % str(value)
+		TYPE_BASIS:
+			return 'Basis%s' % str(value)
+		TYPE_TRANSFORM3D:
+			return 'Transform3D%s' % str(value)
+		TYPE_PROJECTION:
+			return 'Projection%s' % str(value)
+		TYPE_COLOR:
+			return 'Color%s' % str(value)
+		TYPE_NODE_PATH:
+			return 'NodePath%s' % str(value)
+		TYPE_RID:
+			return 'RID%s' % str(value)
+		TYPE_OBJECT:
+			return 'Object%s' % str(value)
+		TYPE_DICTIONARY:
+			return 'Dictionary%s' % str(value)
+		TYPE_ARRAY:
+			return 'Array%s' % str(value)
+		TYPE_PACKED_BYTE_ARRAY:
+			return 'PackedByteArray%s' % str(value)
+		TYPE_PACKED_INT32_ARRAY:
+			return 'PackedInt32Array%s' % str(value)
+		TYPE_PACKED_INT64_ARRAY:
+			return 'PackedInt64Array%s' % str(value)
+		TYPE_PACKED_FLOAT32_ARRAY:
+			return 'PackedFloat32Array%s' % str(value)
+		TYPE_PACKED_FLOAT64_ARRAY:
+			return 'PackedFloat64Array%s' % str(value)
+		TYPE_PACKED_STRING_ARRAY:
+			return 'PackedStringArray%s' % str(value)
+		TYPE_PACKED_VECTOR2_ARRAY:
+			return 'PackedVector2Array%s' % str(value)
+		TYPE_PACKED_VECTOR3_ARRAY:
+			return 'PackedVector3Array%s' % str(value)
+		TYPE_PACKED_COLOR_ARRAY:
+			return 'PackedColorArray%s' % str(value)
+		TYPE_STRING:
+			return "'%s'" % value
+		TYPE_STRING_NAME:
+			return "'%s'" % value
+		_:
+			return str(value)
+	

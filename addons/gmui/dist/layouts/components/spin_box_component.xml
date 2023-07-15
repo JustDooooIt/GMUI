@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Row align="center">
+	<SpinBox g-model="value"></SpinBox>
+	<ProgressBar :value="value" :custom_minimum_size="Vector2(100, 27)"></ProgressBar>
+</Row>

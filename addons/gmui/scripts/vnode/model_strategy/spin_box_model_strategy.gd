@@ -8,10 +8,10 @@ func _init(rnode, vnode):
 	self.vnode = vnode
 	
 func operate():
-	if vnode.model.has('rName'):
+	if vnode.model != null:
 		var gmui:GMUI = vnode.gmui
 		var model:Model = vnode.model
-		rnode.set('value', gmui.data.rget(model.name))
+		rnode.set_value_no_signal(gmui.data.rget(model.name))
 		rnode.value_changed.connect(
 			func(value):
 				gmui.data.rset(vnode.model.name, value, true, true)
@@ -20,5 +20,5 @@ func operate():
 			func(key, value, oldValue):
 				if key == vnode.model.name:
 					gmui.data.emit_signal('watch', key, value, oldValue)
-					rnode.value = value
+					rnode.set_value_no_signal(value)
 		)

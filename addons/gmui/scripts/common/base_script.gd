@@ -13,6 +13,7 @@ var reactiveData:ReactiveDictionary = ReactiveDictionary.new()
 var distPath:String = 'res://addons/gmui/dist'
 
 signal update
+signal root_init_finish
 signal init_finish
 signal init_start
 signal before_update
@@ -55,7 +56,7 @@ func __root_init_render():
 	self.set_name.call_deferred(ast.name)
 	oldVNode = __init_root_vnode()
 	gmui = ast.gmui
-	gmui.data = reactiveData
+#	gmui.data = reactiveData
 	emit_signal('init_gmui')
 	emit_signal('before_mount')
 	vnode = VnodeHelper.create(ast, 0, oldVNode, true)
@@ -63,11 +64,12 @@ func __root_init_render():
 	__set_scene_parent()
 	__set_scene_children()
 	oldVNode = vnode
+	emit_signal('root_init_finish')
 
 func __other_init_render():
 	ast = oldVNode.astNode
 	gmui = ast.rgmui
-	gmui.data = reactiveData
+#	gmui.data = reactiveData
 	emit_signal('init_gmui')
 	var tempSceneNode = null
 	emit_signal('before_mount')
@@ -136,15 +138,16 @@ func _unmounted():
 	pass
 
 func __run_node_init(node):
-	if node is Control:
-		if node.has_method('_node_init'):
-			node._node_init()
+	if node.has_method('_node_init'):
+		node._node_init()
 	for child in node.get_children():
-		__run_node_init(child)
+		if !'isGMUI' in child:
+			__run_node_init(child)
 
 func reactive(data:Dictionary):
-	reactiveData.merge(data)
+#	reactiveData.merge(data)
 	await init_gmui
+	gmui.merge_data(data)
 	emit_signal('init_gmui_finish')
 	return gmui.data
 

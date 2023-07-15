@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<BoxContainer>
-	<Label text="scene 1"></Label>
-	<Button text="jump" ref="btn"></Button>
-</BoxContainer>

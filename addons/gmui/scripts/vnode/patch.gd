@@ -30,8 +30,8 @@ func __add_rnode_by_vnode(rnode:Node, vnode:VNode, mode = Node.INTERNAL_MODE_DIS
 			newRNode.name = childVNode.name
 			newRNode.oldVNode = childVNode
 			childVNode.rnode = newRNode
-			rnode.add_child(newRNode)
 			bind_model(newRNode, childVNode)
+			rnode.add_child(newRNode)
 		vnode.rnode = rnode
 	elif vnode.vnodeType == VNode.VNodeType.SINGAL_SCENE_ROOT:
 		var sceneNode:VNode = vnode.children[0]
@@ -66,8 +66,8 @@ func __create_rnode_tree(rnode, vnode, mode = Node.INTERNAL_MODE_DISABLED):
 				newRNode.name = childVNode.name
 				newRNode.oldVNode = childVNode
 				childVNode.rnode = newRNode
-				rnode.add_child(newRNode)
 				bind_model(newRNode, childVNode)
+				rnode.add_child(newRNode)
 #				__create_rnode_tree(newRNode, childVNode)
 #				__set_properties_tree(newRNode, childVNode)
 			child.rnode = rnode
@@ -78,19 +78,19 @@ func __create_rnode_tree(rnode, vnode, mode = Node.INTERNAL_MODE_DISABLED):
 			newRNode.name = sceneNode.name
 			newRNode.oldVNode = sceneNode
 			sceneNode.rnode = newRNode
+			bind_model(newRNode, child)
 			rnode.add_child(newRNode)
 			__set_properties_tree(rnode, sceneNode)
 		elif child.vnodeType != VNode.VNodeType.NORMAL:
 			__create_rnode_tree(rnode, child)
-			bind_model(newRNode, child)
 		else:
 			newRNode = ClassUtils.instantiate(child.type)
 			newRNode.name = child.name
 			child.rnode = newRNode
+			bind_model(newRNode, child)
 			rnode.add_child(newRNode)
 			__create_rnode_tree(newRNode, child)
 			__set_properties(newRNode,child)
-			bind_model(newRNode, child)
 
 func __create_rnode_tree_with_root(rnode, vnode:VNode):
 	var newRNode = null
@@ -272,3 +272,7 @@ func bind_model(newRNode, vnode):
 		CodeEditModelStrategy.new(newRNode, vnode).operate()
 	elif newRNode is OptionButton:
 		OptionButtonModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is SpinBox:
+		SpinBoxModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is GButtonBox:
+		GButtonBoxModelStrategy.new(newRNode, vnode).operate()

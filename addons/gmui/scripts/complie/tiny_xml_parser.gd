@@ -15,7 +15,6 @@ func parse_xml(content, isBuffer:bool = false)->ASTNode:
 	var root = __parse_xml(content, true, null, null, isBuffer)
 	__set_default_template(root)
 	__set_gmui(root)
-	__bind_scene_model(root)
 	return root
 
 func __parse_xml(content:String, isRoot = false, gmui:GMUI = null, sceneRoot:ASTNode = null, isBuffer:bool = false)->ASTNode:
@@ -188,22 +187,6 @@ func __set_parent_scene(node:ASTNode, scene:ASTNode = node):
 	else:
 		for child in node.children:
 			__set_parent_scene(child, scene)
-
-func __bind_scene_model(node:ASTNode):
-	if node.type == scene:
-		for model in node.models:
-			node.rgmui.parent.data.setted.connect(
-				func(key, value): 
-					if key == model.pName: 
-						node.rgmui.data.rset(model.cName, value, true, false)
-			)
-			node.rgmui.data.setted.connect(
-				func(key, value): 
-					if key == model.cName: 
-						node.rgmui.parent.data.rset(model.pName, value, true, false)
-			)
-	for child in node.children:
-		__bind_scene_model(child)
 
 func get_value(code:String)->Dictionary:
 	var exp = Expression.new()

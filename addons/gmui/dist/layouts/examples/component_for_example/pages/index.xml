@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Row>
-	<Scene eBE2i="res://addons/gmui/dist/layouts/components/component.xml" g-for="(item, index) in arr" :text="item"></Scene>
-</Row>

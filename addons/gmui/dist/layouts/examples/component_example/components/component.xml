@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Control>
-	<BoxContainer>
-		<Label text="component text" ref="text1"></Label>
-		<Label text="component text" ref="text2"></Label>
-	</BoxContainer>
-</Control>

@@ -8,7 +8,7 @@ func _init(rnode, vnode):
 	self.vnode = vnode
 	
 func operate():
-	if vnode.model.has('rName'):
+	if vnode.model != null:
 		var gmui:GMUI = vnode.gmui
 		var model:Model = vnode.model
 		rnode.set('color', gmui.data.rget(model.name))

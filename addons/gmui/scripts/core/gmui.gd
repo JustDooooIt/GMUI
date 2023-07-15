@@ -21,8 +21,14 @@ func reactive(data:Dictionary, override = false)->ReactiveDictionary:
 
 func merge_props(data:Dictionary, override = false):
 	self.props.data.merge(data, override)
-	for key in data.keys():
-		self.props.rset(key, data[key], false, false)
+#	for key in data.keys():
+#		self.props.rset(key, data[key], false, false)
 	for key in data.keys():
 		self.props.depMap[key] = Dep.new()
 	self.props.observe()
+	
+func merge_data(data:Dictionary, override = false):
+	self.data.data.merge(data, override)
+	for key in data.keys():
+		self.data.depMap[key] = Dep.new()
+	self.data.observe()

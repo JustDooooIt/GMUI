@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Row align="center">
+	<Label text="checkButton:"></Label>
+	<GButtonBox g-model="index">
+		<CheckButton ref="checkButton"></CheckButton>
+		<CheckButton ref="checkButton"></CheckButton>
+		<CheckButton ref="checkButton"></CheckButton>
+	</GButtonBox>
+	<Label :text="index"></Label>
+</Row>
