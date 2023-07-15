@@ -347,7 +347,7 @@ func _ready():
 func change_text(newValue, oldValue):
 	print(newValue, ',', oldValue)
 </Script>
-```
+```  
 
 ## 路线图  
 
