@@ -1,19 +1,21 @@
-<Row align="center">
-	<Column align="center">
-		<Row>
-			<Label text="Username"></Label>
-			<LineEdit placeholder_text="Pls enter username" g-model="username"></LineEdit>
-		</Row>
-		<Row>
-			<Label text="Password"></Label>
-			<LineEdit placeholder_text="Pls enter password" g-model="password"></LineEdit>
-		</Row>
-		<Row>
-			<Button text="Login" ref="loginBtn"></Button>
-			<Button text="Reset" ref="resetBtn"></Button>
-		 </Row>
-	</Column>
-</Row>
+<Center>
+	<Row align="center">
+		<Column align="center">
+			<Row>
+				<Label text="Username"></Label>
+				<LineEdit placeholder_text="Pls enter username" g-model="username"></LineEdit>
+			</Row>
+			<Row>
+				<Label text="Password"></Label>
+				<LineEdit placeholder_text="Pls enter password" g-model="password"></LineEdit>
+			</Row>
+			<Row>
+				<Button text="Login" ref="loginBtn"></Button>
+				<Button text="Reset" ref="resetBtn"></Button>
+			 </Row>
+		</Column>
+	</Row>
+</Center>
 
 <Script>
 @onready var data = await reactive({'username': 'name', 'password': '123'})
