@@ -1,4 +1,4 @@
-extends Row
+extends Center
 
 
 var isGMUI:int = 0

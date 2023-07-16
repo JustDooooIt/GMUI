@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Row align="center">
-	<Column align="center">
-		<Button text="Hello World" ref="my_button"></Button>
-	</Column>
-</Row>
+<Center>
+	<Row align="center">
+		<Column align="center">
+			<Button text="Hello World" ref="my_button"></Button>
+		</Column>
+	</Row>
+</Center>
