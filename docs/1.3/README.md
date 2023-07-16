@@ -8,7 +8,8 @@ MVVM UI Framework for Godot Engine
 > v1.3 Update:    
 >> 1. Add listening properties   
 >> 2. Add computing properties   
->> 3. Fix known bugs   
+>> 3. Add conditional compilation   
+>> 4. Fix known bugs   
 
 ## Quick Start  
 
@@ -389,6 +390,38 @@ func _mounted():
 	)
 </Script>
 ```  
+
+### Conditional Compilation   
+
+You can use conditional compilation to specify which platforms the current code will be used on :   
+
+```xml  
+#ifdef [Windows]
+<Label text="Windows"></Label>
+#endif
+
+#ifdef [Android]
+<Label text="Android"></Label>
+#endif
+
+<Script>
+#ifdef [Windows]
+var platform = 'Windows'
+#endif
+<Script>
+```   
+
+```xml  
+#ifndef [Windows]
+<Label text="Not Windows"></Label>
+#endif
+
+<Script>
+#ifdef [Windows]
+var platform = 'Not Windows'
+#endif
+</Script>
+```   
 
 ### Modify Project Information
 

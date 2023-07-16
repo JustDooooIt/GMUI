@@ -8,7 +8,8 @@ Godot游戏引擎的 MVVM UI框架
 > 1.3版本更新内容:    
 >> 1. 新增监听属性   
 >> 2. 新增计算属性   
->> 3. 修复了已知bugs   
+>> 3. 新增条件编译   
+>> 4. 修复了已知bugs   
 
 ## 快速入门  
 
@@ -388,12 +389,15 @@ func _mounted():
 </Script>
 ```
 
-### 条件编译
-您可以在gmui中使用条件编译来指定当前代码要使用在哪些平台：
-```xml
+### 条件编译  
+
+您可以在gmui中使用条件编译来指定当前代码要使用在哪些平台：  
+
+```xml  
 #ifdef [Windows]
 <Label text="Windows"></Label>
 #endif
+
 #ifdef [Android]
 <Label text="Android"></Label>
 #endif
@@ -403,17 +407,19 @@ func _mounted():
 var platform = 'Windows'
 #endif
 <Script>
-```
-```xml
+```   
+
+```xml  
 #ifndef [Windows]
 <Label text="Not Windows"></Label>
 #endif
+
 <Script>
 #ifdef [Windows]
 var platform = 'Not Windows'
 #endif
 </Script>
-```
+```   
 
 ### 修改项目信息
 

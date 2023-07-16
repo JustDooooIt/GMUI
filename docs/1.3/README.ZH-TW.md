@@ -1,8 +1,15 @@
 # GMUI - Godot MVVM UI  
 Godot遊戲引擎的 MVVM UI框架   
 
-> [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[简体中文](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)&nbsp;&nbsp;&nbsp;[繁体中文](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH-TW.md)   
+> [English](https://github.com/JustDooooIt/GMUI)&nbsp;&nbsp;&nbsp;[簡體中文](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH.md)&nbsp;&nbsp;&nbsp;[繁體中文](https://github.com/JustDooooIt/GMUI/blob/master/README.ZH-TW.md)   
 > GMUI版本：1.3.x   &nbsp;&nbsp;&nbsp;&nbsp;Godot版本：4.x  
+
+> 最新情報  
+> 1.3版本更新內容:    
+>> 1. 新增監聽屬性   
+>> 2. 新增計算屬性   
+>> 3. 新增條件編譯   
+>> 4. 修復了已知bugs     
 
 ## 快速入門  
 
@@ -11,7 +18,7 @@ Godot遊戲引擎的 MVVM UI框架
 > 也可以下載插件包`gmui.zip`手動導入  
 2. 進入項目設置，啟用插件(勾選)  
 
-### 最簡單的頁面   
+### 最簡單的頁面  
 
 在根目錄下的pages文件夾裏新建index.gmui文件，然後寫入：  
 
@@ -380,7 +387,39 @@ func _mounted():
 			data.rset('firstName', '李')
 	)
 </Script>
-```  
+```
+
+### 條件編譯  
+
+您可以在gmui中使用條件編譯來指定當前代碼要使用在哪些平臺：  
+
+```xml  
+#ifdef [Windows]
+<Label text="Windows"></Label>
+#endif
+
+#ifdef [Android]
+<Label text="Android"></Label>
+#endif
+
+<Script>
+#ifdef [Windows]
+var platform = 'Windows'
+#endif
+<Script>
+```   
+
+```xml  
+#ifndef [Windows]
+<Label text="Not Windows"></Label>
+#endif
+
+<Script>
+#ifdef [Windows]
+var platform = 'Not Windows'
+#endif
+</Script>
+```   
 
 ### 修改項目信息
 
