@@ -417,7 +417,7 @@ var platform = 'Windows'
 #endif
 
 <Script>
-#ifdef [Windows]
+#ifndef [Windows]
 var platform = 'Not Windows'
 #endif
 </Script>
