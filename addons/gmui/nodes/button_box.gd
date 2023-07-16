@@ -1,4 +1,4 @@
-class_name GButtonBox extends BoxContainer
+class_name ButtonBox extends BoxContainer
 
 var buttonGroup:ButtonGroup = ButtonGroup.new()
 signal init_finish

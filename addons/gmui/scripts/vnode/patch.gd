@@ -274,5 +274,5 @@ func bind_model(newRNode, vnode):
 		OptionButtonModelStrategy.new(newRNode, vnode).operate()
 	elif newRNode is SpinBox:
 		SpinBoxModelStrategy.new(newRNode, vnode).operate()
-	elif newRNode is GButtonBox:
-		GButtonBoxModelStrategy.new(newRNode, vnode).operate()
+	elif newRNode is ButtonBox:
+		ButtonBoxModelStrategy.new(newRNode, vnode).operate()

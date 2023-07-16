@@ -6,13 +6,14 @@ func _node_init():
 	set_align()
 
 func set_align():
+	set_anchors_and_offsets_preset(PRESET_LEFT_WIDE)
 	match align:
 		'top':
-			set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
-			alignment = BoxContainer.ALIGNMENT_BEGIN
+			alignment = ALIGNMENT_BEGIN
 		'center':
-			set_anchors_and_offsets_preset(Control.PRESET_HCENTER_WIDE)
-			alignment = BoxContainer.ALIGNMENT_CENTER
+			alignment = ALIGNMENT_CENTER
 		'bottom':
-			set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
-			alignment = BoxContainer.ALIGNMENT_END
+			alignment = ALIGNMENT_END
+		'equal':
+			for child in get_children():
+				child.size_flags_vertical = SIZE_EXPAND_FILL

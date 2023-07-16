@@ -25,11 +25,11 @@ signal unmounted
 
 func _init():
 	ready.connect(__init_watcher)
+	init_finish.connect(__run_node_init.bind(self))
 	init_finish.connect(_mounted)
 	update.connect(_updated)
 	before_mount.connect(_before_mount)
 	before_update.connect(_before_update)
-	init_finish.connect(__run_node_init.bind(self))
 	tree_exiting.connect(_unmounted)
 	tree_exited.connect(__clear_setting)
 	_created()

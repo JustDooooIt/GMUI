@@ -1,15 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://chir2kwjfl20d"]
+[gd_scene load_steps=2 format=3 uid="uid://cm6xteifotnv"]
 
-[sub_resource type="GDScript" id="GDScript_d6k5e"]
-script/source = "extends \"res://addons/gmui/dist/super_scripts/pages/index.gd\"
-
-
-func _mounted():
-	gmui.refs['my_button'].rnode.pressed.connect(
-		func():
-			print(gmui.refs['my_button'].rnode.text)
-	)
-"
+[ext_resource type="Script" path="res://addons/gmui/dist/scripts/pages/index.gd" id="1_mlq4o"]
 
 [node name="Root" type="HBoxContainer"]
-script = SubResource("GDScript_d6k5e")
+script = ExtResource("1_mlq4o")

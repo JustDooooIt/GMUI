@@ -1,9 +1,9 @@
-class_name GButtonBoxModelStrategy extends RefCounted
+class_name ButtonBoxModelStrategy extends RefCounted
 
-var rnode:GButtonBox
+var rnode:ButtonBox
 var vnode:VNode
 
-func _init(rnode:GButtonBox, vnode:VNode):
+func _init(rnode:ButtonBox, vnode:VNode):
 	self.rnode = rnode
 	self.vnode = vnode
 
