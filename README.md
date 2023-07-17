@@ -437,7 +437,6 @@ After these attributes are modified, Godot's project settings will be overwritte
 
 ## Roadmap  
 
-0. [x] Bidirectional data binding  
-1. [ ] New UI component library  
-2. [ ] More layout components  
-3. [ ] C # language support  
+0. [x] Bidirectional data binding   
+1. [ ] Material Design UI    
+2. [ ] C # language support   

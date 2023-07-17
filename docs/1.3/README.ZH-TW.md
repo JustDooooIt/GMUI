@@ -436,6 +436,5 @@ var platform = 'Not Windows'
 ## 路線圖  
 
 0. [x] 雙向數據綁定  
-1. [ ] 全新的UI組件庫  
-2. [ ] 更多的布局組件  
-3. [ ] C# 語言支持  
+1. [ ] C# 語言支持   
+2. [ ] Material Design UI   
